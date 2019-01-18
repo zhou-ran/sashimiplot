@@ -74,16 +74,23 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
                                                         geneinfo.chr,
                                                         geneinfo.start - offset,
                                                         geneinfo.end + offset)})
+    try:
+        plot_density(bamlst,
+                     mRNAobject,
+                     "+" if geneinfo.strand > 0 else "-",
+                     fileout,
+                     sj,
+                     wide,
+                     height,
+                     pa
+                     )
+    except:
 
-    plot_density(bamlst,
-                 mRNAobject,
-                 "+" if geneinfo.strand > 0 else "-",
-                 fileout,
-                 sj,
-                 wide,
-                 height,
-                 pa
-                 )
+        with open('failed.log', 'w') as faillog:
+            if pa:
+                faillog.write('{},{}'.format(gene, pa) + '\n')
+            else:
+                faillog.write(gene + '\n')
 
 
 @click.command()

@@ -34,9 +34,8 @@ class Uniprot:
         url = "{}/uniprot/?query={}&format={}".format(self._url, self.ui, self.frmt)
 
         try:
-            result = rq.get(url)
-            # with open('{}.xml'.format(self.ui), 'w') as ot:
-            #     ot.write(result.text)
+            result = rq.get(url, timeout=10)
+
         except ConnectionError:
             raise "Can't crawl {}, pls check your network".format(url)
 

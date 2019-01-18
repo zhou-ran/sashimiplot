@@ -1,6 +1,7 @@
 # Massageplot
 
 ## Usage
+![sashimiplot](example/sashimiplot.png)
 ```
 Usage: sashimiplot [OPTIONS] COMMAND [ARGS]...
 
