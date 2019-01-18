@@ -7,7 +7,7 @@ import pylab
 import matplotlib.gridspec as gridspec
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
-# import math
+
 import matplotlib.pyplot as plt
 
 plt.switch_backend('agg')
@@ -58,6 +58,7 @@ def plot_density_single(read_depth_object,
                         graphToGene,
                         avx,
                         xlabel,
+                        sjthread=1,
                         color='r',
                         ymax=None,
                         number_junctions=True,
@@ -66,7 +67,6 @@ def plot_density_single(read_depth_object,
                         font_size=8,
                         numbering_font_size=6,
                         junction_log_base=10):
-
     tx_start = read_depth_object.low
     tx_end = read_depth_object.high
     chrom = read_depth_object.chrm
@@ -81,7 +81,6 @@ def plot_density_single(read_depth_object,
         ymax = ymax
     ymin = -.6 * ymax
 
-
     compressed_x = []
     compressed_wiggle = []
     prevx = graphcoords[0]
@@ -95,8 +94,11 @@ def plot_density_single(read_depth_object,
             prevx = graphcoords[i]
             tmpval = []
 
-    pylab.fill_between(compressed_x, compressed_wiggle, \
-                       y2=0, color=color, lw=0)
+    pylab.fill_between(compressed_x,
+                       compressed_wiggle,
+                       y2=0,
+                       color=color,
+                       lw=0)
 
     sslists = []
     for mRNA in mRNAs:
@@ -120,11 +122,14 @@ def plot_density_single(read_depth_object,
     for plotted_count, jxn in enumerate(jxns_sorted_list):
         leftss, rightss = map(int, jxn.split(":")[1].split("-"))
 
+        if round(jxns[jxn], 2) < sjthread:
+            continue
         u'''
         1.13 add a junction in half
         '''
         leftstatus = False
         rightstatus = False
+
         try:
             ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[rightss - tx_start]]
         except IndexError:
@@ -171,7 +176,9 @@ def plot_density_single(read_depth_object,
         if number_junctions:
             t = pylab.text(midpt[0], midpt[1], '{0}'.format(round(jxns[jxn], 2)), fontsize=numbering_font_size,
                            ha='center',
-                           va='center', backgroundcolor='w')
+                           va='center',
+                           backgroundcolor='w')
+
             t.set_bbox(dict(alpha=0, ))
 
         a = Path(pts, [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4])
@@ -242,12 +249,11 @@ def plot_density_single(read_depth_object,
 
 def getScaling(tx_start,
                tx_end,
-               strand,
                exon_starts,
                exon_ends,
                intron_scale,
-               exon_scale,
-               reverse_minus):
+               exon_scale
+               ):
     """
     Compute the scaling factor across various genic regions.
     """
@@ -312,14 +318,16 @@ def plotdomain(region,
         logging.debug("ploting domain")
         dregion, domainname = subdomain
         logging.debug("{}".format(domainname))
-        print(dregion)
         if "chain" in domainname: continue
         if "conflict" in domainname: continue
         if "variant" in domainname: continue
-        try:
-            dregion = calculateinterval(dregion, (tx_start, tx_end))
-        except TypeError:
-            print(dregion, (tx_start, tx_end))
+
+        dregion = calculateinterval(dregion, (tx_start, tx_end))
+
+        # try:
+        #     dregion = calculateinterval(dregion, (tx_start, tx_end))
+        # except TypeError:
+        #     print(dregion, (tx_start, tx_end))
 
         minsite = min(map(lambda x: x[0], dregion))
         maxsite = max(map(lambda x: x[1], dregion))
@@ -356,7 +364,7 @@ def plotdomain(region,
     plt.text(xaxisloc, yloc - 0.05, '{};domain'.format(tid), fontsize=8)
 
 
-def plot_mRNAs(tx_start, tx_end, mRNAs, graphcoords, reverse_minus):
+def plot_mRNAs(tx_start, tx_end, mRNAs, graphcoords):
     """
     Draw the gene structure.
     """
@@ -374,7 +382,6 @@ def plot_mRNAs(tx_start, tx_end, mRNAs, graphcoords, reverse_minus):
             # print(tid)
             logging.debug('ploting {}'.format(tid))
             toplot = ['domain', 'CDS', 'exon']
-            print(info)
             for type_ in toplot:
                 logging.debug("ploting the {}".format(type_))
                 try:
@@ -422,7 +429,7 @@ def plot_mRNAs(tx_start, tx_end, mRNAs, graphcoords, reverse_minus):
                         # print(region, loc, x, min_, max_, tx_start, tx_end, graphcoords)
                         break
 
-                    if strand == '+' or reverse_minus:
+                    if strand == '+':
                         x = [loc - spread, loc, loc - spread]
                     else:
                         x = [loc + spread, loc, loc + spread]
@@ -443,6 +450,9 @@ def plot_density(read_depth_object,
                  mRNAobject,
                  strand,
                  fileout,
+                 sjthread=1,
+                 wide=8,
+                 height=12,
                  pasite=None
                  ):
     """
@@ -463,18 +473,28 @@ def plot_density(read_depth_object,
 
     intron_scale = 30
     exon_scale = 1
-    reverse_minus = False
 
-    graphcoords, graphToGene = getScaling(txstart, txend,
-                                          strand, exon_starts,
-                                          exon_ends, intron_scale,
-                                          exon_scale, reverse_minus)
+    plt.rcParams["figure.figsize"] = (wide, height)
+
+    graphcoords, graphToGene = getScaling(txstart,
+                                          txend,
+                                          exon_starts,
+                                          exon_ends,
+                                          intron_scale,
+                                          exon_scale
+                                          )
 
     nfile = len(read_depth_object)
-    gs = gridspec.GridSpec(int(nfile + nfile * 0.8 + 1), 1)
+    mRNAnum = len(mRNAobject.txlst) * 2
+
+    gs = gridspec.GridSpec(int(nfile + mRNAnum),
+                           1,
+                           height_ratios=[4] * nfile + [1] * mRNAnum
+                           )
 
     for fileindex, bamfileinfo in enumerate(read_depth_object):
         axvar = pylab.subplot(gs[fileindex, :])
+
         bamread = list(bamfileinfo.values())[0]
         bamname = list(bamfileinfo.keys())[0]
         xlabel = True if fileindex == nfile - 1 else False
@@ -492,6 +512,7 @@ def plot_density(read_depth_object,
                             graphToGene,
                             axvar,
                             xlabel,
+                            sjthread,
                             color,
                             ymax=None,
                             number_junctions=True,
@@ -507,12 +528,12 @@ def plot_density(read_depth_object,
     plot_mRNAs(txstart,
                txend,
                mRNAobject.txlst,
-               graphcoords,
-               reverse_minus)
+               graphcoords)
 
     if pasite:
         plt.axvline(graphcoords[pasite - txstart], lw=.5)
-    plt.savefig(fileout, bbox_inches='tight')
+    plt.savefig(fileout,
+                bbox_inches='tight')
 
 
 def main(file):

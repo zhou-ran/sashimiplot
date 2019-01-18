@@ -7,9 +7,8 @@ from collections import defaultdict
 from itertools import chain
 import pysam
 
-
-from .pyUniprot import *
-from .DomainCds import *
+from pyUniprot import *
+from DomainCds import *
 
 
 class AttrDict(dict):
@@ -148,7 +147,6 @@ class mRNA:
                             ';'.join([domain.name, domain.type])
                         )
                     )
-                print(domainlst)
                 tmpres = CdsDmain(cdsexon["CDS"], domainlst, strand).domainrelativegenomiccoordinary
                 resdict[t]["domain"] = tmpres
         return resdict
@@ -189,7 +187,7 @@ class mRNA:
         mRNAlist = []
         for i in regiondict:
             for k, v in i.items():
-                mRNAlist.append(v['exon'])
+                mRNAlist.append(v[type_])
         return mRNAlist
 
     @property
@@ -248,7 +246,7 @@ class mRNA:
 
 
 def main(file):
-    tre = mRNA('1', 4773206, 4785739, file)
+    tre = mRNA('18', 20684599, 20746404, file, genename='ENSMUSG00000056124')
     print(tre.exonstarts)
 
     mRNAlist = []
@@ -259,6 +257,7 @@ def main(file):
 
 if __name__ == '__main__':
     import logging
+    import sys
 
     logger = logging.getLogger()
     handler = logging.StreamHandler()

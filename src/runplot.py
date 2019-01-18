@@ -34,39 +34,56 @@ def cli():
 @click.option('--pa',
               type=int,
               default=None,
-              help="The pA site."
+              help="The pA site. default: None"
               )
 @click.option('--fileout',
               type=str,
               help="The output name."
               )
-def gene(gtf, gene, bam, pa, fileout):
+@click.option('--offset',
+              type=int,
+              default=0,
+              help='Add an offset number to broaden the interval. default: 0')
+@click.option('--sj',
+              type=int,
+              default=1,
+              help='The min splice jucntion count to show. default: 1')
+def gene(gtf, gene, bam, pa, fileout, offset, sj):
     if not all([gtf, gene, bam, fileout]):
         cli(['gene', '--help'])
         sys.exit(1)
+
+    wide = 8
+    height = 12
+
     geneinfo = Myinfo('ensembl.gene:{}'.format(gene),
                       'all',
                       'gene').loc
 
     mRNAobject = mRNA(geneinfo.chr,
-                      geneinfo.start,
-                      geneinfo.end,
+                      geneinfo.start - offset,
+                      geneinfo.end + offset,
                       gtf,
-                      genename=gene)
+                      genename=gene
+                      )
 
     bamdict = readbamlist(bam)
     bamlst = []
     for label, filepath in bamdict.items():
         bamlst.append({label: ReadDepth.determine_depth(filepath,
                                                         geneinfo.chr,
-                                                        geneinfo.start,
-                                                        geneinfo.end)})
+                                                        geneinfo.start - offset,
+                                                        geneinfo.end + offset)})
 
     plot_density(bamlst,
                  mRNAobject,
                  "+" if geneinfo.strand > 0 else "-",
                  fileout,
-                 pa)
+                 sj,
+                 wide,
+                 height,
+                 pa
+                 )
 
 
 @click.command()
