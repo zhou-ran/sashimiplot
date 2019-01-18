@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/16 4:07 PM
 __author__ = 'Zhou Ran'
-# import sys
+import sys
 import click
 
 from .ReadDepth import ReadDepth
@@ -41,7 +41,9 @@ def cli():
               help="The output name."
               )
 def gene(gtf, gene, bam, pa, fileout):
-    click.echo("Plot a sashimi in the given gene!")
+    if not all([gtf, gene, bam, fileout]):
+        cli(['gene', '--help'])
+        sys.exit(1)
     geneinfo = Myinfo('ensembl.gene:{}'.format(gene),
                       'all',
                       'gene').loc

@@ -7,7 +7,7 @@ import pylab
 import matplotlib.gridspec as gridspec
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
-import math
+# import math
 import matplotlib.pyplot as plt
 
 plt.switch_backend('agg')
@@ -66,7 +66,6 @@ def plot_density_single(read_depth_object,
                         font_size=8,
                         numbering_font_size=6,
                         junction_log_base=10):
-    # extract data from read_depth_object 4702888, 4784871
 
     tx_start = read_depth_object.low
     tx_end = read_depth_object.high
@@ -82,7 +81,7 @@ def plot_density_single(read_depth_object,
         ymax = ymax
     ymin = -.6 * ymax
 
-    # Reduce memory footprint by using incremented graphcoords.
+
     compressed_x = []
     compressed_wiggle = []
     prevx = graphcoords[0]
@@ -143,7 +142,7 @@ def plot_density_single(read_depth_object,
                     ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[tx_end - tx_start]]
                     rightstatus = True
 
-        mid = (ss1 + ss2) / 2
+        # mid = (ss1 + ss2) / 2
 
         # draw junction on bottom
 
@@ -185,7 +184,7 @@ def plot_density_single(read_depth_object,
 
     avx.set_ybound(lower=fake_ymin, upper=1.2 * max_used_yval)
     universal_yticks = pylab.linspace(0, max_used_yval, 2 + 1)
-    universal_ticks = map(math.ceil, universal_yticks)
+    # universal_ticks = map(math.ceil, universal_yticks)
     curr_yticklabels = []
     for label in universal_yticks:
         if label <= 0:

@@ -5,9 +5,19 @@
 import numpy
 import pysam
 
-""""""
+"""
+This script were migrated from spliceplot
+"""
+
+
 class ReadDepth:
-    def __init__(self, chrm, low, high, wiggle, junctions_dict):
+    def __init__(self,
+                 chrm,
+                 low,
+                 high,
+                 wiggle,
+                 junctions_dict):
+
         assert chrm == None or high - low + 1 == len(wiggle), 'Wiggle, lower bound, and upper bound do not correspond'
         self.low = low
         self.high = high
@@ -16,17 +26,21 @@ class ReadDepth:
         self.junctions_dict = junctions_dict
 
     @classmethod
-    def determine_depth(cls, bam_file_path, chrm, start_coord, end_coord):
+    def determine_depth(cls,
+                        bam_file_path,
+                        chrm,
+                        start_coord,
+                        end_coord):
         """
-            determine_depth determines the coverage at each base between start_coord and end_coord, inclusive.
+        calculate the coverage at each base between start_coord and endcoord.
 
-            bam_file_path is the path to the bam file used to determine the depth and junctions on chrm between start_coord and end_coord
-
-            return values:
-                depth_vector, which is a Numpy array which contains the coverage at each base position between start_coord and end_coord
-                spanned_junctions, which is a dictionary containing the junctions supported by reads. The keys in spanned_junctions are the
-                    names of the junctions, with the format chromosome:lowerBasePosition-higherBasePosition
+        :param bam_file_path:
+        :param chrm:
+        :param start_coord: int
+        :param end_coord: int
+        :return: Numpy array
         """
+
         try:
             bam_file = pysam.Samfile(bam_file_path, 'rb')
             relevant_reads = bam_file.fetch(reference=chrm, start=start_coord, end=end_coord)
@@ -68,8 +82,7 @@ class ReadDepth:
 
             return cls(chrm, start_coord, end_coord, depth_vector, spanned_junctions)
         except IOError:
-            # print 'There is no .bam file at {0}'.format(bam_file_path)
-            # raise Exception
+
             raise 'There is no .bam file at {0}'.format(bam_file_path)
 
     @classmethod

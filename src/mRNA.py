@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/10 4:25 PM
 __author__ = 'Zhou Ran'
-import sys
+
 from collections import defaultdict
 from itertools import chain
 import pysam
 
-# from Convert import *
+
 from .pyUniprot import *
 from .DomainCds import *
 
@@ -31,6 +31,7 @@ class GTFFeature(object):
 
     def __init__(self, chrom=None, source=None, featuretype=None, start=None, end=None,
                  score=None, strand=None, phase=None, attributes=None):
+
         self._chrom = chrom
         self._source = source
         self._featuretype = featuretype
