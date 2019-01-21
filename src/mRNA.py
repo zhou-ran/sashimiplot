@@ -85,6 +85,39 @@ class GTFFeature(object):
         return "<GTF;gene {}>".format(self.attributes["gene_id"])
 
 
+class Exon:
+    def __init__(self, chr, tstart, tend, gtf):
+        self.chr = chr
+        self.tstart = tstart
+        self.tend = tend
+        self.gtf = pysam.TabixFile(gtf)
+
+        self.info = self.__processline()
+
+    def __processline(self):
+        """
+
+        :return: all exon information and transcript information
+        """
+        resdict = defaultdict(lambda: defaultdict(list))
+        lines = self.gtf.fetch(self.chr,
+                               self.tstart,
+                               self.tend)
+        if not lines:
+            return ''
+        for line in lines:
+            line = GTFFeature(*line.strip().split('\t'))
+            _feature = line.feature
+            if _feature == 'transcript':
+                resdict[line.attributes['transcript_id']]['maxinfo'].append((line.start, line.end))
+                resdict[line.attributes['transcript_id']]['strand'] = line.strand
+            elif _feature == 'exon':
+                resdict[line.attributes['transcript_id']]['exon'].append((line.start, line.end))
+            else:
+                continue
+        return resdict
+
+
 class mRNA:
     def __init__(self, chr, tstart, tend, gtf, genename=None):
         """
@@ -125,12 +158,14 @@ class mRNA:
             if self.genename:
                 if line_gid != self.genename:
                     continue
-
-            if _feature in self._validfeature:
-                resdict[line.attributes["transcript_id"]][_feature].append((line.start, line.end))
+            if _feature == 'transcript_id':
+                resdict[line.attributes["transcript_id"]][maxinfo].append((line.start, line.end))
                 resdict[line.attributes["transcript_id"]]["strand"] = line.strand
+            elif _feature in self._validfeature:
+                resdict[line.attributes["transcript_id"]][_feature].append((line.start, line.end))
             else:
                 continue
+
         for t, cdsexon in resdict.items():
             strand = cdsexon['strand']
             if "CDS" in cdsexon:
@@ -244,15 +279,59 @@ class mRNA:
         left, right = zip(*d)
         return left, right
 
+    @classmethod
+    def gene(cls, gene, gtf, offset=0):
+        """
+        Convert the geneid into interval, and return a mRNA object
+        :param gene:
+        :param gtf:
+        :return:
+        """
+        geneinfo = Myinfo(
+            'ensembl.gene:{}'.format(gene),
+            'all',
+            'gene'
+        ).loc
+
+        return mRNA(
+            geneinfo.chr,
+            geneinfo.start - offset,
+            geneinfo.end + offset,
+            gtf,
+            genename=gene
+        )
+
+    @classmethod
+    def isoform(cls, isoid, gtf, offset=0):
+        """
+        Convert the transcript id into interval,and return a mRNA object
+        :param isoid:
+        :param gtf:
+        :param offset:
+        :return:
+        """
+        isoinfo = Myinfo(
+            'ensembl.transcript:{}'.format(isoid),
+            'all',
+            'gene'
+        ).loc
+
+        return mRNA(isoinfo.chr,
+                    isoinfo.start - offset,
+                    isoinfo.end + offset,
+                    gtf,
+                    genename=isoinfo.ensemblgene
+                    )
+
 
 def main(file):
-    tre = mRNA('18', 20684599, 20746404, file, genename='ENSMUSG00000056124')
-    print(tre.exonstarts)
+    tre = Exon('18', 20685599, 20740404, file)
+    print(tre.info)
 
-    mRNAlist = []
-    for i in tre.txlst:
-        for k, v in i.items():
-            mRNAlist.append(v['exon'])
+    # mRNAlist = []
+    # for i in tre.txlst:
+    #     for k, v in i.items():
+    #         mRNAlist.append(v['exon'])
 
 
 if __name__ == '__main__':

@@ -364,7 +364,11 @@ def plotdomain(region,
     plt.text(xaxisloc, yloc - 0.05, '{};domain'.format(tid), fontsize=8)
 
 
-def plot_mRNAs(tx_start, tx_end, mRNAs, graphcoords):
+def plot_mRNAs(tx_start,
+               tx_end,
+               mRNAs,
+               graphcoords,
+               domain=True):
     """
     Draw the gene structure.
     """
@@ -379,14 +383,18 @@ def plot_mRNAs(tx_start, tx_end, mRNAs, graphcoords):
     for allinfo in mRNAs:
         for tid, info in allinfo.items():
             strand = info['strand']
-            # print(tid)
+            minsite, maxsite = info['maxinfo']
             logging.debug('ploting {}'.format(tid))
-            toplot = ['domain', 'CDS', 'exon']
+            '''
+            1.21 add plot the splicing plot
+            '''
+            toplot = ['domain', 'CDS', 'exon'] if domain else ['exon']
+
             for type_ in toplot:
                 logging.debug("ploting the {}".format(type_))
                 try:
                     region = info[type_]
-                except ValueError:
+                except KeyError:
                     continue
 
                 if not region:
@@ -399,8 +407,12 @@ def plot_mRNAs(tx_start, tx_end, mRNAs, graphcoords):
 
                 region = calculateinterval(region, (tx_start, tx_end))
 
-                minsite = min(map(lambda x: x[0], region))
-                maxsite = max(map(lambda x: x[1], region))
+                '''
+                1.21 test the coordinary
+                '''
+                # minsite = min(map(lambda x: x[0], region))
+                # maxsite = max(map(lambda x: x[1], region))
+
                 # if strand == "+":
                 #     min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
                 #     max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
@@ -453,6 +465,7 @@ def plot_density(read_depth_object,
                  sjthread=1,
                  wide=8,
                  height=12,
+                 domain=True,
                  pasite=None
                  ):
     """
@@ -528,7 +541,8 @@ def plot_density(read_depth_object,
     plot_mRNAs(txstart,
                txend,
                mRNAobject.txlst,
-               graphcoords)
+               graphcoords,
+               domain)
 
     if pasite:
         plt.axvline(graphcoords[pasite - txstart], lw=.5)

@@ -56,16 +56,25 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
     wide = 8
     height = 12
 
-    geneinfo = Myinfo('ensembl.gene:{}'.format(gene),
-                      'all',
-                      'gene').loc
+    # geneinfo = Myinfo('ensembl.gene:{}'.format(gene),
+    #                   'all',
+    #                   'gene').loc
+    #
+    # mRNAobject = mRNA(geneinfo.chr,
+    #                   geneinfo.start - offset,
+    #                   geneinfo.end + offset,
+    #                   gtf,
+    #                   genename=gene
+    #                   )
+    '''
+    1.21 add transcript support
+    '''
 
-    mRNAobject = mRNA(geneinfo.chr,
-                      geneinfo.start - offset,
-                      geneinfo.end + offset,
-                      gtf,
-                      genename=gene
-                      )
+    mRNAobject = mRNA.gene(
+        gene,
+        gtf,
+        offset
+    )
 
     bamdict = readbamlist(bam)
     bamlst = []
@@ -94,8 +103,17 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
 
 
 @click.command()
-def junc():
-    click.echo("Plot a sashimi in the given interval")
+def junc(gtf, bam, fileout):
+    """
+    Junction mode, not need network to plot
+    :return:
+    """
+    if not all([gtf, bam, fileout]):
+        cli(['junc', '--help'])
+        sys.exit(1)
+
+    wide = 8
+    height = 12
 
 
 cli.add_command(gene)
