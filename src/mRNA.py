@@ -5,12 +5,14 @@ __author__ = 'Zhou Ran'
 
 from collections import defaultdict
 from itertools import chain
+import logging
 import pysam
 
 from .FetchGene import Myinfo
 from .pyUniprot import *
 from .DomainCds import *
 
+logger = logging.getLogger("MAIN")
 
 class AttrDict(dict):
 

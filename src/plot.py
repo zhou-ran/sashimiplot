@@ -8,14 +8,13 @@ import matplotlib.gridspec as gridspec
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 import matplotlib.pyplot as plt
+import logging
 
 plt.switch_backend('agg')
 from .DomainCds import calculateinterval
 from .Constant import COLOR
 
-from .helper import set_logging
-
-logging = set_logging('plot')
+logger = logging.getLogger('MAIN')
 
 
 def cubic_bezier(pts, t):
@@ -309,10 +308,10 @@ def plotdomain(region,
 
     RGB_tuples = ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"]
     for index, subdomain in enumerate(region):
-        logging.debug("ploting domain")
+        logger.debug("ploting domain")
 
         dregion, domainname = subdomain
-        logging.debug("{}".format(domainname))
+        logger.debug("{}".format(domainname))
         if "chain" in domainname: continue
         if "conflict" in domainname: continue
         if "variant" in domainname: continue
@@ -380,14 +379,14 @@ def plot_mRNAs(tx_start,
             strand = info['strand']
             # print(info)
             minsite, maxsite = info['maxinfo'][0]
-            logging.debug('ploting {}'.format(tid))
+            logger.debug('ploting {}'.format(tid))
             '''
             1.21 add plot the splicing plot
             '''
             toplot = ['domain', 'CDS', 'exon'] if domain else ['exon']
 
             for type_ in toplot:
-                logging.debug("ploting the {}".format(type_))
+                logger.debug("ploting the {}".format(type_))
                 try:
                     region = info[type_]
                 except KeyError:
@@ -428,7 +427,7 @@ def plot_mRNAs(tx_start,
                     pylab.fill(x, y, '#000000', lw=.5, zorder=20)
                     pylab.plot([min_, max_], [yloc, yloc], color='#000000', lw=0.5)
 
-                logging.debug('{} ploting intron'.format(tid))
+                logger.debug('{} ploting intron'.format(tid))
 
                 spread = .5 * (max_ - min_) / narrows
                 for i in range(narrows):
@@ -443,10 +442,10 @@ def plot_mRNAs(tx_start,
                         x = [loc + spread, loc, loc + spread]
                     y = [yloc - exonwidth / 5, yloc, yloc + exonwidth / 5]
                     pylab.plot(x, y, lw=.5, color='#000000')
-                logging.debug('{} ploting tid'.format(tid))
+                logger.debug('{} ploting tid'.format(tid))
                 pylab.text(xaxisloc, yloc - 0.05, ';'.join([tid, type_]), fontsize=8)
                 yloc += 1
-                logging.debug('{} done'.format(tid))
+                logger.debug('{} done'.format(tid))
     pylab.xlim(0, max(graphcoords))
     pylab.ylim(-.5, yloc + .5)
     pylab.box(on=False)

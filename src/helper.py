@@ -1,41 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/22 3:16 PM
-
-import os
 import logging
-from logging.handlers import RotatingFileHandler
+
 
 
 def set_logging(log_name):
-    u"""
-    set logging handler
-    modified from Zhang yiming at 2018.11.13
+    """
+    a DEBUG logger
+    :param log_name:
     :return:
     """
-    sh = logging.StreamHandler()
-    fh = RotatingFileHandler(
-        os.path.join("{}_error.log".format(log_name)),
-        mode='a+',
-        encoding="utf-8",
-        maxBytes=5 * 1024 * 1024,
-        backupCount=2,
-        delay=0
-    )
-
-    # [%(module)s:%(lineno)d]
+    handler = logging.StreamHandler()
     formatter = logging.Formatter(
         fmt="[%(asctime)s] - [%(levelname)s]: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
     )
 
-    sh.setFormatter(formatter)
-    fh.setFormatter(formatter)
-    sh.setLevel(logging.INFO)
-    fh.setLevel(logging.DEBUG)
+    handler.setFormatter(formatter)
+    handler.setLevel(logging.DEBUG)
 
     log = logging.getLogger(log_name)
     log.setLevel(logging.DEBUG)
-    log.addHandler(sh)
-    log.addHandler(fh)
+    log.addHandler(handler)
+
     return log

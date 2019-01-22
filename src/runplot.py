@@ -11,6 +11,8 @@ from .mRNA import mRNA
 from .plot import plot_density
 from .utils import readbamlist
 
+logger = set_logging("MAIN")
+
 
 @click.group()
 def cli():
@@ -52,7 +54,7 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
     if not all([gtf, gene, bam, fileout]):
         cli(['gene', '--help'])
         sys.exit(1)
-    logging = set_logging("gene")
+
     wide = 8
     height = 12
 
@@ -69,13 +71,13 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
     '''
     1.21 add transcript support
     '''
-    loggings.debug("prepare the mRNA data")
+    logger.info("prepare the mRNA data")
     mRNAobject = mRNA.gene(
         gene,
         gtf,
         offset
     )
-    loggings.debug("retrieve expression data")
+    logger.debug("retrieve expression data")
     bamdict = readbamlist(bam)
     bamlst = []
     for label, filepath in bamdict.items():
@@ -138,7 +140,6 @@ def junc(gtf, bam, fileout, junc, sj):
     Junction mode, not need network to plot
     :return:
     """
-    loggings = set_logging("junc")
 
     if not all([gtf, bam, fileout, junc]):
         cli(['junc', '--help'])
@@ -150,7 +151,7 @@ def junc(gtf, bam, fileout, junc, sj):
     pa = None
     domain = False
     # chr, tstart, tend, gtf
-    loggings.debug("prepare the mRNA data")
+    logger.debug("prepare the mRNA data")
     mRNAobject = mRNA(
         chr,
         s,
@@ -158,16 +159,16 @@ def junc(gtf, bam, fileout, junc, sj):
         gtf,
         exonstat=True
     )
-    print(mRNAobject.tstart, mRNAobject.tend)
+
     bamdict = readbamlist(bam)
     bamlst = []
-    loggings.debug("retrieve expression data")
+    logger.debug("retrieve expression data")
     for label, filepath in bamdict.items():
         bamlst.append({label: ReadDepth.determine_depth(filepath,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
                                                         mRNAobject.tend)})
-    loggings.debug("plot")
+    logger.debug("plot")
     plot_density(bamlst,
                  mRNAobject,
                  fileout,
