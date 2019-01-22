@@ -19,6 +19,7 @@ class ReadDepth:
                  junctions_dict):
 
         assert chrm == None or high - low + 1 == len(wiggle), 'Wiggle, lower bound, and upper bound do not correspond'
+
         self.low = low
         self.high = high
         self.chrm = chrm
@@ -49,7 +50,6 @@ class ReadDepth:
             spanned_junctions = {}
 
             for read in relevant_reads:
-
                 # make sure that the read can be used
                 cigar_string = read.cigar
 

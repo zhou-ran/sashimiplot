@@ -8,11 +8,9 @@ This is the mygene.info's wrapper to process every things that you want to do
 
 from biothings_client import get_client
 
-import logging
 
 
-# from biothings_client import get_client
-#
+
 # gene_client.query('ensembl.transcript:ENSMUST00000208660', fields='symbol,name,uniprot')
 # gene_client = get_client('gene')
 

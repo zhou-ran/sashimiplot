@@ -7,34 +7,15 @@ import pylab
 import matplotlib.gridspec as gridspec
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
-
 import matplotlib.pyplot as plt
 
 plt.switch_backend('agg')
 from .DomainCds import calculateinterval
 from .Constant import COLOR
 
-import logging
+from .helper import set_logging
 
-from logging import handlers
-
-logger = logging.getLogger()
-handler = logging.StreamHandler()
-fh = handlers.RotatingFileHandler(
-    'plot.log',
-    mode='a+',
-    encoding="utf-8",
-    maxBytes=5 * 1024 * 1024,
-    backupCount=2,
-    delay=0
-)
-fh.setLevel(logging.DEBUG)
-formatter = logging.Formatter(
-    '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.addHandler(fh)
-logger.setLevel(logging.DEBUG)
+logging = set_logging('plot')
 
 
 def cubic_bezier(pts, t):
@@ -52,7 +33,6 @@ def cubic_bezier(pts, t):
 
 def plot_density_single(read_depth_object,
                         mRNAs,
-                        strand,
                         samplename,
                         graphcoords,
                         graphToGene,
@@ -67,8 +47,30 @@ def plot_density_single(read_depth_object,
                         font_size=8,
                         numbering_font_size=6,
                         junction_log_base=10):
+    """
+
+    :param read_depth_object:
+    :param mRNAs:
+    :param samplename:
+    :param graphcoords:
+    :param graphToGene:
+    :param avx:
+    :param xlabel:
+    :param sjthread:
+    :param color:
+    :param ymax:
+    :param number_junctions:
+    :param resolution:
+    :param nxticks:
+    :param font_size:
+    :param numbering_font_size:
+    :param junction_log_base:
+    :return:
+    """
+
     tx_start = read_depth_object.low
     tx_end = read_depth_object.high
+
     chrom = read_depth_object.chrm
     wiggle = read_depth_object.wiggle
     jxns = read_depth_object.junctions_dict
@@ -120,13 +122,14 @@ def plot_density_single(read_depth_object,
     current_height = -3 * ymin / 4
 
     for plotted_count, jxn in enumerate(jxns_sorted_list):
-        leftss, rightss = map(int, jxn.split(":")[1].split("-"))
 
-        if round(jxns[jxn], 2) < sjthread:
+        leftss, rightss = map(int, jxn.split(":")[1].split("-"))
+        if round(jxns[jxn], 2) <= sjthread:
             continue
         u'''
         1.13 add a junction in half
         '''
+
         leftstatus = False
         rightstatus = False
 
@@ -231,9 +234,9 @@ def plot_density_single(read_depth_object,
 
     if xlabel:
         avx.xaxis.set_ticks_position('bottom')
-        pylab.xlabel('Genomic coordinate (%s), "%s" strand' % (chrom,
-                                                               strand),
-                     fontsize=font_size)
+        # pylab.xlabel('Genomic coordinate (%s), "%s" strand' % (chrom,
+        #                                                        strand),
+        #              fontsize=font_size)
         max_graphcoords = max(graphcoords) - 1
         pylab.xticks(pylab.linspace(0, max_graphcoords, nxticks),
                      [graphToGene[int(x)] for x in \
@@ -258,8 +261,15 @@ def getScaling(tx_start,
     Compute the scaling factor across various genic regions.
     """
     exoncoords = pylab.zeros((tx_end - tx_start + 1))
+
     for i in range(len(exon_starts)):
-        exoncoords[exon_starts[i] - tx_start: exon_ends[i] - tx_start] = 1
+        '''
+        1.22 add a if-else to solve these condition that exons were greater than the given region
+        '''
+        leftsite = exon_starts[i] - tx_start if exon_starts[i] - tx_start > 0 else 0
+        rightsite = exon_ends[i] - tx_start if exon_ends[i] - tx_end < 0 else tx_start - tx_end
+
+        exoncoords[leftsite: rightsite] = 1
 
     graphToGene = {}
     graphcoords = pylab.zeros((tx_end - tx_start + 1), dtype='f')
@@ -273,22 +283,6 @@ def getScaling(tx_start,
         else:
             x += 1. / intron_scale
 
-    # if strand == '+' or not reverse_minus:
-    #     for i in range(tx_end - tx_start + 1):
-    #         graphcoords[i] = x
-    #         graphToGene[int(x)] = i + tx_start
-    #         if exoncoords[i] == 1:
-    #             x += 1. / exon_scale
-    #         else:
-    #             x += 1. / intron_scale
-    # else:
-    #     for i in range(tx_end - tx_start + 1):
-    #         graphcoords[-(i + 1)] = x
-    #         graphToGene[int(x)] = tx_end - i + 1
-    #         if exoncoords[-(i + 1)] == 1:
-    #             x += 1. / exon_scale
-    #         else:
-    #             x += 1. / intron_scale
     return graphcoords, graphToGene
 
 
@@ -299,8 +293,8 @@ def plotdomain(region,
                exonwidth,
                yloc,
                xaxisloc,
-               tid,
-               strand):
+               tid
+               ):
     """
 
     :param region:
@@ -316,6 +310,7 @@ def plotdomain(region,
     RGB_tuples = ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"]
     for index, subdomain in enumerate(region):
         logging.debug("ploting domain")
+
         dregion, domainname = subdomain
         logging.debug("{}".format(domainname))
         if "chain" in domainname: continue
@@ -383,7 +378,8 @@ def plot_mRNAs(tx_start,
     for allinfo in mRNAs:
         for tid, info in allinfo.items():
             strand = info['strand']
-            minsite, maxsite = info['maxinfo']
+            # print(info)
+            minsite, maxsite = info['maxinfo'][0]
             logging.debug('ploting {}'.format(tid))
             '''
             1.21 add plot the splicing plot
@@ -401,7 +397,7 @@ def plot_mRNAs(tx_start,
                     continue
 
                 if type_ == 'domain':
-                    plotdomain(region, tx_start, tx_end, graphcoords, exonwidth, yloc, xaxisloc, tid, strand)
+                    plotdomain(region, tx_start, tx_end, graphcoords, exonwidth, yloc, xaxisloc, tid)
                     yloc += 1
                     continue
 
@@ -460,13 +456,12 @@ def plot_mRNAs(tx_start,
 
 def plot_density(read_depth_object,
                  mRNAobject,
-                 strand,
                  fileout,
                  sjthread=1,
                  wide=8,
                  height=12,
-                 domain=True,
-                 pasite=None
+                 pasite=None,
+                 domain=True
                  ):
     """
 
@@ -519,7 +514,6 @@ def plot_density(read_depth_object,
 
         plot_density_single(bamread,
                             mRNAlist,
-                            strand,
                             bamname,
                             graphcoords,
                             graphToGene,

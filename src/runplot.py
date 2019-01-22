@@ -5,8 +5,8 @@ __author__ = 'Zhou Ran'
 import sys
 import click
 
+from .helper import set_logging
 from .ReadDepth import ReadDepth
-from .FetchGene import Myinfo
 from .mRNA import mRNA
 from .plot import plot_density
 from .utils import readbamlist
@@ -52,7 +52,7 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
     if not all([gtf, gene, bam, fileout]):
         cli(['gene', '--help'])
         sys.exit(1)
-
+    logging = set_logging("gene")
     wide = 8
     height = 12
 
@@ -69,51 +69,134 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
     '''
     1.21 add transcript support
     '''
-
+    loggings.debug("prepare the mRNA data")
     mRNAobject = mRNA.gene(
         gene,
         gtf,
         offset
     )
-
+    loggings.debug("retrieve expression data")
     bamdict = readbamlist(bam)
     bamlst = []
     for label, filepath in bamdict.items():
         bamlst.append({label: ReadDepth.determine_depth(filepath,
-                                                        geneinfo.chr,
-                                                        geneinfo.start - offset,
-                                                        geneinfo.end + offset)})
-    try:
-        plot_density(bamlst,
-                     mRNAobject,
-                     "+" if geneinfo.strand > 0 else "-",
-                     fileout,
-                     sj,
-                     wide,
-                     height,
-                     pa
-                     )
-    except:
+                                                        mRNAobject.chr,
+                                                        mRNAobject.tstart,
+                                                        mRNAobject.tend)})
 
-        with open('failed.log', 'w') as faillog:
-            if pa:
-                faillog.write('{},{}'.format(gene, pa) + '\n')
-            else:
-                faillog.write(gene + '\n')
+    plot_density(bamlst,
+                 mRNAobject,
+                 fileout,
+                 sj,
+                 wide,
+                 height,
+                 pa
+                 )
+
+    # try:
+    #     plot_density(bamlst,
+    #                  mRNAobject,
+    #                  fileout,
+    #                  sj,
+    #                  wide,
+    #                  height,
+    #                  pa
+    #                  )
+    # except:
+    #     '''
+    #     TODO need to add more information
+    #     '''
+    #     with open('failed.log', 'w') as faillog:
+    #         if pa:
+    #             faillog.write('{},{}'.format(gene, pa) + '\n')
+    #         else:
+    #             faillog.write(gene + '\n')
 
 
 @click.command()
-def junc(gtf, bam, fileout):
+@click.option('--gtf',
+              type=str,
+              help="The gtf file."
+              )
+@click.option('--bam',
+              type=str,
+              help="Bam config file. There were two columns, label and file path"
+              )
+@click.option('--fileout',
+              type=str,
+              help="The output name."
+              )
+@click.option('--junc',
+              help="The junction, it looks like chr:s:e"
+              )
+@click.option('--sj',
+              type=int,
+              default=1,
+              help="Only values greater than a certain value are displayed. default: 1")
+def junc(gtf, bam, fileout, junc, sj):
     """
     Junction mode, not need network to plot
     :return:
     """
-    if not all([gtf, bam, fileout]):
+    loggings = set_logging("junc")
+
+    if not all([gtf, bam, fileout, junc]):
         cli(['junc', '--help'])
         sys.exit(1)
 
+    chr, s, e = junc.split(':')
     wide = 8
     height = 12
+    pa = None
+    domain = False
+    # chr, tstart, tend, gtf
+    loggings.debug("prepare the mRNA data")
+    mRNAobject = mRNA(
+        chr,
+        s,
+        e,
+        gtf,
+        exonstat=True
+    )
+    print(mRNAobject.tstart, mRNAobject.tend)
+    bamdict = readbamlist(bam)
+    bamlst = []
+    loggings.debug("retrieve expression data")
+    for label, filepath in bamdict.items():
+        bamlst.append({label: ReadDepth.determine_depth(filepath,
+                                                        mRNAobject.chr,
+                                                        mRNAobject.tstart,
+                                                        mRNAobject.tend)})
+    loggings.debug("plot")
+    plot_density(bamlst,
+                 mRNAobject,
+                 fileout,
+                 sj,
+                 wide,
+                 height,
+                 pa,
+                 domain
+                 )
+
+    # try:
+    #     plot_density(bamlst,
+    #                  mRNAobject,
+    #                  fileout,
+    #                  sj,
+    #                  wide,
+    #                  height,
+    #                  pa,
+    #                  domain
+    #                  )
+    # except:
+    #     '''
+    #     TODO need to add more information
+    #     '''
+    #     with open('failed.log', 'w') as faillog:
+    #         if pa:
+    #             faillog.write('{},{}'.format(gene, pa) + '\n')
+    #         else:
+    #             faillog.write(gene + '\n')
 
 
 cli.add_command(gene)

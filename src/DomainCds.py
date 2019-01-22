@@ -40,7 +40,8 @@ def calculateinterval(cdsinterval, txregion):
     :return:
     """
     assert txregion[0] < txregion[1], "start site not smaller than end site in the given region"
-    cdsinterval = sorted(cdsinterval, key=lambda x: x[0])
+    cdsinterval = list(map(list, sorted(cdsinterval, key=lambda x: x[0])))
+
     lindex, rindex = CdsDmain.domainlocation(cdsinterval, txregion)
 
     info = cdsinterval[lindex:rindex]
