@@ -31,3 +31,21 @@ Options:
   --fileout TEXT  The output name.
   --help          Show this message and exit.
 ``` 
+
+### junc
+
+just for plot the sashimiplot
+```
+Usage: sashimiplot junc [OPTIONS]
+
+  Junction mode, not need network to plot
+
+Options:
+  --gtf TEXT      The gtf file.
+  --bam TEXT      Bam config file. There were two columns, label and file path
+  --fileout TEXT  The output name.
+  --junc TEXT     The junction, it looks like chr:s:e
+  --sj INTEGER    Only values greater than a certain value are displayed.
+                  default: 1
+  --help          Show this message and exit.
+```
