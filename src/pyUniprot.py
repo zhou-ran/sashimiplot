@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/10 2:04 PM
 __author__ = 'Zhou Ran'
-
+import logging
 from collections import namedtuple
 import requests as rq
 import xmltodict
 
+logger = logging.getLogger("MAIN")
 
 class ErrorCrawl(Exception):
     pass

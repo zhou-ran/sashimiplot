@@ -386,11 +386,14 @@ def plot_mRNAs(tx_start,
             toplot = ['domain', 'CDS', 'exon'] if domain else ['exon']
 
             for type_ in toplot:
+
                 logger.debug("ploting the {}".format(type_))
                 try:
                     region = info[type_]
                 except KeyError:
                     continue
+
+
 
                 if not region:
                     continue

@@ -7,7 +7,8 @@ This is the mygene.info's wrapper to process every things that you want to do
 """
 
 from biothings_client import get_client
-
+import logging
+logger = logging.getLogger("MAIN")
 
 
 

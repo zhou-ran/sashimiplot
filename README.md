@@ -5,7 +5,7 @@
 ```
 Usage: sashimiplot [OPTIONS] COMMAND [ARGS]...
 
-  A pure python sashimiplot, support the protein domain. Version: 1.0.0
+  A pure python sashimiplot, support the protein domain. Version: 1.1.0
 
 Options:
   --help  Show this message and exit.

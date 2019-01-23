@@ -14,6 +14,7 @@ from .DomainCds import *
 
 logger = logging.getLogger("MAIN")
 
+
 class AttrDict(dict):
 
     def __init__(self):
@@ -88,54 +89,9 @@ class GTFFeature(object):
         return "<GTF;gene {}>".format(self.attributes["gene_id"])
 
 
-#
-# class Exon:
-#     def __init__(self, chr, tstart, tend, gtf):
-#         self.chr = chr
-#         self.tstart = int(tstart)
-#         self.tend = int(tend)
-#         self.gtf = pysam.TabixFile(gtf)
-#
-#         self.info = self.__processline()
-#
-#     def __processline(self):
-#         """
-#
-#         :return: all exon information and transcript information
-#         """
-#         resdict = defaultdict(lambda: defaultdict(list))
-#         lines = self.gtf.fetch(self.chr,
-#                                self.tstart,
-#                                self.tend)
-#         if not lines:
-#             return ''
-#         for line in lines:
-#             line = GTFFeature(*line.strip().split('\t'))
-#             _feature = line.feature
-#             if _feature == 'transcript':
-#                 resdict[line.attributes['transcript_id']]['maxinfo'].append((line.start, line.end))
-#                 resdict[line.attributes['transcript_id']]['strand'] = line.strand
-#             elif _feature == 'exon':
-#                 resdict[line.attributes['transcript_id']]['exon'].append((line.start, line.end))
-#             else:
-#                 continue
-#         return resdict
-#
-#     @property
-#     def txlst(self):
-#         """
-#
-#         :return: a list, and every element was a dict, same to mRNA object
-#         """
-#
-#     @property
-#     def exon(self):
-#         print(mRNA._returnregion(self.info, 'exon'))
-#         return mRNA._returnregion(self.info, 'exon')
-
-
 class mRNA:
-    def __init__(self, chr,
+    def __init__(self,
+                 chr,
                  tstart,
                  tend,
                  gtf,
@@ -157,12 +113,21 @@ class mRNA:
         self.genename = genename
         self.strand = strand
         self.exonstat = exonstat
-        if self.exonstat:
-            self._validfeature = set(("exon", "CDS"))
+
+        if not self.exonstat:
+            self._validfeature = set(["exon", "CDS"])
         else:
-            self._validfeature = set(("exon"))
+            self._validfeature = set(["exon"])
 
         self.txlst_ = self.__txlst()
+
+    '''
+    TODO, here to add check the tabix index file
+    '''
+
+    # @classmethod
+    # def __checkgtf(cls, gtf):
+    #     try:
 
     def __txlst(self):
         """
@@ -173,6 +138,7 @@ class mRNA:
         lines = self.gtf.fetch(self.chr, self.tstart, self.tend)
         if not lines:
             return ''
+
         for line in lines:
             line = GTFFeature(*line.strip().split("\t"))
             _feature = line.feature
@@ -192,11 +158,13 @@ class mRNA:
                 resdict[line.attributes["transcript_id"]][_feature].append((line.start, line.end))
             else:
                 continue
+
         if self.exonstat:
             return resdict
 
         for t, cdsexon in resdict.items():
             strand = cdsexon['strand']
+
             if "CDS" in cdsexon:
                 domainlst = []
                 uniprotinfo = Uniprot(t)
@@ -213,12 +181,10 @@ class mRNA:
                     )
                 tmpres = CdsDmain(cdsexon["CDS"], domainlst, strand).domainrelativegenomiccoordinary
                 resdict[t]["domain"] = tmpres
-        return resdict
+            else:
+                pass
 
-    # [(1, 1257, 'Transcription factor SOX-17;chain'), (832, 1254, 'Sox C-terminal;domain'),
-    #  (202, 408, 'HMG box;DNA-binding region'), (934, 1038, 'Gln/Pro-rich;compositionally biased region'),
-    #  (964, 978, 'Poly-Pro;compositionally biased region'), (1, 384,  'In isoform 2.;splice variant'),
-    #  (220, 267, 'helix;helix'), (271, 279, 'strand;strand'), (283, 324, 'helix;helix'), (331, 393, 'helix;helix')]
+        return resdict
 
     @property
     def txlst(self):
@@ -327,6 +293,7 @@ class mRNA:
             geneinfo.start - offset,
             geneinfo.end + offset,
             gtf,
+            exonstat=False,
             genename=gene,
             strand=strand
         )
@@ -346,13 +313,15 @@ class mRNA:
             'gene'
         ).loc
         strand = '+' if isoinfo.strand > 0 else '-'
-        return mRNA(isoinfo.chr,
-                    isoinfo.start - offset,
-                    isoinfo.end + offset,
-                    gtf,
-                    genename=isoinfo.ensemblgene,
-                    strand=strand
-                    )
+        return mRNA(
+            isoinfo.chr,
+            isoinfo.start - offset,
+            isoinfo.end + offset,
+            gtf,
+            exonstat=False,
+            genename=isoinfo.ensemblgene,
+            strand=strand
+        )
 
 
 def main(file):

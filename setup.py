@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-from probe.version import __version__
+from .src.version import __version__
 
 setup(name='pysashimiplot',
       version=__version__,

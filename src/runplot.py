@@ -58,16 +58,6 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
     wide = 8
     height = 12
 
-    # geneinfo = Myinfo('ensembl.gene:{}'.format(gene),
-    #                   'all',
-    #                   'gene').loc
-    #
-    # mRNAobject = mRNA(geneinfo.chr,
-    #                   geneinfo.start - offset,
-    #                   geneinfo.end + offset,
-    #                   gtf,
-    #                   genename=gene
-    #                   )
     '''
     1.21 add transcript support
     '''
@@ -77,6 +67,7 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
         gtf,
         offset
     )
+
     logger.debug("retrieve expression data")
     bamdict = readbamlist(bam)
     bamlst = []
