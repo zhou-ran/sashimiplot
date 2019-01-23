@@ -90,7 +90,8 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
                      sj,
                      wide,
                      height,
-                     pa
+                     pa,
+                     focus
                      )
 
     except Exception as e:
