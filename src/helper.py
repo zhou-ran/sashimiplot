@@ -8,7 +8,8 @@ from logging.handlers import RotatingFileHandler
 
 def set_logging(log_name):
     """
-    a DEBUG logger
+    return a two logger object, one for stream and another for the log file
+
     :param log_name:
     :return:
     """

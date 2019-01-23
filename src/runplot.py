@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/16 4:07 PM
+
 __author__ = 'Zhou Ran'
 import sys
 import click
@@ -95,6 +96,7 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
                      )
 
     except Exception as e:
+        logger.error("Error information found in {}, pls check the gene command".format(gene))
         logger.error(e)
 
 
@@ -133,7 +135,7 @@ def junc(gtf, bam, fileout, junc, sj):
     height = 12
     pa = None
     domain = False
-    # chr, tstart, tend, gtf
+
     logger.info("prepare the mRNA data")
     mRNAobject = mRNA(
         chr,
@@ -163,6 +165,7 @@ def junc(gtf, bam, fileout, junc, sj):
                      domain
                      )
     except Exception as e:
+        logger.error("Error information found in {}, pls check the splicing region".format(junc))
         logger.error(e)
 
 

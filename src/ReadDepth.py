@@ -7,6 +7,7 @@ import pysam
 import logging
 
 logger = logging.getLogger("MAIN")
+
 """
 This script were migrated from spliceplot
 """

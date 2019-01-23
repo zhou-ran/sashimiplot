@@ -3,14 +3,13 @@
 # @Time    : 2019/1/10 4:25 PM
 __author__ = 'Zhou Ran'
 
+import pysam
 from collections import defaultdict
 from itertools import chain
-import logging
-import pysam
-
 from .FetchGene import Myinfo
 from .pyUniprot import *
 from .DomainCds import *
+import logging
 
 logger = logging.getLogger("MAIN")
 
@@ -312,6 +311,7 @@ class mRNA:
             'all',
             'gene'
         ).loc
+
         strand = '+' if isoinfo.strand > 0 else '-'
         return mRNA(
             isoinfo.chr,
@@ -335,7 +335,6 @@ def main(file):
 
 
 if __name__ == '__main__':
-    import logging
     import sys
 
     logger = logging.getLogger()
