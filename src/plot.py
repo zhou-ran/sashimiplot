@@ -393,8 +393,6 @@ def plot_mRNAs(tx_start,
                 except KeyError:
                     continue
 
-
-
                 if not region:
                     continue
 
@@ -463,6 +461,7 @@ def plot_density(read_depth_object,
                  wide=8,
                  height=12,
                  pasite=None,
+                 focus=None,
                  domain=True
                  ):
     """
@@ -542,6 +541,18 @@ def plot_density(read_depth_object,
 
     if pasite:
         plt.axvline(graphcoords[pasite - txstart], lw=.5)
+
+    '''
+    1.23 add focus line into AS
+    '''
+    # TODO here to add a error raise, if the region is greater than the given
+
+    if focus:
+        assert len(focus) == 2, "Got a error on focus region, pls check the focus region you have given"
+        l, r = list(map(int, focus))
+        plt.axvline(graphcoords[l - txstart], lw=.5)
+        plt.axvline(graphcoords[r - txstart], lw=.5)
+
     plt.savefig(fileout,
                 bbox_inches='tight')
 

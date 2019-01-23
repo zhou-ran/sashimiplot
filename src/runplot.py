@@ -50,13 +50,19 @@ def cli():
               type=int,
               default=1,
               help='The min splice jucntion count to show. default: 1')
-def gene(gtf, gene, bam, pa, fileout, offset, sj):
+@click.option('--focus',
+              default=None,
+              help="Highlight the given region. start-end")
+def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
     if not all([gtf, gene, bam, fileout]):
         cli(['gene', '--help'])
         sys.exit(1)
 
     wide = 8
     height = 12
+
+    if focus:
+        focus = focus.split('-')
 
     '''
     1.21 add transcript support
@@ -68,7 +74,7 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
         offset
     )
 
-    logger.debug("retrieve expression data")
+    logger.info("retrieve expression data")
     bamdict = readbamlist(bam)
     bamlst = []
     for label, filepath in bamdict.items():
@@ -76,34 +82,19 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj):
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
                                                         mRNAobject.tend)})
+    logger.info("plot")
+    try:
+        plot_density(bamlst,
+                     mRNAobject,
+                     fileout,
+                     sj,
+                     wide,
+                     height,
+                     pa
+                     )
 
-    plot_density(bamlst,
-                 mRNAobject,
-                 fileout,
-                 sj,
-                 wide,
-                 height,
-                 pa
-                 )
-
-    # try:
-    #     plot_density(bamlst,
-    #                  mRNAobject,
-    #                  fileout,
-    #                  sj,
-    #                  wide,
-    #                  height,
-    #                  pa
-    #                  )
-    # except:
-    #     '''
-    #     TODO need to add more information
-    #     '''
-    #     with open('failed.log', 'w') as faillog:
-    #         if pa:
-    #             faillog.write('{},{}'.format(gene, pa) + '\n')
-    #         else:
-    #             faillog.write(gene + '\n')
+    except Exception as e:
+        logger.error(e)
 
 
 @click.command()
@@ -142,7 +133,7 @@ def junc(gtf, bam, fileout, junc, sj):
     pa = None
     domain = False
     # chr, tstart, tend, gtf
-    logger.debug("prepare the mRNA data")
+    logger.info("prepare the mRNA data")
     mRNAobject = mRNA(
         chr,
         s,
@@ -153,42 +144,25 @@ def junc(gtf, bam, fileout, junc, sj):
 
     bamdict = readbamlist(bam)
     bamlst = []
-    logger.debug("retrieve expression data")
+    logger.info("retrieve expression data")
     for label, filepath in bamdict.items():
         bamlst.append({label: ReadDepth.determine_depth(filepath,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
                                                         mRNAobject.tend)})
-    logger.debug("plot")
-    plot_density(bamlst,
-                 mRNAobject,
-                 fileout,
-                 sj,
-                 wide,
-                 height,
-                 pa,
-                 domain
-                 )
-
-    # try:
-    #     plot_density(bamlst,
-    #                  mRNAobject,
-    #                  fileout,
-    #                  sj,
-    #                  wide,
-    #                  height,
-    #                  pa,
-    #                  domain
-    #                  )
-    # except:
-    #     '''
-    #     TODO need to add more information
-    #     '''
-    #     with open('failed.log', 'w') as faillog:
-    #         if pa:
-    #             faillog.write('{},{}'.format(gene, pa) + '\n')
-    #         else:
-    #             faillog.write(gene + '\n')
+    logger.info("plot")
+    try:
+        plot_density(bamlst,
+                     mRNAobject,
+                     fileout,
+                     sj,
+                     wide,
+                     height,
+                     pa,
+                     domain
+                     )
+    except Exception as e:
+        logger.error(e)
 
 
 cli.add_command(gene)
