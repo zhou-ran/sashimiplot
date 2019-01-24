@@ -13,6 +13,7 @@ import logging
 plt.switch_backend('agg')
 from .DomainCds import calculateinterval
 from .Constant import COLOR
+from .Constant import DOMAINFILTER
 
 logger = logging.getLogger('MAIN')
 
@@ -126,7 +127,7 @@ def plot_density_single(read_depth_object,
         if round(jxns[jxn], 2) <= sjthread:
             continue
         u'''
-        1.13 add a junction in half
+        1.13 add a junction in half, delete this?
         '''
 
         leftstatus = False
@@ -135,19 +136,25 @@ def plot_density_single(read_depth_object,
         try:
             ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[rightss - tx_start]]
         except IndexError:
-
-            leftsite = leftss - tx_start
-            rightsite = rightss - tx_end
-
-            if leftsite < 0 and rightsite > 0:
-                continue
-            else:
-                if leftsite < 0:
-                    ss1, ss2 = [graphcoords[0], graphcoords[rightss - tx_start]]
-                    leftstatus = True
-                else:
-                    ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[tx_end - tx_start]]
-                    rightstatus = True
+            continue
+            '''
+            here to remove the junction not in graph, but i remove this,
+            '''
+            # TODO, add a parameter to handle this
+            # leftsite = leftss - tx_start
+            # rightsite = rightss - tx_end
+            # if leftsite > tx_end and rightsite > tx_end:
+            #     continue
+            #
+            # if leftsite < 0 and rightsite > 0:
+            #     continue
+            # else:
+            #     if leftsite < 0:
+            #         ss1, ss2 = [graphcoords[0], graphcoords[rightss - tx_start]]
+            #         leftstatus = True
+            #     else:
+            #         ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[tx_end - tx_start]]
+            #         rightstatus = True
 
         # mid = (ss1 + ss2) / 2
 
@@ -218,11 +225,12 @@ def plot_density_single(read_depth_object,
     # ylab
     y_horz_alignment = 'right'
     avx.set_ylabel(samplename,
-                   fontsize=font_size,
+                   fontsize=font_size * 1.25,
                    va="center",
                    rotation="horizontal",
                    ha=y_horz_alignment,
-                   labelpad=10)
+                   labelpad=10
+                   )
 
     # Format plot
     # ylim(ymin, ymax)
@@ -233,9 +241,7 @@ def plot_density_single(read_depth_object,
 
     if xlabel:
         avx.xaxis.set_ticks_position('bottom')
-        # pylab.xlabel('Genomic coordinate (%s), "%s" strand' % (chrom,
-        #                                                        strand),
-        #              fontsize=font_size)
+
         max_graphcoords = max(graphcoords) - 1
         pylab.xticks(pylab.linspace(0, max_graphcoords, nxticks),
                      [graphToGene[int(x)] for x in \
@@ -312,9 +318,16 @@ def plotdomain(region,
 
         dregion, domainname = subdomain
         logger.debug("{}".format(domainname))
-        if "chain" in domainname: continue
-        if "conflict" in domainname: continue
-        if "variant" in domainname: continue
+
+        domainname = domainname.split(';;')[-1]
+        # if "chain" in domainname: continue
+        # if "conflict" in domainname: continue
+        # if "variant" in domainname: continue
+        '''
+        1.23 add domain information, retrieve from the nature communication
+        '''
+        if domainname not in DOMAINFILTER:
+            continue
 
         dregion = calculateinterval(dregion, (tx_start, tx_end))
 
@@ -355,7 +368,7 @@ def plotdomain(region,
             except IndexError:
                 pylab.fill(x, y, RGB_tuples[index % 8], lw=.5, zorder=20)
                 pylab.plot([min_, max_], [yloc, yloc], color=RGB_tuples[index % 8], lw=0.2)
-    plt.text(xaxisloc, yloc - 0.05, '{};domain'.format(tid), fontsize=8)
+    plt.text(xaxisloc, yloc - 0.05, '{}_domain'.format(tid), fontsize=8)
 
 
 def plot_mRNAs(tx_start,
@@ -367,6 +380,7 @@ def plot_mRNAs(tx_start,
     Draw the gene structure.
     """
 
+    # TODO, The CDS's location were same as the exon, fix it for beauty
     xaxisloc = -1 * max(graphcoords) * 0.4
     yloc = 0
     exonwidth = .3
@@ -444,7 +458,7 @@ def plot_mRNAs(tx_start,
                     y = [yloc - exonwidth / 5, yloc, yloc + exonwidth / 5]
                     pylab.plot(x, y, lw=.5, color='#000000')
                 logger.debug('{} ploting tid'.format(tid))
-                pylab.text(xaxisloc, yloc - 0.05, ';'.join([tid, type_]), fontsize=8)
+                pylab.text(xaxisloc, yloc - 0.05, '_'.join([tid, type_]), fontsize=8)
                 yloc += 1
                 logger.debug('{} done'.format(tid))
     pylab.xlim(0, max(graphcoords))

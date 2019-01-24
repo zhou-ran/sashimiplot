@@ -97,7 +97,7 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
 
     except Exception as e:
         logger.error("Error information found in {}, pls check the gene command".format(gene))
-        logger.error(e)
+        logger.exception(e)
 
 
 @click.command()
@@ -166,7 +166,7 @@ def junc(gtf, bam, fileout, junc, sj):
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
-        logger.error(e)
+        logger.exception(e)
 
 
 cli.add_command(gene)

@@ -16,3 +16,129 @@ COLOR = [
     '#f6c4e1',
     '#f79cd4'
 ]
+
+# This dataset were download from intronic pA destipted in nature communication.
+
+DOMAINFILTER = set(
+    ["active site",
+     "domain",
+     "transmembrane region",
+     "repeat",
+     "zinc ﬁnger region",
+     "compositionally biased region",
+     "DNA-binding region",
+     "region of interest",
+     "lipid moiety-binding region",
+     "short sequence motif",
+     "calcium-binding region",
+     "nucleotide phosphate-binding region",
+     "metal ion-binding site",
+     "topological domain"
+     ]
+)
+
+DNABIND = set(['C2H2-type',
+               'PHD-type',
+               'C3H1-type',
+               'KRAB',
+               'Bromo',
+               'Chromo',
+               'DNA-binding',
+               'C4-type',
+               'CHCR',
+               'A.T hook',
+               'bZIP',
+               'bHLH',
+               'CCHC-type',
+               'CHCH',
+               'Bromodomain-like',
+               'CH1',
+               'C6-type',
+               'A.T hook-like',
+               'C4H2 - type',
+               'CHHC-type'
+               ]
+              )
+
+ACTIVE = set(
+    [
+        'active site',
+        'catalytic sites'
+    ]
+)
+
+TRANSREGION = set(
+    [
+        'transmembrane region',
+        'ABC transmembrane type-1',
+        'ABC transporter',
+        'ABC transmembrane type-2'
+    ]
+)
+
+PPI = set(
+    ["WD",
+     "ANK",
+     "TPR",
+     "LRR",
+     "HEAT",
+     "Sushi",
+     "EF-hand",
+     "ARM",
+     "PDZ",
+     "PH",
+     "SH3",
+     "RING-type",
+     "LIM zinc-binding",
+     "WW",
+     "SH2",
+     "BTB",
+     "FERM",
+     "CH",
+     "Rod",
+     "Coil 1A",
+     "MH2",
+     "WD40-like repeat",
+     "t-SNARE coiled-coil homology",
+     "Coil 1B",
+     "Cbl-PTB",
+     "Coil",
+     "CARD",
+     "SH2-like",
+     "DED",
+     "IRS-type PTB",
+     "SP-RING-type",
+     "EF-hand-like",
+     "RING-CHtype",
+     "v-SNARE coiled-coil homology",
+     "Arm domain",
+     "LIM protein-binding",
+     "GYF",
+     "PDZ domain-binding",
+     "and PDZD11-binding"
+     ]
+)
+
+RNABIND = set(
+    [
+        "RRM",
+        "SAM",
+        "KH",
+        "DRBM",
+        "RBD",
+        "Piwi",
+        "PAZ",
+        "S1 motif",
+        "Pumilio",
+        "THUMP"
+    ]
+)
+
+ANNOTATION = {
+    "PPI": PPI,
+    "TMD": TRANSREGION,
+    "activesite": ACTIVE,
+    "dnabinding": DNABIND,
+    "rnabinding": RNABIND
+}
+# repeat and

@@ -175,7 +175,7 @@ class mRNA:
                         (
                             domain.start,
                             domain.end,
-                            ';'.join([domain.name, domain.type])
+                            ';;'.join([domain.name, domain.type])
                         )
                     )
                 tmpres = CdsDmain(cdsexon["CDS"], domainlst, strand).domainrelativegenomiccoordinary
@@ -325,8 +325,8 @@ class mRNA:
 
 
 def main(file):
-    tre = mRNA.gene('ENSMUSG00000092341', file)
-    print(tre)
+    tre = mRNA.isoform('ENSMUST00000117291', file)
+    print(tre.txlst)
 
     # mRNAlist = []
     # for i in tre.txlst:

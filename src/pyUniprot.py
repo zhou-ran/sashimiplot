@@ -9,10 +9,12 @@ import xmltodict
 
 logger = logging.getLogger("MAIN")
 
+
 class ErrorCrawl(Exception):
     pass
 
 
+# TODO,add a function, if not a protein_coding, continue
 class Uniprot:
 
     def __init__(self, uniprot_id, frmt="XML", database="uniprot"):

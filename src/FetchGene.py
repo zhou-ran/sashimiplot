@@ -8,8 +8,8 @@ This is the mygene.info's wrapper to process every things that you want to do
 
 from biothings_client import get_client
 import logging
-logger = logging.getLogger("MAIN")
 
+logger = logging.getLogger("MAIN")
 
 
 # gene_client.query('ensembl.transcript:ENSMUST00000208660', fields='symbol,name,uniprot')
@@ -102,15 +102,16 @@ class Myinfo:
         'strand': -1
         }
         """
-
-        return AttrDict(self.uniquequery['genomic_pos'])
+        try:
+            return AttrDict(self.uniquequery['genomic_pos'])
+        except ValueError:
+            return AttrDict(self.uniquequery['genomic_pos'][0])
 
 
 def main():
-    a = Myinfo('ensembl.gene:ENSMUSG00000056124', 'all', 'gene')
-    # ENSMUSG00000025902
-    loc = a.loc
-    print(loc)
+    a = Myinfo('ensembl.gene:ENSG00000007129', 'all', 'gene')
+    # loc = a.loc
+    print(a.query)
 
 
 if __name__ == '__main__':

@@ -5,8 +5,10 @@ __author__ = 'Zhou Ran'
 
 import math
 import logging
+from .Constant import ANNOTATION
 
 logger = logging.getLogger('MAIN')
+
 
 def bs(arr, threshold):
     """
@@ -201,6 +203,21 @@ class CdsDmain:
                 cdsregion[-1] = tuple(tmplist)
             indexres.append((cdsregion, name))
         return indexres
+
+
+def annot_classfication(domaininfo):
+    """
+    domaininfo was a object that like a string, for example, domainname;;domaintype
+    :param domaininfo:
+    :return:
+    """
+    domaindes, domaintype = domaininfo.split(';;')
+    if domaintype == 'repeat':
+        return 'repeat'
+    for annotcate, detail in ANNOTATION.items():
+        if domaintype in detail:
+            return annotcate
+    return 'other'
 
 
 def main():
