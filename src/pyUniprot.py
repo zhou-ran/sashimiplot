@@ -75,18 +75,25 @@ class Uniprot:
             else:
                 description = 'type'
                 type_ = 'type'
-            try:
-                domainres.append(domaininfo._make([d_[description],
-                                                   d_[type_],
-                                                   (int(d_['location']['begin']['position']) - 1) * 3 + 1,
-                                                   int(d_['location']['end']['position']) * 3]))
-            except KeyError:
+
+            if 'position' in d_['location']:
                 domainres.append(domaininfo._make([d_[description],
                                                    d_[type_],
                                                    (int(d_['location']['position']['position']) - 1) * 3 + 1,
                                                    int(d_['location']['position']['position']) * 3]))
-            # except TypeError:
-            #     print(self.feature)
+            else:
+                try:
+                    domainres.append(domaininfo._make([d_[description],
+                                                       d_[type_],
+                                                       (int(d_['location']['begin']['position']) - 1) * 3 + 1,
+                                                       int(d_['location']['end']['position']) * 3]))
+                except KeyError:
+                    '''
+                    1.24 there was a location error, because the location status was unkown!!
+                    '''
+                    if 'status' in d_['location']['begin'] or 'status' in d_['location']['end']:
+                        continue
+
         return domainres
 
     @property

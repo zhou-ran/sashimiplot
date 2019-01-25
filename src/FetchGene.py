@@ -109,9 +109,9 @@ class Myinfo:
 
 
 def main():
-    a = Myinfo('ensembl.gene:ENSG00000007129', 'all', 'gene')
+    a = Myinfo('ensembl.gene:ENSG00000134905', 'all', 'gene')
     # loc = a.loc
-    print(a.query)
+    print(a.loc)
 
 
 if __name__ == '__main__':
