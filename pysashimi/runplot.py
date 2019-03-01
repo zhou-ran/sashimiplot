@@ -55,6 +55,18 @@ def cli():
               default=None,
               help="Highlight the given region. start-end")
 def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
+    """
+    Normal mode to generate sashimi plot
+    :param gtf:
+    :param gene:
+    :param bam:
+    :param pa:
+    :param fileout:
+    :param offset:
+    :param sj:
+    :param focus:
+    :return:
+    """
     if not all([gtf, gene, bam, fileout]):
         cli(['gene', '--help'])
         sys.exit(1)
@@ -91,8 +103,8 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
                      sj,
                      wide,
                      height,
-                     pa,
-                     focus
+                     pasite=pa,
+                     focus=focus
                      )
 
     except Exception as e:
@@ -120,7 +132,12 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
               type=int,
               default=1,
               help="Only values greater than a certain value are displayed. default: 1")
-def junc(gtf, bam, fileout, junc, sj):
+@click.option('--pa',
+              type=str,
+              default=None,
+              help="The pA site, if there were multiple sites, pls seperate by `,`. default: None"
+              )
+def junc(gtf, bam, fileout, junc, sj, pa):
     """
     Junction mode, not need network to plot
     :return:
@@ -133,7 +150,7 @@ def junc(gtf, bam, fileout, junc, sj):
     chr, s, e = junc.split(':')
     wide = 8
     height = 12
-    pa = None
+    # pa = None
     domain = False
 
     logger.info("prepare the mRNA data")
@@ -161,8 +178,8 @@ def junc(gtf, bam, fileout, junc, sj):
                      sj,
                      wide,
                      height,
-                     pa,
-                     domain
+                     pasite=pa,
+                     domain=domain
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

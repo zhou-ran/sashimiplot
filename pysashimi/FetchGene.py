@@ -105,11 +105,14 @@ class Myinfo:
         try:
             return AttrDict(self.uniquequery['genomic_pos'])
         except ValueError:
-            return AttrDict(self.uniquequery['genomic_pos'][0])
+            '''
+            1.25 sorted the genomic coordinary, and choose the shortest chromosome as candidate.
+            '''
+            return AttrDict(sorted(self.uniquequery['genomic_pos'], key=lambda x: x['chr'])[0])
 
 
 def main():
-    a = Myinfo('ensembl.gene:ENSG00000134905', 'all', 'gene')
+    a = Myinfo('ensembl.gene:ENSG00000234127', 'all', 'gene')
     # loc = a.loc
     print(a.loc)
 

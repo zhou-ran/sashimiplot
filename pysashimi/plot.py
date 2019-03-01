@@ -8,9 +8,13 @@ import matplotlib.gridspec as gridspec
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
 import logging
 
 plt.switch_backend('agg')
+
+rcParams['font.family'] = 'Helvetica'
+
 from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
@@ -458,7 +462,11 @@ def plot_mRNAs(tx_start,
                     y = [yloc - exonwidth / 5, yloc, yloc + exonwidth / 5]
                     pylab.plot(x, y, lw=.5, color='#000000')
                 logger.debug('{} ploting tid'.format(tid))
-                pylab.text(xaxisloc, yloc - 0.05, '_'.join([tid, type_]), fontsize=8)
+                if domain:
+                    pylab.text(xaxisloc, yloc - 0.05, '_'.join([tid, type_]), fontsize=8)
+                else:
+                    xaxisloc = -1 * max(graphcoords) * 0.3
+                    pylab.text(xaxisloc, yloc - 0.05, tid, fontsize=8)
                 yloc += 1
                 logger.debug('{} done'.format(tid))
     pylab.xlim(0, max(graphcoords))
@@ -554,7 +562,9 @@ def plot_density(read_depth_object,
                domain)
 
     if pasite:
-        plt.axvline(graphcoords[pasite - txstart], lw=.5)
+        pasite = map(int, pasite.split(','))
+        for subsite in pasite:
+            plt.axvline(graphcoords[subsite - txstart], lw=.5)
 
     '''
     1.23 add focus line into AS

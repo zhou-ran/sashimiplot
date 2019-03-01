@@ -92,6 +92,7 @@ class Uniprot:
                     1.24 there was a location error, because the location status was unkown!!
                     '''
                     if 'status' in d_['location']['begin'] or 'status' in d_['location']['end']:
+                        #TODO, here should not return a continue. Return a error class
                         continue
 
         return domainres

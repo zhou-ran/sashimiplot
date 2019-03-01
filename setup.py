@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-from .src.version import __version__
+from pysashimi.version import __version__
 
 setup(name='pysashimiplot',
       version=__version__,
@@ -26,11 +26,13 @@ setup(name='pysashimiplot',
           'biothings_client',
           'pysam',
           'requests',
-          'click'
+          'click',
+          'numpy',
+          'matplotlib'
       ],
       entry_points={
           'console_scripts': [
-              'sashimiplot=src.runplot:cli'
+              'sashimiplot=pysashimi.runplot:cli'
           ],
       },
       )
