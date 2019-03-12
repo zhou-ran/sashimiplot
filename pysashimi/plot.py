@@ -13,7 +13,7 @@ import logging
 
 plt.switch_backend('agg')
 
-rcParams['font.family'] = 'Helvetica'
+# rcParams['font.family'] = 'Helvetica'
 
 from .DomainCds import calculateinterval
 from .Constant import COLOR
@@ -87,21 +87,10 @@ def plot_density_single(read_depth_object,
         ymax = ymax
     ymin = -.6 * ymax
 
-    compressed_x = []
-    compressed_wiggle = []
-    prevx = graphcoords[0]
-    tmpval = []
 
-    for i in range(len(graphcoords)):
-        tmpval.append(wiggle[i])
-        if abs(graphcoords[i] - prevx) > resolution:
-            compressed_wiggle.append(pylab.mean(tmpval))
-            compressed_x.append(prevx)
-            prevx = graphcoords[i]
-            tmpval = []
 
-    pylab.fill_between(compressed_x,
-                       compressed_wiggle,
+    pylab.fill_between(graphcoords,
+                       wiggle,
                        y2=0,
                        color=color,
                        lw=0)
@@ -113,11 +102,6 @@ def plot_density_single(read_depth_object,
             tmp.extend([s, e])
         sslists.append(tmp)
 
-    # sort the junctions by intron length for better plotting look
-    # jxns_sorted_list = sorted(jxns.keys(),cmp=junc_comp_function)
-    # ['1:4774516-4777525', '1:4774516-4776410', '1:4777648-4782568', '1:4776704-4903966', '1:4776801-4777525',
-    #  '1:4782060-4782568', '1:4782301-4782568', '1:4782733-4783951', '1:4782733-4785573', '1:4782733-4784078',
-    #  '1:4784105-4785573', '1:4784105-4785618', '1:4784100-4785573']
 
     u'''
     1.13 sorted the list by the location
@@ -327,6 +311,7 @@ def plotdomain(region,
         # if "chain" in domainname: continue
         # if "conflict" in domainname: continue
         # if "variant" in domainname: continue
+
         '''
         1.23 add domain information, retrieve from the nature communication
         '''

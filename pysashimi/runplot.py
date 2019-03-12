@@ -137,7 +137,13 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
               default=None,
               help="The pA site, if there were multiple sites, pls seperate by `,`. default: None"
               )
-def junc(gtf, bam, fileout, junc, sj, pa):
+def junc(gtf,
+         bam,
+         fileout,
+         junc,
+         sj,
+         pa
+         ):
     """
     Junction mode, not need network to plot
     :return:
@@ -150,7 +156,6 @@ def junc(gtf, bam, fileout, junc, sj, pa):
     chr, s, e = junc.split(':')
     wide = 8
     height = 12
-    # pa = None
     domain = False
 
     logger.info("prepare the mRNA data")
@@ -166,10 +171,21 @@ def junc(gtf, bam, fileout, junc, sj, pa):
     bamlst = []
     logger.info("retrieve expression data")
     for label, filepath in bamdict.items():
-        bamlst.append({label: ReadDepth.determine_depth(filepath,
+        readdepth_ = ''
+        for bam_ in filepath:
+            if readdepth_ == '':
+                readdepth_ = ReadDepth.determine_depth(bam_,
+                                                       mRNAobject.chr,
+                                                       mRNAobject.tstart,
+                                                       mRNAobject.tend)
+            else:
+                readdepth_ += ReadDepth.determine_depth(bam_,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
-                                                        mRNAobject.tend)})
+                                                        mRNAobject.tend)
+
+        bamlst.append({label: readdepth_})
+
     logger.info("plot")
     try:
         plot_density(bamlst,

@@ -78,9 +78,31 @@ class ReadDepth:
             spanned_junctions = defaultdict(int)
 
             for read in relevant_reads:
+
                 # make sure that the read can be used
                 cigar_string = read.cigar
+
+                # each read must have a cigar string
+                if cigar_string == None:
+                    continue
+                #
+                # # read cannot have insertions or deletions
+                # contains_indel = False
+
+                # for cigar_event in cigar_string:
+                #     if cigar_event[0] == 1 or cigar_event[0] == 2:
+                #         contains_indel = True
+                #         break
+                #
+                # if contains_indel:
+                #     continue
+
+                for index, base_position in enumerate(read.positions):
+                    if base_position >= start_coord and base_position <= end_coord:
+                        depth_vector[base_position - start_coord] += 1
+
                 # TODO, the deletion will impair some pacbio data. How to solve it?
+
                 intronbound = fetch_intron(read.reference_start, cigar_string)
                 if intronbound:
                     for intronbound_ in intronbound:
@@ -89,25 +111,6 @@ class ReadDepth:
                                                           intronbound_[1]
                                                           )
                         spanned_junctions[junction_name] += 1
-
-                # each read must have a cigar string
-                if cigar_string == None:
-                    continue
-
-                # read cannot have insertions or deletions
-                contains_indel = False
-
-                for cigar_event in cigar_string:
-                    if cigar_event[0] == 1 or cigar_event[0] == 2:
-                        contains_indel = True
-                        break
-
-                if contains_indel:
-                    continue
-
-                for index, base_position in enumerate(read.positions):
-                    if base_position >= start_coord and base_position <= end_coord:
-                        depth_vector[base_position - start_coord] += 1
 
             return cls(chrm, start_coord, end_coord, depth_vector, spanned_junctions)
         except IOError:
@@ -128,7 +131,7 @@ class ReadDepth:
         #     spanned_junctions = defaultdict(int)
         #     depth_vector = numpy.zeros(end_coord - start_coord + 1, dtype='f')
         #
-        #     refname = set()
+        #     # refname = set()
         #
         #     bam_file = pysam.Samfile(bam_file_path, 'rb')
         #
@@ -146,7 +149,9 @@ class ReadDepth:
         #             for read in pileupcolumn.pileups:
         #
         #                 # TODO, QC?
+        #                 # if not read.is_del and not read.is_refskip:
         #                 # if read.is_del: continue
+        #                 # if read.is_refskip: continue
         #                 # if read.alignment.is_qcfail: continue
         #                 # if read.alignment.is_secondary: continue
         #                 # if read.alignment.is_unmapped: continue
@@ -154,13 +159,13 @@ class ReadDepth:
         #
         #                 base_cover += 1
         #
-        #                 id = '_'.join([read.alignment.query_name,
-        #                                str(read.alignment.reference_start)])
+        #                 # id = '_'.join([read.alignment.query_name,
+        #                 #                str(read.alignment.reference_start)])
         #
-        #                 if id in refname:
-        #                     continue
-        #
-        #                 refname.add(id)
+        #                 # if id in refname:
+        #                 #     continue
+        #                 #
+        #                 # refname.add(id)
         #
         #                 intronbound = fetch_intron(read.alignment.reference_start, read.alignment.cigar)
         #
