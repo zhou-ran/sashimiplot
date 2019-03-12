@@ -3,20 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constant.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DomainCds.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FetchGene.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReadDepth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/color.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mRNA.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/plot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pyUniprot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runplot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/version.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/ReadDepth.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/ReadDepth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/mRNA.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/mRNA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,20 +17,21 @@
     <session id="-1244714303">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="17" />
+          <entry key="project.closed" value="19" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.11" value="4" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.18" value="1" />
-          <entry key="project.open.time.2" value="1" />
+          <entry key="project.open.time.2" value="2" />
           <entry key="project.open.time.23" value="1" />
+          <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.7" value="2" />
           <entry key="project.open.time.8" value="2" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="19" />
+          <entry key="project.opened" value="21" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -50,14 +40,14 @@
           <entry key="TODO" value="1" />
           <entry key="gitignore" value="1" />
           <entry key="md" value="4" />
-          <entry key="py" value="73" />
+          <entry key="py" value="77" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Markdown" value="4" />
           <entry key="PLAIN_TEXT" value="3" />
-          <entry key="Python" value="73" />
+          <entry key="Python" value="77" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -65,14 +55,14 @@
           <entry key="LICENSE" value="15" />
           <entry key="gitignore" value="4" />
           <entry key="md" value="366" />
-          <entry key="py" value="34608" />
+          <entry key="py" value="35133" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="366" />
           <entry key="PLAIN_TEXT" value="19" />
-          <entry key="Python" value="34608" />
+          <entry key="Python" value="35133" />
         </counts>
       </usages-collector>
     </session>
@@ -91,20 +81,58 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pysashimi/ReadDepth.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
-              <caret line="99" column="12" selection-start-line="99" selection-start-column="12" selection-end-line="99" selection-end-column="12" />
+            <state relative-caret-position="583">
+              <caret line="82" column="83" selection-start-line="82" selection-start-column="83" selection-end-line="82" selection-end-column="83" />
+              <folding>
+                <element signature="e#47#56#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pysashimi/tmp.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pysashimi/cigarutils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="532">
+              <caret line="28" column="49" selection-start-line="28" selection-start-column="49" selection-end-line="28" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pysashimi/plot.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2446">
+              <caret line="431" column="37" lean-forward="true" selection-start-line="431" selection-start-column="37" selection-end-line="431" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysashimi/runplot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="58" column="40" selection-start-line="58" selection-start-column="40" selection-end-line="58" selection-end-column="40" />
+            <state relative-caret-position="3325">
+              <caret line="175" column="31" selection-start-line="175" selection-start-column="21" selection-end-line="175" selection-end-column="31" />
+              <folding>
+                <element signature="e#102#112#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pysashimi/mRNA.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="743">
+              <caret line="130" column="20" selection-start-line="130" selection-start-column="20" selection-end-line="130" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -137,7 +165,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>write</find>
       <find>tx_end</find>
       <find>'k'</find>
       <find>Convert</find>
@@ -167,6 +194,7 @@
       <find>genomic_pos</find>
       <find>logger</find>
       <find>text(</find>
+      <find>fetch_intron</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -208,8 +236,10 @@
         <option value="$PROJECT_DIR$/src/cigarutils.py" />
         <option value="$PROJECT_DIR$/src/ReadDepth.py" />
         <option value="$PROJECT_DIR$/setup.py" />
-        <option value="$PROJECT_DIR$/pysashimi/ReadDepth.py" />
         <option value="$PROJECT_DIR$/pysashimi/runplot.py" />
+        <option value="$PROJECT_DIR$/pysashimi/mRNA.py" />
+        <option value="$PROJECT_DIR$/pysashimi/plot.py" />
+        <option value="$PROJECT_DIR$/pysashimi/ReadDepth.py" />
       </list>
     </option>
   </component>
@@ -222,7 +252,7 @@
   <component name="ProjectFrameBounds" fullScreen="true">
     <option name="x" value="-2560" />
     <option name="y" value="-592" />
-    <option name="width" value="1274" />
+    <option name="width" value="2560" />
     <option name="height" value="1440" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -279,7 +309,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -301,6 +330,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -340,18 +370,27 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-2560" y="-592" width="2560" height="1440" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.15766482" />
+      <window_info content_ui="combo" id="Project" order="1" weight="0.13780779" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
-      <window_info id="Terminal" order="3" weight="0.33333334" />
+      <window_info active="true" id="Terminal" order="3" visible="true" weight="0.33320096" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="2" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" order="3" />
+      <window_info anchor="bottom" id="Python Console" order="3" weight="0.329927" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="5" />
       <window_info anchor="bottom" id="Find" order="6" weight="0.329927" />
@@ -359,7 +398,7 @@
       <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="11" />
+      <window_info anchor="bottom" id="TODO" order="11" weight="0.329927" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -423,28 +462,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" column="23" lean-forward="true" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/__init__.py" />
     <entry file="file://$PROJECT_DIR$/src/plotgene.py" />
-    <entry file="file://$PROJECT_DIR$/src/version.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="17" lean-forward="true" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/color.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/version.py" />
+    <entry file="file://$PROJECT_DIR$/src/color.py" />
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -452,13 +473,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mRNA.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="107" column="22" lean-forward="true" selection-start-line="107" selection-start-column="22" selection-end-line="107" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mRNA.py" />
     <entry file="file://$PROJECT_DIR$/d.py" />
     <entry file="file://$PROJECT_DIR$/a.py" />
     <entry file="file://$USER_HOME$/miniconda3/lib/python3.6/http/client.py">
@@ -468,95 +483,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Constant.py">
+    <entry file="file://$PROJECT_DIR$/src/Constant.py" />
+    <entry file="file://$PROJECT_DIR$/src/DomainCds.py" />
+    <entry file="file://$PROJECT_DIR$/src/utils.py" />
+    <entry file="file://$PROJECT_DIR$/src/pyUniprot.py" />
+    <entry file="file://$PROJECT_DIR$/src/runplot.py" />
+    <entry file="file://$PROJECT_DIR$/src/FetchGene.py" />
+    <entry file="file://$PROJECT_DIR$/src/helper.py" />
+    <entry file="file://$PROJECT_DIR$/src/plot.py" />
+    <entry file="file://$PROJECT_DIR$/src/cigarutils.py" />
+    <entry file="file://$PROJECT_DIR$/src/tmp.py" />
+    <entry file="file://$PROJECT_DIR$/src/ReadDepth.py" />
+    <entry file="file://$PROJECT_DIR$/setup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/DomainCds.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pyUniprot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="7" column="16" selection-start-line="4" selection-end-line="7" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/runplot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1520">
-          <caret line="87" column="27" selection-start-line="87" selection-start-column="21" selection-end-line="87" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/FetchGene.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="77" selection-start-line="5" selection-start-column="77" selection-end-line="5" selection-end-column="77" />
+        <state relative-caret-position="399">
+          <caret line="21" column="29" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
           <folding>
-            <element signature="e#188#227#0" expanded="true" />
+            <element signature="e#47#90#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/helper.py">
+    <entry file="file://$PROJECT_DIR$/pysashimi/cigarutils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" selection-start-line="19" selection-end-line="19" />
-          <folding>
-            <element signature="e#77#86#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/plot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2166">
-          <caret line="121" column="8" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="8" />
-          <folding>
-            <element signature="e#101#111#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cigarutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1577">
-          <caret line="83" selection-start-line="83" selection-end-line="83" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tmp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3059">
-          <caret line="161" column="24" selection-start-line="161" selection-start-column="16" selection-end-line="161" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TODO">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadDepth.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="715">
-          <caret line="257" selection-start-line="257" selection-end-line="257" />
-          <folding>
-            <element signature="e#48#62#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="532">
+          <caret line="28" column="49" selection-start-line="28" selection-start-column="49" selection-end-line="28" selection-end-column="49" />
         </state>
       </provider>
     </entry>
@@ -570,27 +521,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/setup.py">
+    <entry file="file://$PROJECT_DIR$/TODO">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysashimi/tmp.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysashimi/runplot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="21" column="29" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
+        <state relative-caret-position="3325">
+          <caret line="175" column="31" selection-start-line="175" selection-start-column="21" selection-end-line="175" selection-end-column="31" />
           <folding>
-            <element signature="e#47#90#0" expanded="true" />
+            <element signature="e#102#112#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysashimi/mRNA.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="743">
+          <caret line="130" column="20" selection-start-line="130" selection-start-column="20" selection-end-line="130" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysashimi/plot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2446">
+          <caret line="431" column="37" lean-forward="true" selection-start-line="431" selection-start-column="37" selection-end-line="431" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pysashimi/ReadDepth.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="99" column="12" selection-start-line="99" selection-start-column="12" selection-end-line="99" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pysashimi/runplot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="58" column="40" selection-start-line="58" selection-start-column="40" selection-end-line="58" selection-end-column="40" />
+        <state relative-caret-position="583">
+          <caret line="82" column="83" selection-start-line="82" selection-start-column="83" selection-end-line="82" selection-end-column="83" />
+          <folding>
+            <element signature="e#47#56#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

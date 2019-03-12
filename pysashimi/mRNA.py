@@ -150,9 +150,15 @@ class mRNA:
             if self.genename:
                 if line_gid != self.genename:
                     continue
+
             if _feature == 'transcript':
                 resdict[line.attributes["transcript_id"]]['maxinfo'].append((line.start, line.end))
                 resdict[line.attributes["transcript_id"]]["strand"] = line.strand
+                try:
+                    resdict[line.attributes["transcript_id"]]["symbol"] = line.attributes["gene_name"]
+                except KeyError:
+                    resdict[line.attributes["transcript_id"]]["symbol"] = "None"
+
             elif _feature in self._validfeature:
                 resdict[line.attributes["transcript_id"]][_feature].append((line.start, line.end))
             else:

@@ -433,6 +433,7 @@ def plot_mRNAs(tx_start,
                 # else:
                 #     max_ = graphcoords[-1 if maxsite - tx_end > 0 else maxsite - tx_end - 1]
                 #     min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_end - 1]
+
                 min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
                 max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
 
@@ -462,13 +463,20 @@ def plot_mRNAs(tx_start,
                     y = [yloc - exonwidth / 5, yloc, yloc + exonwidth / 5]
                     pylab.plot(x, y, lw=.5, color='#000000')
                 logger.debug('{} ploting tid'.format(tid))
+
                 if domain:
-                    pylab.text(xaxisloc, yloc - 0.05, '_'.join([tid, type_]), fontsize=8)
+                    pylab.text(xaxisloc, yloc - 0.05,
+                               '|'.join([info['symbol'], '_'.join([tid, type_])]),
+                               fontsize=8)
                 else:
+                    print('|'.join([info['symbol'], tid]))
                     xaxisloc = -1 * max(graphcoords) * 0.3
-                    pylab.text(xaxisloc, yloc - 0.05, tid, fontsize=8)
+                    pylab.text(xaxisloc, yloc - 0.05,
+                               '|'.join([info['symbol'], tid]),
+                               fontsize=8)
                 yloc += 1
                 logger.debug('{} done'.format(tid))
+
     pylab.xlim(0, max(graphcoords))
     pylab.ylim(-.5, yloc + .5)
     pylab.box(on=False)
