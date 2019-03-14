@@ -46,11 +46,13 @@ def plot_density_single(read_depth_object,
                         color='r',
                         ymax=None,
                         number_junctions=True,
-                        resolution=.5,
                         nxticks=4,
                         font_size=8,
                         numbering_font_size=6,
-                        junction_log_base=10):
+                        junction_log_base=10,
+                        pasite=None,
+                        focus=None
+                        ):
     """
 
     :param read_depth_object:
@@ -87,8 +89,6 @@ def plot_density_single(read_depth_object,
         ymax = ymax
     ymin = -.6 * ymax
 
-
-
     pylab.fill_between(graphcoords,
                        wiggle,
                        y2=0,
@@ -101,7 +101,6 @@ def plot_density_single(read_depth_object,
         for s, e in mRNA:
             tmp.extend([s, e])
         sslists.append(tmp)
-
 
     u'''
     1.13 sorted the list by the location
@@ -239,6 +238,13 @@ def plot_density_single(read_depth_object,
         avx.spines['bottom'].set_color('none')
         pylab.xticks([])
 
+    # Here to plot the highlight site, for example pasite.
+    if pasite:
+        print(pasite)
+        pasite = map(int, pasite.split(','))
+        for subsite in pasite:
+            pylab.axvline(graphcoords[subsite - tx_start], lw=.5)
+
     pylab.xlim(0, max(graphcoords))
     return avx
 
@@ -364,7 +370,9 @@ def plot_mRNAs(tx_start,
                tx_end,
                mRNAs,
                graphcoords,
-               domain=True):
+               domain=True,
+               focus=None
+               ):
     """
     Draw the gene structure.
     """
@@ -454,7 +462,6 @@ def plot_mRNAs(tx_start,
                                '|'.join([info['symbol'], '_'.join([tid, type_])]),
                                fontsize=8)
                 else:
-                    print('|'.join([info['symbol'], tid]))
                     xaxisloc = -1 * max(graphcoords) * 0.3
                     pylab.text(xaxisloc, yloc - 0.05,
                                '|'.join([info['symbol'], tid]),
@@ -465,6 +472,15 @@ def plot_mRNAs(tx_start,
     pylab.xlim(0, max(graphcoords))
     pylab.ylim(-.5, yloc + .5)
     pylab.box(on=False)
+    if focus:
+        for focus_ in focus:
+            # assert len(focus) == 2, "Got a error on focus region, pls check the focus region you have given"
+            l, r = list(map(int, focus_))
+            fill_x = [graphcoords[l - tx_start], graphcoords[r - tx_start],
+                      graphcoords[r - tx_start], graphcoords[l - tx_start]]
+            fill_y = [0, 0, yloc, yloc]
+            pylab.fill(fill_x, fill_y, alpha=0.1, color='grey')
+
     pylab.xticks([])
     pylab.yticks([])
 
@@ -539,11 +555,12 @@ def plot_density(read_depth_object,
                             color,
                             ymax=None,
                             number_junctions=True,
-                            resolution=.5,
                             nxticks=4,
                             font_size=6,
                             numbering_font_size=6,
-                            junction_log_base=10
+                            junction_log_base=10,
+                            pasite=pasite,
+                            focus=focus
                             )
 
     pylab.subplot(gs[nfile:, :])
@@ -552,23 +569,28 @@ def plot_density(read_depth_object,
                txend,
                mRNAobject.txlst,
                graphcoords,
-               domain)
+               domain,
+               focus=focus)
 
-    if pasite:
-        pasite = map(int, pasite.split(','))
-        for subsite in pasite:
-            plt.axvline(graphcoords[subsite - txstart], lw=.5)
+    # if pasite:
+    #     pasite = map(int, pasite.split(','))
+    #     for subsite in pasite:
+    #         plt.axvline(graphcoords[subsite - txstart], lw=.5)
 
     '''
     1.23 add focus line into AS
     '''
     # TODO here to add a error raise, if the region is greater than the given
 
-    if focus:
-        assert len(focus) == 2, "Got a error on focus region, pls check the focus region you have given"
-        l, r = list(map(int, focus))
-        plt.axvline(graphcoords[l - txstart], lw=.5)
-        plt.axvline(graphcoords[r - txstart], lw=.5)
+    # if focus:
+    #     assert len(focus) == 2, "Got a error on focus region, pls check the focus region you have given"
+    #     l, r = list(map(int, focus))
+    #     fill_l = [graphcoords[l - txstart], graphcoords[r - txstart],
+    #               graphcoords[r - txstart], graphcoords[l - txstart]]
+    #
+    #     pylab.fill(fill_l)
+    # plt.axvline(graphcoords[l - txstart], lw=.5)
+    # plt.axvline(graphcoords[r - txstart], lw=.5)
 
     plt.savefig(fileout,
                 bbox_inches='tight')

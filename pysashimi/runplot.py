@@ -137,12 +137,16 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
               default=None,
               help="The pA site, if there were multiple sites, pls seperate by `,`. default: None"
               )
+@click.option('--focus',
+              default=None,
+              help="Highlight the given region. for one region: start-end, if multiple, pls seperate by ,")
 def junc(gtf,
          bam,
          fileout,
          junc,
          sj,
-         pa
+         pa,
+         focus
          ):
     """
     Junction mode, not need network to plot
@@ -166,6 +170,10 @@ def junc(gtf,
         gtf,
         exonstat=True
     )
+
+    if focus:
+        focus = focus.split(',')
+        focus = map(lambda x: x.split('-'), focus)
 
     bamdict = readbamlist(bam)
     bamlst = []
@@ -195,6 +203,7 @@ def junc(gtf,
                      wide,
                      height,
                      pasite=pa,
+                     focus=focus,
                      domain=domain
                      )
     except Exception as e:
