@@ -51,7 +51,8 @@ def fetch_exon(start, cigar):
             start += l
 
         elif c == 4:  # soft clip
-            start += l
+            # start += l
+            continue
 
         else:
             continue
@@ -80,7 +81,9 @@ def fetch_intron(start, cigar):
             start += l
 
         elif c == 4:
-            start += l
+            # start += l
+            u'3.15 这里好像有问题，得改'
+            continue
 
         elif c == 0:
             start += l

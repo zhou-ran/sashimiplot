@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/runplot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/runplot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/cigarutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/cigarutils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -53,14 +53,14 @@
           <entry key="LICENSE" value="15" />
           <entry key="gitignore" value="4" />
           <entry key="md" value="366" />
-          <entry key="py" value="36038" />
+          <entry key="py" value="36080" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="366" />
           <entry key="PLAIN_TEXT" value="19" />
-          <entry key="Python" value="36038" />
+          <entry key="Python" value="36080" />
         </counts>
       </usages-collector>
     </session>
@@ -86,7 +86,7 @@
         <entry file="file://$PROJECT_DIR$/pysashimi/ReadDepth.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="392">
-              <caret line="272" lean-forward="true" selection-start-line="272" selection-end-line="272" />
+              <caret line="272" selection-start-line="272" selection-end-line="272" />
               <folding>
                 <element signature="e#47#56#0" expanded="true" />
               </folding>
@@ -97,26 +97,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysashimi/cigarutils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="532">
-              <caret line="28" column="49" selection-start-line="28" selection-start-column="49" selection-end-line="28" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pysashimi/plot.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="740">
-              <caret line="490" column="28" lean-forward="true" selection-start-line="490" selection-start-column="28" selection-end-line="490" selection-end-column="28" />
+            <state relative-caret-position="133">
+              <caret line="7" selection-start-line="7" selection-end-line="7" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pysashimi/plot.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="852">
+              <caret line="115" column="12" selection-start-line="115" selection-start-column="12" selection-end-line="115" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysashimi/runplot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="905">
-              <caret line="175" column="40" selection-start-line="175" selection-start-column="40" selection-end-line="175" selection-end-column="40" />
+            <state relative-caret-position="354">
+              <caret line="146" column="12" selection-start-line="146" selection-start-column="12" selection-end-line="146" selection-end-column="12" />
               <folding>
                 <element signature="e#102#112#0" expanded="true" />
               </folding>
@@ -128,7 +128,7 @@
         <entry file="file://$PROJECT_DIR$/pysashimi/utils.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="513">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+              <caret line="27" selection-start-line="27" selection-end-line="27" />
             </state>
           </provider>
         </entry>
@@ -137,7 +137,7 @@
         <entry file="file://$PROJECT_DIR$/pysashimi/mRNA.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-332">
-              <caret line="95" column="21" lean-forward="true" selection-start-line="95" selection-start-column="21" selection-end-line="96" selection-end-column="32" />
+              <caret line="95" column="21" selection-start-line="95" selection-start-column="21" selection-end-line="96" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -244,8 +244,9 @@
         <option value="$PROJECT_DIR$/pysashimi/mRNA.py" />
         <option value="$PROJECT_DIR$/pysashimi/ReadDepth.py" />
         <option value="$PROJECT_DIR$/pysashimi/utils.py" />
-        <option value="$PROJECT_DIR$/pysashimi/plot.py" />
         <option value="$PROJECT_DIR$/pysashimi/runplot.py" />
+        <option value="$PROJECT_DIR$/pysashimi/cigarutils.py" />
+        <option value="$PROJECT_DIR$/pysashimi/plot.py" />
       </list>
     </option>
   </component>
@@ -256,10 +257,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="x" value="-2560" />
-    <option name="y" value="-592" />
-    <option name="width" value="2560" />
-    <option name="height" value="1440" />
+    <option name="x" value="-1979" />
+    <option name="y" value="-322" />
+    <option name="width" value="1440" />
+    <option name="height" value="877" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -526,21 +527,14 @@
     <entry file="file://$PROJECT_DIR$/pysashimi/mRNA.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-332">
-          <caret line="95" column="21" lean-forward="true" selection-start-line="95" selection-start-column="21" selection-end-line="96" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pysashimi/cigarutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="28" column="49" selection-start-line="28" selection-start-column="49" selection-end-line="28" selection-end-column="49" />
+          <caret line="95" column="21" selection-start-line="95" selection-start-column="21" selection-end-line="96" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pysashimi/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
         </state>
       </provider>
     </entry>
@@ -554,27 +548,34 @@
     <entry file="file://$PROJECT_DIR$/pysashimi/ReadDepth.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="392">
-          <caret line="272" lean-forward="true" selection-start-line="272" selection-end-line="272" />
+          <caret line="272" selection-start-line="272" selection-end-line="272" />
           <folding>
             <element signature="e#47#56#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pysashimi/plot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="740">
-          <caret line="490" column="28" lean-forward="true" selection-start-line="490" selection-start-column="28" selection-end-line="490" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pysashimi/runplot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="905">
-          <caret line="175" column="40" selection-start-line="175" selection-start-column="40" selection-end-line="175" selection-end-column="40" />
+        <state relative-caret-position="354">
+          <caret line="146" column="12" selection-start-line="146" selection-start-column="12" selection-end-line="146" selection-end-column="12" />
           <folding>
             <element signature="e#102#112#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysashimi/cigarutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysashimi/plot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="852">
+          <caret line="115" column="12" selection-start-line="115" selection-start-column="12" selection-end-line="115" selection-end-column="12" />
         </state>
       </provider>
     </entry>
