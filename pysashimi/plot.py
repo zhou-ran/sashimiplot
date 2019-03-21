@@ -8,7 +8,6 @@ import matplotlib.gridspec as gridspec
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 import matplotlib.pyplot as plt
-from matplotlib import rcParams
 import logging
 
 plt.switch_backend('agg')
@@ -75,9 +74,9 @@ def plot_density_single(read_depth_object,
     """
 
     tx_start = read_depth_object.low
-    tx_end = read_depth_object.high
-
-    chrom = read_depth_object.chrm
+    # tx_end = read_depth_object.high
+    #
+    # chrom = read_depth_object.chrm
     wiggle = read_depth_object.wiggle
     jxns = read_depth_object.junctions_dict
 
@@ -95,12 +94,6 @@ def plot_density_single(read_depth_object,
                        color=color,
                        lw=0)
 
-    sslists = []
-    for mRNA in mRNAs:
-        tmp = []
-        for s, e in mRNA:
-            tmp.extend([s, e])
-        sslists.append(tmp)
 
     u'''
     1.13 sorted the list by the location

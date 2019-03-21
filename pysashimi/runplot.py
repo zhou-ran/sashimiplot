@@ -8,8 +8,10 @@ import click
 
 from .helper import set_logging
 from .ReadDepth import ReadDepth
+from .sitedepth import SiteDepth
 from .mRNA import mRNA
 from .plot import plot_density
+from .siteplot import plot_density_site
 from .utils import readbamlist
 
 logger = set_logging("MAIN")
@@ -211,8 +213,82 @@ def junc(gtf,
         logger.exception(e)
 
 
+@click.command()
+@click.option('--gtf',
+              type=str,
+              help="The gtf file."
+              )
+@click.option('--bam',
+              type=str,
+              help="Bam config file. There were two columns, label and file path"
+              )
+@click.option('--fileout',
+              type=str,
+              help="The output name."
+              )
+@click.option('--loc',
+              help="The junction, it looks like chr:s:e"
+              )
+def site(gtf,
+         bam,
+         fileout,
+         loc
+         ):
+    """
+    site mode, plot the last site coverage of the gene direction
+    """
+
+    if not all([gtf, bam, fileout, loc]):
+        cli(['site', '--help'])
+        sys.exit(1)
+
+    chr, s, e = loc.split(':')
+
+    logger.info("prepare the mRNA data")
+    mRNAobject = mRNA(
+        chr,
+        s,
+        e,
+        gtf,
+        exonstat=True
+    )
+
+    bamdict = readbamlist(bam)
+    bamlst = []
+    logger.info("retrieve expression data")
+
+    for label, filepath in bamdict.items():
+        readdepth_ = ''
+        for bam_ in filepath:
+            if readdepth_ == '':
+                readdepth_ = SiteDepth.determine_depth(bam_,
+                                                       mRNAobject.chr,
+                                                       mRNAobject.tstart,
+                                                       mRNAobject.tend,
+                                                       "FR")
+            else:
+                readdepth_ += SiteDepth.determine_depth(bam_,
+                                                        mRNAobject.chr,
+                                                        mRNAobject.tstart,
+                                                        mRNAobject.tend,
+                                                        "FR")
+
+        bamlst.append({label: readdepth_})
+
+    logger.info("plot")
+    try:
+        plot_density_site(bamlst,
+                          mRNAobject,
+                          fileout
+                          )
+    except Exception as e:
+        logger.error("Error information found in {}, pls check the splicing region".format(junc))
+        logger.exception(e)
+
+
 cli.add_command(gene)
 cli.add_command(junc)
+cli.add_command(site)
 
 if __name__ == '__main__':
     cli()
