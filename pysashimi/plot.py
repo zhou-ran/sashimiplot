@@ -17,6 +17,7 @@ plt.switch_backend('agg')
 from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
+from .siteplot import plot_density_single_site
 
 logger = logging.getLogger('MAIN')
 
@@ -74,9 +75,7 @@ def plot_density_single(read_depth_object,
     """
 
     tx_start = read_depth_object.low
-    # tx_end = read_depth_object.high
-    #
-    # chrom = read_depth_object.chrm
+
     wiggle = read_depth_object.wiggle
     jxns = read_depth_object.junctions_dict
 
@@ -93,7 +92,6 @@ def plot_density_single(read_depth_object,
                        y2=0,
                        color=color,
                        lw=0)
-
 
     u'''
     1.13 sorted the list by the location
@@ -117,26 +115,7 @@ def plot_density_single(read_depth_object,
             ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[rightss - tx_start]]
         except IndexError:
             continue
-            '''
-            here to remove the junction not in graph, but i remove this,
-            '''
-            # TODO, add a parameter to handle this
-            # leftsite = leftss - tx_start
-            # rightsite = rightss - tx_end
-            # if leftsite > tx_end and rightsite > tx_end:
-            #     continue
-            #
-            # if leftsite < 0 and rightsite > 0:
-            #     continue
-            # else:
-            #     if leftsite < 0:
-            #         ss1, ss2 = [graphcoords[0], graphcoords[rightss - tx_start]]
-            #         leftstatus = True
-            #     else:
-            #         ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[tx_end - tx_start]]
-            #         rightstatus = True
 
-        # mid = (ss1 + ss2) / 2
 
         # draw junction on bottom
 
@@ -191,10 +170,7 @@ def plot_density_single(read_depth_object,
             1.9, force int y axis 
             '''
             curr_yticklabels.append("{}".format(int(label)))
-            # if label % 1 != 0:
-            #     curr_yticklabels.append("%.1f" % (label))
-            # else:
-            #     curr_yticklabels.append("%d" % (label))
+
     avx.set_yticklabels(curr_yticklabels,
                         fontsize=font_size)
     avx.spines["left"].set_bounds(0, max_used_yval)
@@ -212,9 +188,6 @@ def plot_density_single(read_depth_object,
                    labelpad=10
                    )
 
-    # Format plot
-    # ylim(ymin, ymax)
-    # axvar.spines['left'].set_bounds(0, ymax)
 
     avx.spines['right'].set_color('none')
     avx.spines['top'].set_color('none')
@@ -233,7 +206,6 @@ def plot_density_single(read_depth_object,
 
     # Here to plot the highlight site, for example pasite.
     if pasite:
-        print(pasite)
         pasite = map(int, pasite.split(','))
         for subsite in pasite:
             pylab.axvline(graphcoords[subsite - tx_start], lw=.5)
@@ -307,9 +279,7 @@ def plotdomain(region,
         logger.debug("{}".format(domainname))
 
         domainname = domainname.split(';;')[-1]
-        # if "chain" in domainname: continue
-        # if "conflict" in domainname: continue
-        # if "variant" in domainname: continue
+
 
         '''
         1.23 add domain information, retrieve from the nature communication
@@ -319,21 +289,12 @@ def plotdomain(region,
 
         dregion = calculateinterval(dregion, (tx_start, tx_end))
 
-        # try:
-        #     dregion = calculateinterval(dregion, (tx_start, tx_end))
-        # except TypeError:
-        #     print(dregion, (tx_start, tx_end))
 
         minsite = min(map(lambda x: x[0], dregion))
         maxsite = max(map(lambda x: x[1], dregion))
         min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
         max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
-        # if strand == "+":
-        #     min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
-        #     max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
-        # else:
-        #     min_ = graphcoords[-1 if maxsite - tx_end > 0 else maxsite - tx_end - 1]
-        #     max_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_end - 1]
+
 
         for s, e in dregion:
             s = s - tx_start
@@ -342,10 +303,6 @@ def plotdomain(region,
 
             y = [yloc - exonwidth / 2, yloc - exonwidth / 2, \
                  yloc + exonwidth / 2, yloc + exonwidth / 2]
-            # pylab.fill(x, y, RGB_tuples[index], lw=.5, zorder=20)
-            # pylab.fill(x, y, 'k', lw=.5, zorder=20)
-            # plot([min_ * 1.05, max_], [yloc, yloc], color='k', lw=0.5)
-            # pylab.plot([min_, max_], [yloc, yloc], color='k', lw=0.5)
 
             '''
             1.16 domain numbers more than color numbers
@@ -407,19 +364,6 @@ def plot_mRNAs(tx_start,
 
                 region = calculateinterval(region, (tx_start, tx_end))
 
-                '''
-                1.21 test the coordinary
-                '''
-                # minsite = min(map(lambda x: x[0], region))
-                # maxsite = max(map(lambda x: x[1], region))
-
-                # if strand == "+":
-                #     min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
-                #     max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
-                # else:
-                #     max_ = graphcoords[-1 if maxsite - tx_end > 0 else maxsite - tx_end - 1]
-                #     min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_end - 1]
-
                 min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
                 max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
 
@@ -439,7 +383,7 @@ def plot_mRNAs(tx_start,
                 for i in range(narrows):
                     loc = float(i) * max(graphcoords) / narrows + min_
                     if loc >= max_:
-                        # print(region, loc, x, min_, max_, tx_start, tx_end, graphcoords)
+
                         break
 
                     if strand == '+':
@@ -467,7 +411,6 @@ def plot_mRNAs(tx_start,
     pylab.box(on=False)
     if focus:
         for focus_ in focus:
-            # assert len(focus) == 2, "Got a error on focus region, pls check the focus region you have given"
             l, r = list(map(int, focus_))
             fill_x = [graphcoords[l - tx_start], graphcoords[r - tx_start],
                       graphcoords[r - tx_start], graphcoords[l - tx_start]]
@@ -486,7 +429,8 @@ def plot_density(read_depth_object,
                  height=12,
                  pasite=None,
                  focus=None,
-                 domain=True
+                 domain=True,
+                 sitedepth=None
                  ):
     """
 
@@ -516,8 +460,11 @@ def plot_density(read_depth_object,
                                           intron_scale,
                                           exon_scale
                                           )
+    if sitedepth:
+        nfile = 2 * len(read_depth_object)
+    else:
+        nfile = len(read_depth_object)
 
-    nfile = len(read_depth_object)
     mRNAnum = len(mRNAobject.txlst) * 2
 
     gs = gridspec.GridSpec(int(nfile + mRNAnum),
@@ -526,11 +473,17 @@ def plot_density(read_depth_object,
                            )
 
     for fileindex, bamfileinfo in enumerate(read_depth_object):
-        axvar = pylab.subplot(gs[fileindex, :])
+        if not sitedepth:
+            xlabel = True if fileindex == nfile - 1 else False
+            fileindex_grid = fileindex
+        else:
+            fileindex_grid = 2 * fileindex
+            xlabel = False
+
+        axvar = pylab.subplot(gs[fileindex_grid, :])
 
         bamread = list(bamfileinfo.values())[0]
         bamname = list(bamfileinfo.keys())[0]
-        xlabel = True if fileindex == nfile - 1 else False
 
         try:
             color = COLOR[fileindex]
@@ -555,6 +508,23 @@ def plot_density(read_depth_object,
                             pasite=pasite,
                             focus=focus
                             )
+        if sitedepth:
+            axvar = pylab.subplot(gs[fileindex_grid + 1, :])
+            bamfileinfo = sitedepth[fileindex]
+            bamread = list(bamfileinfo.values())[0]
+            bamname = list(bamfileinfo.keys())[0]
+            xlabel = True if fileindex == nfile / 2 - 1 else False
+            # print('site {}'.format(fileindex_grid + 1))
+            plot_density_single_site(bamread,
+                                     bamname,
+                                     graphcoords,
+                                     graphToGene,
+                                     axvar,
+                                     xlabel,
+                                     color,
+                                     nxticks=4,
+                                     font_size=6
+                                     )
 
     pylab.subplot(gs[nfile:, :])
 

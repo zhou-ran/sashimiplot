@@ -17,6 +17,8 @@ This script were migrated from spliceplot
 """
 
 
+# TODO, 添加生成一个空的对象，重新变量命名
+
 def checkbam(bamfile):
     """
     check bam index
@@ -44,8 +46,6 @@ class ReadDepth:
                  high,
                  wiggle,
                  junctions_dict):
-
-        assert chrm == None or high - low + 1 == len(wiggle), 'Wiggle, lower bound, and upper bound do not correspond'
 
         self.low = low
         self.high = high
@@ -191,20 +191,22 @@ class ReadDepth:
         # except IOError:
         #     raise 'There is no .bam file at {0}'.format(bam_file_path)
 
+    @classmethod
+    def generateobj(cls):
+
+        return cls(None, None, None, None, None)
+
     def is_invalid(self):
         """
-            is_invalid determines whether any of the attributes are None
+        Check the readdepth object whether legal
         """
         return self.chrm is None or self.low is None or self.high is None or self.wiggle is None or self.junctions_dict is None
 
     def __add__(self, other):
         """
-            __add__ allows two ReadDepth objects to be added together using the + symbol
-
-            Both self and other must have the same low and high attributes
-
-            return value:
-                A new ReadDepth object containing the sum of the two original ReadDepth objects
+        if self or other is empty, then return the other
+        :param other:
+        :return:
         """
 
         if self.is_invalid():

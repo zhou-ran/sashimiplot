@@ -59,15 +59,6 @@ def cli():
 def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
     """
     Normal mode to generate sashimi plot
-    :param gtf:
-    :param gene:
-    :param bam:
-    :param pa:
-    :param fileout:
-    :param offset:
-    :param sj:
-    :param focus:
-    :return:
     """
     if not all([gtf, gene, bam, fileout]):
         cli(['gene', '--help'])
@@ -142,17 +133,21 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
 @click.option('--focus',
               default=None,
               help="Highlight the given region. for one region: start-end, if multiple, pls seperate by ,")
+@click.option('--ps',
+              is_flag=True,
+              help="plot the site coverage, default: False."
+              )
 def junc(gtf,
          bam,
          fileout,
          junc,
          sj,
          pa,
-         focus
+         focus,
+         ps
          ):
     """
     Junction mode, not need network to plot
-    :return:
     """
 
     if not all([gtf, bam, fileout, junc]):
@@ -179,23 +174,26 @@ def junc(gtf,
 
     bamdict = readbamlist(bam)
     bamlst = []
+    bamsitelst = [] if ps else None
     logger.info("retrieve expression data")
     for label, filepath in bamdict.items():
-        readdepth_ = ''
+        readdepth_ = ReadDepth.generateobj()
+
         for bam_ in filepath:
-            if readdepth_ == '':
-                readdepth_ = ReadDepth.determine_depth(bam_,
-                                                       mRNAobject.chr,
-                                                       mRNAobject.tstart,
-                                                       mRNAobject.tend)
-            else:
-                readdepth_ += ReadDepth.determine_depth(bam_,
+            readdepth_ += ReadDepth.determine_depth(bam_,
+                                                    mRNAobject.chr,
+                                                    mRNAobject.tstart,
+                                                    mRNAobject.tend)
+        bamlst.append({label: readdepth_})
+        if ps:
+            sitedepth_ = SiteDepth.generateobj()
+            for bam_ in filepath:
+                sitedepth_ += SiteDepth.determine_depth(bam_,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
-                                                        mRNAobject.tend)
-
-        bamlst.append({label: readdepth_})
-
+                                                        mRNAobject.tend,
+                                                        "FR")
+            bamsitelst.append({label: sitedepth_})
     logger.info("plot")
     try:
         plot_density(bamlst,
@@ -206,7 +204,8 @@ def junc(gtf,
                      height,
                      pasite=pa,
                      focus=focus,
-                     domain=domain
+                     domain=domain,
+                     sitedepth=bamsitelst
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
@@ -279,7 +278,7 @@ def site(gtf,
     try:
         plot_density_site(bamlst,
                           mRNAobject,
-                          fileout
+                          fileout=fileout
                           )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

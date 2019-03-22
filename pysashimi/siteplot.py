@@ -11,19 +11,18 @@ import matplotlib.pyplot as plt
 from .Constant import COLOR
 from .sitedepth import SiteDepth
 from .mRNA import mRNA
-from .plot import plot_mRNAs
 
 
-def plot_density_single(read_depth_object,
-                        samplename,
-                        graphcoords,
-                        graphToGene,
-                        avx,
-                        xlabel,
-                        color='r',
-                        nxticks=4,
-                        font_size=8
-                        ):
+def plot_density_single_site(read_depth_object,
+                             samplename,
+                             graphcoords,
+                             graphToGene,
+                             avx,
+                             xlabel,
+                             color='r',
+                             nxticks=4,
+                             font_size=8
+                             ):
     """
 
     :param read_depth_object:
@@ -152,7 +151,7 @@ def getScaling(tx_start,
 
 def plot_density_site(read_depth_object,
                       mRNAobject,
-                      fileout,
+                      fileout=None,
                       wide=8,
                       height=12,
                       ):
@@ -165,6 +164,9 @@ def plot_density_site(read_depth_object,
     :param pasite:
     :return:
     """
+
+    from .plot import plot_mRNAs
+
     txstart = mRNAobject.tstart
     txend = mRNAobject.tend
 
@@ -204,16 +206,16 @@ def plot_density_site(read_depth_object,
         except IndexError:
             color = COLOR[fileindex % 11]
 
-        plot_density_single(bamread,
-                            bamname,
-                            graphcoords,
-                            graphToGene,
-                            axvar,
-                            xlabel,
-                            color,
-                            nxticks=4,
-                            font_size=6
-                            )
+        plot_density_single_site(bamread,
+                                 bamname,
+                                 graphcoords,
+                                 graphToGene,
+                                 axvar,
+                                 xlabel,
+                                 color,
+                                 nxticks=4,
+                                 font_size=6
+                                 )
 
     pylab.subplot(gs[nfile:, :])
 
@@ -222,9 +224,9 @@ def plot_density_site(read_depth_object,
                mRNAobject.txlst,
                graphcoords,
                domain=False)
-
-    plt.savefig(fileout,
-                bbox_inches='tight')
+    if fileout:
+        plt.savefig(fileout,
+                    bbox_inches='tight')
 
 
 def main(file):
