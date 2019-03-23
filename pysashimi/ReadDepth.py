@@ -99,7 +99,7 @@ class ReadDepth:
                 u'''
                 3.21 change `read.positions` into range
                 '''
-                for index, base_position in enumerate(range(read.reference_start + 1, read.reference_end + 2)):
+                for index, base_position in enumerate(read.positions):
                     if base_position >= start_coord and base_position <= end_coord:
                         depth_vector[base_position - start_coord] += 1
 

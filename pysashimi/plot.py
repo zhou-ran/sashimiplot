@@ -116,7 +116,6 @@ def plot_density_single(read_depth_object,
         except IndexError:
             continue
 
-
         # draw junction on bottom
 
         if plotted_count % 2 == 1:
@@ -188,18 +187,19 @@ def plot_density_single(read_depth_object,
                    labelpad=10
                    )
 
-
     avx.spines['right'].set_color('none')
     avx.spines['top'].set_color('none')
 
     if xlabel:
         avx.xaxis.set_ticks_position('bottom')
 
-        max_graphcoords = max(graphcoords) - 1
+        max_graphcoords = max(graphcoords)
+
         pylab.xticks(pylab.linspace(0, max_graphcoords, nxticks),
                      [graphToGene[int(x)] for x in \
                       pylab.linspace(0, max_graphcoords, nxticks)],
                      fontsize=font_size)
+
     else:
         avx.spines['bottom'].set_color('none')
         pylab.xticks([])
@@ -280,7 +280,6 @@ def plotdomain(region,
 
         domainname = domainname.split(';;')[-1]
 
-
         '''
         1.23 add domain information, retrieve from the nature communication
         '''
@@ -289,12 +288,10 @@ def plotdomain(region,
 
         dregion = calculateinterval(dregion, (tx_start, tx_end))
 
-
         minsite = min(map(lambda x: x[0], dregion))
         maxsite = max(map(lambda x: x[1], dregion))
         min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
         max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
-
 
         for s, e in dregion:
             s = s - tx_start
@@ -383,7 +380,6 @@ def plot_mRNAs(tx_start,
                 for i in range(narrows):
                     loc = float(i) * max(graphcoords) / narrows + min_
                     if loc >= max_:
-
                         break
 
                     if strand == '+':
@@ -514,7 +510,7 @@ def plot_density(read_depth_object,
             bamread = list(bamfileinfo.values())[0]
             bamname = list(bamfileinfo.keys())[0]
             xlabel = True if fileindex == nfile / 2 - 1 else False
-            # print('site {}'.format(fileindex_grid + 1))
+
             plot_density_single_site(bamread,
                                      bamname,
                                      graphcoords,
