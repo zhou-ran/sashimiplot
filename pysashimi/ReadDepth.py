@@ -218,17 +218,26 @@ class ReadDepth:
         assert self.low == other.low and self.high == other.high, 'Cannot add depths with different start and end points'
         new_wiggle = self.wiggle + other.wiggle
 
-        new_junctions_dict = {}
+        new_junctions_dict = defaultdict(int)
 
-        for key, value in self.junctions_dict.items():
-            if key in other.junctions_dict:
-                new_junctions_dict[key] = value + other.junctions_dict[key]
-            else:
-                new_junctions_dict[key] = value
+        # for key, value in self.junctions_dict.items():
+        #     if key in other.junctions_dict:
+        #         new_junctions_dict[key] = value + other.junctions_dict[key]
+        #     else:
+        #         new_junctions_dict[key] = value
+        u''' 2019.3.27 not intersect, but union
+        '''
 
-        for key, value in other.junctions_dict.items():
-            if key not in self.junctions_dict:
-                new_junctions_dict[key] = value
+        for junc_key in set(list(self.junctions_dict.keys()) + list(other.junctions_dict.keys())):
+            try:
+                new_junctions_dict[junc_key] += self.junctions_dict[junc_key]
+            except KeyError:
+                pass
+
+            try:
+                new_junctions_dict[junc_key] += other[junc_key]
+            except KeyError:
+                pass
 
         return ReadDepth(self.chrm, self.low, self.high, new_wiggle, new_junctions_dict)
 
