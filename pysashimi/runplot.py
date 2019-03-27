@@ -137,6 +137,11 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
               is_flag=True,
               help="plot the site coverage, default: False."
               )
+@click.option('--peakfilter',
+              default=None,
+              type=str,
+              help="peaks filter, default: None."
+              )
 def junc(gtf,
          bam,
          fileout,
@@ -144,7 +149,8 @@ def junc(gtf,
          sj,
          pa,
          focus,
-         ps
+         ps,
+         peakfilter
          ):
     """
     Junction mode, not need network to plot
@@ -183,7 +189,8 @@ def junc(gtf,
             readdepth_ += ReadDepth.determine_depth(bam_,
                                                     mRNAobject.chr,
                                                     mRNAobject.tstart,
-                                                    mRNAobject.tend)
+                                                    mRNAobject.tend,
+                                                    readfilter=peakfilter)
         bamlst.append({label: readdepth_})
         if ps:
             sitedepth_ = SiteDepth.generateobj()
@@ -192,7 +199,8 @@ def junc(gtf,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
                                                         mRNAobject.tend,
-                                                        "FR")
+                                                        "FR",
+                                                        readfilter=peakfilter)
             bamsitelst.append({label: sitedepth_})
     logger.info("plot")
     try:
@@ -228,10 +236,16 @@ def junc(gtf,
 @click.option('--loc',
               help="The junction, it looks like chr:s:e"
               )
+@click.option('--peakfilter',
+              default=None,
+              type=str,
+              help="peaks filter, default: None."
+              )
 def site(gtf,
          bam,
          fileout,
-         loc
+         loc,
+         peakfilter
          ):
     """
     site mode, plot the last site coverage of the gene direction
@@ -264,13 +278,15 @@ def site(gtf,
                                                        mRNAobject.chr,
                                                        mRNAobject.tstart,
                                                        mRNAobject.tend,
-                                                       "FR")
+                                                       "FR",
+                                                       readfilter=peakfilter)
             else:
                 readdepth_ += SiteDepth.determine_depth(bam_,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
                                                         mRNAobject.tend,
-                                                        "FR")
+                                                        "FR",
+                                                        readfilter=peakfilter)
 
         bamlst.append({label: readdepth_})
 

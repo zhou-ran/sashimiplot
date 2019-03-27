@@ -53,18 +53,20 @@ def plot_density_single_site(read_depth_object,
     ymax = 1.1 * maxheight
 
     ymin = 1.1 * minheight
-
     pylab.fill_between(graphcoords,
                        plus,
                        y2=0,
                        color=color,
-                       lw=0)
-
+                       linewidth=0,
+                       step='pre',
+                       interpolate=False)
     pylab.fill_between(graphcoords,
                        minus,
                        y2=0,
                        color=color,
-                       lw=0)
+                       linewidth=0,
+                       step='pre',
+                       interpolate=False)
 
     # set the y limit
 

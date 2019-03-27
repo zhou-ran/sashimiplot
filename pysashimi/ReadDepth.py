@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import logging
 from collections import defaultdict
 
@@ -9,34 +8,14 @@ import numpy
 import pysam
 
 from .cigarutils import fetch_intron
+from .bamfilter import pafilter
+from .utils import checkbam
 
 logger = logging.getLogger("MAIN")
 
 """
 This script were migrated from spliceplot
 """
-
-
-# TODO, 添加生成一个空的对象，重新变量命名
-
-def checkbam(bamfile):
-    """
-    check bam index
-    :param file:
-    :return:
-    """
-    if not os.path.exists(bamfile + '.bai'):
-        logging.info("Index the bam file with 4 cores")
-        pysam.index(bamfile, "-@", "4")
-    else:
-        # Check the index file whether is elder than bam file, if not re-generate
-        if os.path.getmtime(bamfile) > os.path.getmtime(bamfile + '.bai'):
-            logging.info('The index file is older than %s file, removing the index file' % bamfile)
-            os.remove(bamfile + '.bai')
-            logging.info("Index the bam file with 4 cores")
-            pysam.index(bamfile, "-@", "4")
-        else:
-            logging.info("Index of the bam file was complete!")
 
 
 class ReadDepth:
@@ -58,7 +37,8 @@ class ReadDepth:
                         bam_file_path,
                         chrm,
                         start_coord,
-                        end_coord):
+                        end_coord,
+                        readfilter=None):
         """
         calculate the coverage at each base between start_coord and endcoord.
 
@@ -78,6 +58,9 @@ class ReadDepth:
             spanned_junctions = defaultdict(int)
 
             for read in relevant_reads:
+                if readfilter:
+                    if not pafilter(read, readfilter):
+                        continue
 
                 # make sure that the read can be used
                 cigar_string = read.cigar
@@ -96,9 +79,8 @@ class ReadDepth:
                 #
                 # if contains_indel:
                 #     continue
-                u'''
-                3.21 change `read.positions` into range
-                '''
+
+
                 for index, base_position in enumerate(read.positions):
                     if base_position >= start_coord and base_position <= end_coord:
                         depth_vector[base_position - start_coord] += 1
@@ -118,78 +100,6 @@ class ReadDepth:
         except IOError:
 
             raise 'There is no .bam file at {0}'.format(bam_file_path)
-
-        u'''
-        2019-2-22
-        convert the coverage calcuation into pileup, not iter all reads
-        2019-3-11
-        I delete the pileup calculate the coverage, because the depth looks wired
-        '''
-        # TODO: 1. convert the coverage calculation into pileup; 2. modify the splice junction judge rule;
-
-        # checkbam(bam_file_path)
-        #
-        # try:
-        #     spanned_junctions = defaultdict(int)
-        #     depth_vector = numpy.zeros(end_coord - start_coord + 1, dtype='f')
-        #
-        #     # refname = set()
-        #
-        #     bam_file = pysam.Samfile(bam_file_path, 'rb')
-        #
-        #     for pileupcolumn in bam_file.pileup(reference=chrm,
-        #                                         start=start_coord,
-        #                                         end=end_coord,
-        #                                         truncate=True):
-        #         ref_pos = pileupcolumn.pos
-        #         if ref_pos >= start_coord and ref_pos <= end_coord:
-        #             if pileupcolumn.n == 0:
-        #                 depth_vector[ref_pos - start_coord] = 0
-        #                 continue
-        #
-        #             base_cover = 0
-        #             for read in pileupcolumn.pileups:
-        #
-        #                 # TODO, QC?
-        #                 # if not read.is_del and not read.is_refskip:
-        #                 # if read.is_del: continue
-        #                 # if read.is_refskip: continue
-        #                 # if read.alignment.is_qcfail: continue
-        #                 # if read.alignment.is_secondary: continue
-        #                 # if read.alignment.is_unmapped: continue
-        #                 # if read.alignment.is_duplicate: continue
-        #
-        #                 base_cover += 1
-        #
-        #                 # id = '_'.join([read.alignment.query_name,
-        #                 #                str(read.alignment.reference_start)])
-        #
-        #                 # if id in refname:
-        #                 #     continue
-        #                 #
-        #                 # refname.add(id)
-        #
-        #                 intronbound = fetch_intron(read.alignment.reference_start, read.alignment.cigar)
-        #
-        #                 if intronbound:
-        #                     for intronbound_ in intronbound:
-        #                         junction_name = '{}:{}-{}'.format(chrm,
-        #                                                           intronbound_[0],
-        #                                                           intronbound_[1]
-        #                                                           )
-        #                         spanned_junctions[junction_name] += 1
-        #
-        #             depth_vector[ref_pos - start_coord] = base_cover
-        #
-        #     return cls(chrm,
-        #                start_coord,
-        #                end_coord,
-        #                depth_vector,
-        #                spanned_junctions
-        #                )
-        #
-        # except IOError:
-        #     raise 'There is no .bam file at {0}'.format(bam_file_path)
 
     @classmethod
     def generateobj(cls):

@@ -12,8 +12,6 @@ import logging
 
 plt.switch_backend('agg')
 
-# rcParams['font.family'] = 'Helvetica'
-
 from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
@@ -51,7 +49,6 @@ def plot_density_single(read_depth_object,
                         numbering_font_size=6,
                         junction_log_base=10,
                         pasite=None,
-                        focus=None
                         ):
     """
 
@@ -87,11 +84,14 @@ def plot_density_single(read_depth_object,
         ymax = ymax
     ymin = -.6 * ymax
 
+    # TODO, change here to barplot
     pylab.fill_between(graphcoords,
                        wiggle,
                        y2=0,
                        color=color,
-                       lw=0)
+                       linewidth=0,
+                       step='pre',
+                       interpolate=False)
 
     u'''
     1.13 sorted the list by the location
@@ -502,7 +502,6 @@ def plot_density(read_depth_object,
                             numbering_font_size=6,
                             junction_log_base=10,
                             pasite=pasite,
-                            focus=focus
                             )
         if sitedepth:
             axvar = pylab.subplot(gs[fileindex_grid + 1, :])

@@ -124,10 +124,6 @@ class mRNA:
     TODO, here to add check the tabix index file
     '''
 
-    # @classmethod
-    # def __checkgtf(cls, gtf):
-    #     try:
-
     def __txlst(self):
         """
 
@@ -333,11 +329,6 @@ class mRNA:
 def main(file):
     tre = mRNA.isoform('ENSMUST00000117291', file)
     print(tre.txlst)
-
-    # mRNAlist = []
-    # for i in tre.txlst:
-    #     for k, v in i.items():
-    #         mRNAlist.append(v['exon'])
 
 
 if __name__ == '__main__':

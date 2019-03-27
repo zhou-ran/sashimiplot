@@ -10,6 +10,7 @@ This class is for plotting the site class
 import pysam
 import numpy as np
 from .utils import checkbam
+from .bamfilter import pafilter
 
 
 class SiteDepth:
@@ -31,7 +32,8 @@ class SiteDepth:
                         chrm,
                         start_coord,
                         end_coord,
-                        libtype):
+                        libtype,
+                        readfilter=None):
 
         """
         calculate the site coverage based the libtype and the input strand.
@@ -55,6 +57,9 @@ class SiteDepth:
             minus = np.zeros(end_coord - start_coord + 1, dtype='f')
 
             for read in relevant_reads:
+                if readfilter:
+                    if not pafilter(read, readfilter):
+                        continue
 
                 # make sure that the read can be used
                 cigar_string = read.cigar
