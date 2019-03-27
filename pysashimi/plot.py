@@ -461,7 +461,7 @@ def plot_density(read_depth_object,
     else:
         nfile = len(read_depth_object)
 
-    mRNAnum = len(mRNAobject.txlst) * 2
+    mRNAnum = len(mRNAobject.txlst) * 2 if len(mRNAobject.txlst) != 0 else 1
 
     gs = gridspec.GridSpec(int(nfile + mRNAnum),
                            1,

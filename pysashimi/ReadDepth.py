@@ -235,7 +235,7 @@ class ReadDepth:
                 pass
 
             try:
-                new_junctions_dict[junc_key] += other[junc_key]
+                new_junctions_dict[junc_key] += other.junctions_dict[junc_key]
             except KeyError:
                 pass
 
