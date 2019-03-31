@@ -68,20 +68,20 @@ class SiteDepth:
                 if cigar_string == None:
                     continue
 
-                if not start_coord <= read.reference_start <= end_coord or not start_coord <= read.reference_end <= end_coord: continue
+                if not start_coord <= read.reference_start + 1 <= end_coord or not start_coord <= read.reference_end + 1 <= end_coord: continue
 
                 if read.is_reverse:
 
                     if read.is_read1:
-                        plus[read.reference_end - start_coord] += 1
+                        plus[read.reference_end - start_coord + 1] += 1
                     else:
-                        minus[read.reference_start - start_coord] += 1
+                        minus[read.reference_start - start_coord + 1] += 1
 
                 else:
                     if read.is_read1:
-                        minus[read.reference_start - start_coord] += 1
+                        minus[read.reference_start - start_coord + 1] += 1
                     else:
-                        plus[read.reference_end - start_coord] += 1
+                        plus[read.reference_end - start_coord + 1] += 1
             if libtype == "FR":
                 return cls(chrm, start_coord, end_coord, plus, -minus)
             else:

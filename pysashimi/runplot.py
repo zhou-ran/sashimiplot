@@ -14,8 +14,6 @@ from .plot import plot_density
 from .siteplot import plot_density_site
 from .utils import readbamlist
 
-logger = set_logging("MAIN")
-
 
 @click.group()
 def cli():
@@ -56,10 +54,21 @@ def cli():
 @click.option('--focus',
               default=None,
               help="Highlight the given region. start-end")
-def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
+@click.option('--verbose',
+              is_flag=True,
+              help='set the logging level, if Ture -> INFO')
+@click.option('--log',
+              default=None,
+              type=str,
+              help="plot the log-tranformed expression values, and support log2 and log10. default: None"
+              )
+def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
     """
     Normal mode to generate sashimi plot
     """
+
+    logger = set_logging("GENE", verbose=verbose)
+
     if not all([gtf, gene, bam, fileout]):
         cli(['gene', '--help'])
         sys.exit(1)
@@ -97,7 +106,8 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
                      wide,
                      height,
                      pasite=pa,
-                     focus=focus
+                     focus=focus,
+                     logtrans=log
                      )
 
     except Exception as e:
@@ -142,6 +152,14 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus):
               type=str,
               help="peaks filter, default: None."
               )
+@click.option('--log',
+              default=None,
+              type=str,
+              help="plot the log-tranformed expression values, and support log2 and log10. default: None"
+              )
+@click.option('--verbose',
+              is_flag=True,
+              help='set the logging level, if Ture -> INFO')
 def junc(gtf,
          bam,
          fileout,
@@ -150,11 +168,15 @@ def junc(gtf,
          pa,
          focus,
          ps,
-         peakfilter
+         peakfilter,
+         log,
+         verbose
          ):
     """
     Junction mode, not need network to plot
     """
+
+    logger = set_logging("JUNC", verbose=verbose)
 
     if not all([gtf, bam, fileout, junc]):
         cli(['junc', '--help'])
@@ -213,7 +235,8 @@ def junc(gtf,
                      pasite=pa,
                      focus=focus,
                      domain=domain,
-                     sitedepth=bamsitelst
+                     sitedepth=bamsitelst,
+                     logtrans=log
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
@@ -241,15 +264,27 @@ def junc(gtf,
               type=str,
               help="peaks filter, default: None."
               )
+@click.option('--verbose',
+              is_flag=True,
+              help='set the logging level, if Ture -> INFO')
+@click.option('--log',
+              default=None,
+              type=str,
+              help="plot the log-tranformed expression values, and support log2 and log10. default: None"
+              )
 def site(gtf,
          bam,
          fileout,
          loc,
-         peakfilter
+         peakfilter,
+         verbose,
+         log
          ):
     """
     site mode, plot the last site coverage of the gene direction
     """
+
+    logger = set_logging("SITE", verbose=verbose)
 
     if not all([gtf, bam, fileout, loc]):
         cli(['site', '--help'])
@@ -294,7 +329,8 @@ def site(gtf,
     try:
         plot_density_site(bamlst,
                           mRNAobject,
-                          fileout=fileout
+                          fileout=fileout,
+                          logtrans=log
                           )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

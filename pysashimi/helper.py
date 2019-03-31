@@ -6,13 +6,14 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-def set_logging(log_name):
+def set_logging(log_name, verbose=False):
     """
     return a two logger object, one for stream and another for the log file
-
     :param log_name:
+    :param infolevel:
     :return:
     """
+
     formatter = logging.Formatter(
         fmt="[%(asctime)s] - [%(levelname)s]: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
@@ -38,7 +39,10 @@ def set_logging(log_name):
     fh.setLevel(logging.ERROR)
 
     log = logging.getLogger(log_name)
-    log.setLevel(logging.DEBUG)
+    if verbose:
+        log.setLevel(logging.DEBUG)
+    else:
+        log.setLevel(logging.INFO)
     log.addHandler(sh)
     log.addHandler(fh)
 

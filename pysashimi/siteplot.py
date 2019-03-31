@@ -7,6 +7,7 @@ import sys
 import pylab
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
+import numpy as np
 
 from .Constant import COLOR
 from .sitedepth import SiteDepth
@@ -21,7 +22,8 @@ def plot_density_single_site(read_depth_object,
                              xlabel,
                              color='r',
                              nxticks=4,
-                             font_size=8
+                             font_size=8,
+                             logtrans=None
                              ):
     """
 
@@ -43,9 +45,17 @@ def plot_density_single_site(read_depth_object,
     :param junction_log_base:
     :return:
     """
-
     plus = read_depth_object.plus
     minus = read_depth_object.minus
+
+    if logtrans == 'log2':
+        plus = np.log2(plus + 1)
+        minus = -np.log2(abs(minus) + 1)
+    elif logtrans == 'log10':
+        plus = np.log10(plus + 1)
+        minus = -np.log10(abs(minus) + 1)
+    else:
+        pass
 
     maxheight = max(plus)
     minheight = min(minus)
@@ -53,6 +63,7 @@ def plot_density_single_site(read_depth_object,
     ymax = 1.1 * maxheight
 
     ymin = 1.1 * minheight
+
     pylab.fill_between(graphcoords,
                        plus,
                        y2=0,
@@ -156,6 +167,7 @@ def plot_density_site(read_depth_object,
                       fileout=None,
                       wide=8,
                       height=12,
+                      logtrans=None
                       ):
     """
 
@@ -216,7 +228,8 @@ def plot_density_site(read_depth_object,
                                  xlabel,
                                  color,
                                  nxticks=4,
-                                 font_size=6
+                                 font_size=6,
+                                 logtrans=logtrans
                                  )
 
     pylab.subplot(gs[nfile:, :])

@@ -5,7 +5,7 @@ __author__ = 'Zhou Ran'
 import os
 import logging
 from collections import defaultdict
-
+import pysam
 
 def readbamlist(bamlists):
     """

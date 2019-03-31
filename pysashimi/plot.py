@@ -9,6 +9,7 @@ from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 import matplotlib.pyplot as plt
 import logging
+import numpy as np
 
 plt.switch_backend('agg')
 
@@ -49,6 +50,7 @@ def plot_density_single(read_depth_object,
                         numbering_font_size=6,
                         junction_log_base=10,
                         pasite=None,
+                        logtrans=None
                         ):
     """
 
@@ -71,10 +73,18 @@ def plot_density_single(read_depth_object,
     :return:
     """
 
+    # TODO, if given a known junction list, highligh the given junction line
     tx_start = read_depth_object.low
 
     wiggle = read_depth_object.wiggle
     jxns = read_depth_object.junctions_dict
+
+    if logtrans == 'log2':
+        wiggle = np.log2(wiggle + 1)
+    elif logtrans == 'log10':
+        wiggle = np.log10(wiggle + 1)
+    else:
+        pass
 
     maxheight = max(wiggle)
 
@@ -84,7 +94,6 @@ def plot_density_single(read_depth_object,
         ymax = ymax
     ymin = -.6 * ymax
 
-    # TODO, change here to barplot
     pylab.fill_between(graphcoords,
                        wiggle,
                        y2=0,
@@ -112,7 +121,7 @@ def plot_density_single(read_depth_object,
         rightstatus = False
 
         try:
-            ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[rightss - tx_start]]
+            ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[rightss - tx_start + 1]]
         except IndexError:
             continue
 
@@ -130,7 +139,7 @@ def plot_density_single(read_depth_object,
                 leftdens = maxheight
 
             if not rightstatus:
-                rightdens = wiggle[rightss - tx_start]
+                rightdens = wiggle[rightss - tx_start + 1]
             else:
                 rightdens = maxheight
 
@@ -324,7 +333,6 @@ def plot_mRNAs(tx_start,
     Draw the gene structure.
     """
 
-    # TODO, The CDS's location were same as the exon, fix it for beauty
     xaxisloc = -1 * max(graphcoords) * 0.4
     yloc = 0
     exonwidth = .3
@@ -426,7 +434,8 @@ def plot_density(read_depth_object,
                  pasite=None,
                  focus=None,
                  domain=True,
-                 sitedepth=None
+                 sitedepth=None,
+                 logtrans=None
                  ):
     """
 
@@ -502,6 +511,7 @@ def plot_density(read_depth_object,
                             numbering_font_size=6,
                             junction_log_base=10,
                             pasite=pasite,
+                            logtrans=logtrans
                             )
         if sitedepth:
             axvar = pylab.subplot(gs[fileindex_grid + 1, :])
@@ -518,7 +528,8 @@ def plot_density(read_depth_object,
                                      xlabel,
                                      color,
                                      nxticks=4,
-                                     font_size=6
+                                     font_size=6,
+                                     logtrans=logtrans
                                      )
 
     pylab.subplot(gs[nfile:, :])
@@ -538,7 +549,6 @@ def plot_density(read_depth_object,
     '''
     1.23 add focus line into AS
     '''
-    # TODO here to add a error raise, if the region is greater than the given
 
     # if focus:
     #     assert len(focus) == 2, "Got a error on focus region, pls check the focus region you have given"

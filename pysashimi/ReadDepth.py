@@ -80,12 +80,10 @@ class ReadDepth:
                 # if contains_indel:
                 #     continue
 
-
                 for index, base_position in enumerate(read.positions):
+                    base_position += 1
                     if base_position >= start_coord and base_position <= end_coord:
                         depth_vector[base_position - start_coord] += 1
-
-                # TODO, the deletion will impair some pacbio data. How to solve it?
 
                 intronbound = fetch_intron(read.reference_start, cigar_string)
                 if intronbound:

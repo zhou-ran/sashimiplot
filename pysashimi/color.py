@@ -23,6 +23,7 @@ vega_20_scanpy = [
 vega_20_scanpy[2] = vega_10_scanpy[2]
 vega_20_scanpy[4] = vega_10_scanpy[4]
 vega_20_scanpy[7] = vega_10_scanpy[8]  # kakhi shifted by missing grey
+
 # TODO: also replace pale colors if necessary
 
 default_20 = vega_20_scanpy
