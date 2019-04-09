@@ -468,10 +468,12 @@ def plot_density(read_depth_object,
                                           exon_scale
                                           )
     if sitedepth:
-        nfile = 2 * len(read_depth_object) + 2
+        nfile = 2 * len(read_depth_object)
     else:
-        nfile = len(read_depth_object) + 2
+        nfile = len(read_depth_object)
 
+    if prob:
+        nfile += 2
     mRNAnum = len(mRNAobject.txlst) * 2 if len(mRNAobject.txlst) != 0 else 1
 
     gs = gridspec.GridSpec(int(nfile + mRNAnum),
