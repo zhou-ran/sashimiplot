@@ -33,6 +33,7 @@ class SiteDepth:
                         start_coord,
                         end_coord,
                         libtype,
+                        singlestrand=None,
                         readfilter=None):
 
         """
@@ -49,6 +50,9 @@ class SiteDepth:
         """
         checkbam(bam_file_path)
         assert libtype in ['RF', 'FR'], "The library type must be one of RF or FR"
+        if singlestrand:
+            assert singlestrand in ['R1', 'R2'], "The single strand mode must be R1 or R2"
+
         try:
             bam_file = pysam.Samfile(bam_file_path, 'rb', ignore_truncation=True)
             relevant_reads = bam_file.fetch(reference=chrm, start=start_coord, end=end_coord)
@@ -60,6 +64,13 @@ class SiteDepth:
                 if readfilter:
                     if not pafilter(read, readfilter):
                         continue
+
+                if singlestrand == 'R1' and read.is_read2:
+                    continue
+                elif singlestrand == 'R2' and read.is_read1:
+                    continue
+                else:
+                    pass
 
                 # make sure that the read can be used
                 cigar_string = read.cigar
@@ -82,6 +93,7 @@ class SiteDepth:
                         minus[read.reference_start - start_coord + 1] += 1
                     else:
                         plus[read.reference_end - start_coord + 1] += 1
+
             if libtype == "FR":
                 return cls(chrm, start_coord, end_coord, plus, -minus)
             else:

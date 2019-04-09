@@ -144,8 +144,9 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               default=None,
               help="Highlight the given region. for one region: start-end, if multiple, pls seperate by ,")
 @click.option('--ps',
-              is_flag=True,
-              help="plot the site coverage, default: False."
+              default=None,
+              type=str,
+              help="Library type, FR or RF."
               )
 @click.option('--peakfilter',
               default=None,
@@ -156,6 +157,16 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               default=None,
               type=str,
               help="plot the log-tranformed expression values, and support log2 and log10. default: None"
+              )
+@click.option('--prob',
+              default=None,
+              type=str,
+              help="probability, given a region"
+              )
+@click.option('--ssm',
+              default=None,
+              type=str,
+              help="single-strand mode(ssm), given R1 or R2"
               )
 @click.option('--verbose',
               is_flag=True,
@@ -170,6 +181,8 @@ def junc(gtf,
          ps,
          peakfilter,
          log,
+         prob,
+         ssm,
          verbose
          ):
     """
@@ -221,7 +234,8 @@ def junc(gtf,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
                                                         mRNAobject.tend,
-                                                        "FR",
+                                                        ps,
+                                                        singlestrand=ssm,
                                                         readfilter=peakfilter)
             bamsitelst.append({label: sitedepth_})
     logger.info("plot")
@@ -236,7 +250,8 @@ def junc(gtf,
                      focus=focus,
                      domain=domain,
                      sitedepth=bamsitelst,
-                     logtrans=log
+                     logtrans=log,
+                     prob=prob
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

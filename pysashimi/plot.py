@@ -17,6 +17,7 @@ from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
 from .siteplot import plot_density_single_site
+from .probability import modelrate
 
 logger = logging.getLogger('MAIN')
 
@@ -435,7 +436,8 @@ def plot_density(read_depth_object,
                  focus=None,
                  domain=True,
                  sitedepth=None,
-                 logtrans=None
+                 logtrans=None,
+                 prob=None
                  ):
     """
 
@@ -466,9 +468,9 @@ def plot_density(read_depth_object,
                                           exon_scale
                                           )
     if sitedepth:
-        nfile = 2 * len(read_depth_object)
+        nfile = 2 * len(read_depth_object) + 2
     else:
-        nfile = len(read_depth_object)
+        nfile = len(read_depth_object) + 2
 
     mRNAnum = len(mRNAobject.txlst) * 2 if len(mRNAobject.txlst) != 0 else 1
 
@@ -531,6 +533,23 @@ def plot_density(read_depth_object,
                                      font_size=6,
                                      logtrans=logtrans
                                      )
+    # modelrate(chrom, peak_s, peak_e, plotregion_s, plotregion_e, strand, model):
+    if prob:
+        chrom, peaks, peake, strand = prob.split(':')
+        probdat = modelrate(
+            chrom,
+            int(peaks), int(peake), txstart, txend, strand,
+            '/mnt/data8/zhouran/proj/2019-4-5-d-pa-dl/begin_CNN/trainning_data/classifier.h5')
+        ax = pylab.subplot(gs[fileindex_grid + 2, :])
+
+        pylab.plot(graphcoords, probdat)
+        ax.get_xaxis().set_ticks([])
+        # ax.get_yaxis().set_ticks([])
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['bottom'].set_visible(False)
+        # ax.spines['left'].set_visible(False)
+        pylab.xlim(0, max(graphcoords))
 
     pylab.subplot(gs[nfile:, :])
 
