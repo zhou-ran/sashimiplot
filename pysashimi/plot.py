@@ -8,8 +8,10 @@ import matplotlib.gridspec as gridspec
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 import matplotlib.pyplot as plt
+import seaborn as sns
 import logging
 import numpy as np
+from scipy import stats
 
 plt.switch_backend('agg')
 
@@ -20,6 +22,16 @@ from .siteplot import plot_density_single_site
 from .probability import modelrate
 
 logger = logging.getLogger('MAIN')
+
+
+def r2(x, y):
+    """
+    calculate the r-square
+    :param x:
+    :param y:
+    :return:
+    """
+    return stats.pearsonr(x, y)[0] ** 2
 
 
 def cubic_bezier(pts, t):
@@ -553,6 +565,20 @@ def plot_density(read_depth_object,
         # ax.spines['left'].set_visible(False)
         pylab.xlim(0, max(graphcoords))
 
+        ax = pylab.subplot(gs[fileindex_grid + 3, :])
+        # for weigh
+        plus = bamread.plus * probdat
+        minus = bamread.minus * probdat
+        pylab.plot(graphcoords, plus)
+        pylab.plot(graphcoords, minus)
+        ax.get_xaxis().set_ticks([])
+        # ax.get_yaxis().set_ticks([])
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['bottom'].set_visible(False)
+        # ax.spines['left'].set_visible(False)
+        pylab.xlim(0, max(graphcoords))
+
     pylab.subplot(gs[nfile:, :])
 
     plot_mRNAs(txstart,
@@ -583,6 +609,29 @@ def plot_density(read_depth_object,
 
     plt.savefig(fileout,
                 bbox_inches='tight')
+    if prob:
+        fig, (ax1, ax2) = pylab.subplots(2, 1)
+        sns.regplot(np.log2(abs(bamread.plus) + 1), probdat, ax=ax1)
+
+        if sum(bamread.plus) != 0:
+            rsquare = stats.pearsonr(np.log2(abs(bamread.plus) + 1), probdat)[0] ** 2
+        else:
+            rsquare = 'NaN'
+        ax1.set_ylabel('plus(+) strand')
+        ax1.set_xlabel('log2(count + 1)|R^2: {}'.format(round(rsquare, 3) if rsquare != 'NaN' else rsquare))
+
+        sns.regplot(np.log2(abs(bamread.minus) + 1), probdat, ax=ax2)
+
+        if sum(bamread.minus) != 0:
+            rsquare = stats.pearsonr(np.log2(abs(bamread.minus) + 1), probdat)[0] ** 2
+        else:
+            rsquare = 'NaN'
+
+        ax2.set_ylabel('minus(-) strand')
+        ax2.set_xlabel('log2(count + 1)|R^2: {}'.format(round(rsquare, 3) if rsquare != 'NaN' else rsquare))
+
+        fig.savefig(fileout.replace('pdf', 'cor.pdf'),
+                    bbox_inches='tight')
 
 
 def main(file):

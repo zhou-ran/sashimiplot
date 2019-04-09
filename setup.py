@@ -11,6 +11,7 @@ setup(name='pysashimiplot',
       author='Ran zhou',
       author_email='ranzhou1005@gmail.com',
       url='https://github.com/luguodexxx/pysashimi',
+      # dependency_links=['https://pypi.douban.com/simple/'],
       license='MIT',
       classifiers=[
           'Development Status :: 5 - Production/Stable',
@@ -28,7 +29,9 @@ setup(name='pysashimiplot',
           'requests',
           'click',
           'numpy',
-          'matplotlib'
+          'matplotlib',
+          'seaborn',
+          'scipy'
       ],
       entry_points={
           'console_scripts': [
