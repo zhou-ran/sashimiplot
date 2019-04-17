@@ -168,6 +168,10 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               type=str,
               help="single-strand mode(ssm), given R1 or R2"
               )
+@click.option('--model',
+              default=None,
+              type=str,
+              help="The deep learning model.")
 @click.option('--verbose',
               is_flag=True,
               help='set the logging level, if Ture -> INFO')
@@ -183,7 +187,8 @@ def junc(gtf,
          log,
          prob,
          ssm,
-         verbose
+         verbose,
+         model
          ):
     """
     Junction mode, not need network to plot
@@ -251,7 +256,8 @@ def junc(gtf,
                      domain=domain,
                      sitedepth=bamsitelst,
                      logtrans=log,
-                     prob=prob
+                     prob=prob,
+                     model=model
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

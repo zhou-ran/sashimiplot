@@ -38,7 +38,11 @@ def revseq(seq):
 
 
 def fetchseq(chrom, s, fa, strand):
-    seq = fa.fetch(chrom, s - 40, s + 30)
+    if strand == '+':
+        seq = fa.fetch(chrom, s - 40, s + 30)
+    else:
+        seq = fa.fetch(chrom, s - 30, s + 40)
+
     if strand == '-':
         seq = revseq(seq)[::-1]
     return seq

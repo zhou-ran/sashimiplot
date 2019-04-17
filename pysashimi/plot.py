@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/10 4:18 PM
 __author__ = 'Zhou Ran'
+import logging
 import sys
-import pylab
+
 import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
+import numpy as np
+import pylab
+import seaborn as sns
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
-import matplotlib.pyplot as plt
-import seaborn as sns
-import logging
-import numpy as np
 from scipy import stats
 
 plt.switch_backend('agg')
@@ -449,7 +450,8 @@ def plot_density(read_depth_object,
                  domain=True,
                  sitedepth=None,
                  logtrans=None,
-                 prob=None
+                 prob=None,
+                 model=None
                  ):
     """
 
@@ -548,22 +550,28 @@ def plot_density(read_depth_object,
                                      logtrans=logtrans
                                      )
     # modelrate(chrom, peak_s, peak_e, plotregion_s, plotregion_e, strand, model):
+
     if prob:
         chrom, peaks, peake, strand = prob.split(':')
         probdat = modelrate(
             chrom,
             int(peaks), int(peake), txstart, txend, strand,
-            '/mnt/data8/zhouran/proj/2019-4-5-d-pa-dl/begin_CNN/trainning_data/classifier.h5')
+            model)
         ax = pylab.subplot(gs[fileindex_grid + 2, :])
 
         pylab.plot(graphcoords, probdat)
+
+        # plot 0 if a site was smaller than 0.5
+        probdat_ = probdat
+        probdat_[probdat_ < 0.5] = 0
+        pylab.plot(graphcoords, probdat_)
+
         ax.get_xaxis().set_ticks([])
-        # ax.get_yaxis().set_ticks([])
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['bottom'].set_visible(False)
-        # ax.spines['left'].set_visible(False)
         pylab.xlim(0, max(graphcoords))
+        pylab.ylim(0, 1)
 
         ax = pylab.subplot(gs[fileindex_grid + 3, :])
         # for weigh
