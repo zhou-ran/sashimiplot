@@ -4,13 +4,14 @@
 
 __author__ = 'Zhou Ran'
 import sys
+
 import click
 
-from .helper import set_logging
 from .ReadDepth import ReadDepth
-from .sitedepth import SiteDepth
+from .helper import set_logging
 from .mRNA import mRNA
 from .plot import plot_density
+from .sitedepth import SiteDepth
 from .siteplot import plot_density_site
 from .utils import readbamlist
 
@@ -168,6 +169,10 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               type=str,
               help="single-strand mode(ssm), given R1 or R2"
               )
+@click.option('--ade',
+              is_flag=True,
+              help="add expression for plot."
+              )
 @click.option('--model',
               default=None,
               type=str,
@@ -188,7 +193,8 @@ def junc(gtf,
          prob,
          ssm,
          verbose,
-         model
+         model,
+         ade
          ):
     """
     Junction mode, not need network to plot
@@ -213,7 +219,7 @@ def junc(gtf,
         gtf,
         exonstat=True
     )
-
+    print(ade)
     if focus:
         focus = focus.split(',')
         focus = map(lambda x: x.split('-'), focus)
@@ -244,6 +250,7 @@ def junc(gtf,
                                                         readfilter=peakfilter)
             bamsitelst.append({label: sitedepth_})
     logger.info("plot")
+
     try:
         plot_density(bamlst,
                      mRNAobject,
@@ -257,7 +264,8 @@ def junc(gtf,
                      sitedepth=bamsitelst,
                      logtrans=log,
                      prob=prob,
-                     model=model
+                     model=model,
+                     addexpress=ade
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

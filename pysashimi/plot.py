@@ -21,6 +21,7 @@ from .Constant import COLOR
 from .Constant import DOMAINFILTER
 from .siteplot import plot_density_single_site
 from .probability import modelrate
+from .probability import modelrate_
 
 logger = logging.getLogger('MAIN')
 
@@ -451,7 +452,8 @@ def plot_density(read_depth_object,
                  sitedepth=None,
                  logtrans=None,
                  prob=None,
-                 model=None
+                 model=None,
+                 addexpress=None
                  ):
     """
 
@@ -553,18 +555,31 @@ def plot_density(read_depth_object,
 
     if prob:
         chrom, peaks, peake, strand = prob.split(':')
-        probdat = modelrate(
-            chrom,
-            int(peaks), int(peake), txstart, txend, strand,
-            model)
+        if addexpress == True:
+            print('Adding expression')
+            if strand == "+":
+                genemtx = bamread.plus
+            else:
+                genemtx = bamread.minus
+            probdat = modelrate_(
+                chrom,
+                int(peaks), int(peake), txstart, txend, strand,
+                model, genemtx=genemtx)
+        else:
+            probdat = modelrate(
+                chrom,
+                int(peaks), int(peake), txstart, txend, strand,
+                model)
+
         ax = pylab.subplot(gs[fileindex_grid + 2, :])
 
         pylab.plot(graphcoords, probdat)
+        plus = bamread.plus * probdat
+        minus = bamread.minus * probdat
 
         # plot 0 if a site was smaller than 0.5
-        probdat_ = probdat
-        probdat_[probdat_ < 0.5] = 0
-        pylab.plot(graphcoords, probdat_)
+        probdat[probdat < 0.5] = 0
+        pylab.plot(graphcoords, probdat)
 
         ax.get_xaxis().set_ticks([])
         ax.spines['top'].set_visible(False)
@@ -575,8 +590,6 @@ def plot_density(read_depth_object,
 
         ax = pylab.subplot(gs[fileindex_grid + 3, :])
         # for weigh
-        plus = bamread.plus * probdat
-        minus = bamread.minus * probdat
         pylab.plot(graphcoords, plus)
         pylab.plot(graphcoords, minus)
         ax.get_xaxis().set_ticks([])
