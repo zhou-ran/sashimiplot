@@ -30,6 +30,7 @@ setup(name='pysashimiplot',
           'click',
           'numpy',
           'matplotlib',
+          'loguru',
           'seaborn',
           'scipy'
       ],

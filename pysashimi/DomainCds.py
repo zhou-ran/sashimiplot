@@ -4,10 +4,7 @@
 __author__ = 'Zhou Ran'
 
 import math
-import logging
 from .Constant import ANNOTATION
-
-logger = logging.getLogger('MAIN')
 
 
 def bs(arr, threshold):

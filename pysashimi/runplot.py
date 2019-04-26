@@ -6,14 +6,20 @@ __author__ = 'Zhou Ran'
 import sys
 
 import click
+from loguru import logger
 
 from .ReadDepth import ReadDepth
-from .helper import set_logging
 from .mRNA import mRNA
 from .plot import plot_density
 from .sitedepth import SiteDepth
 from .siteplot import plot_density_site
 from .utils import readbamlist
+
+logger.remove(0)
+logger.add('sashimiplot.log', rotation='10 MB', colorize=True,
+           level="DEBUG")
+
+logger.add(sys.stderr, level="INFO", colorize=True)
 
 
 @click.group()
@@ -67,8 +73,6 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
     """
     Normal mode to generate sashimi plot
     """
-
-    logger = set_logging("GENE", verbose=verbose)
 
     if not all([gtf, gene, bam, fileout]):
         cli(['gene', '--help'])
@@ -200,8 +204,6 @@ def junc(gtf,
     Junction mode, not need network to plot
     """
 
-    logger = set_logging("JUNC", verbose=verbose)
-
     if not all([gtf, bam, fileout, junc]):
         cli(['junc', '--help'])
         sys.exit(1)
@@ -219,7 +221,7 @@ def junc(gtf,
         gtf,
         exonstat=True
     )
-    print(ade)
+
     if focus:
         focus = focus.split(',')
         focus = map(lambda x: x.split('-'), focus)
@@ -312,8 +314,6 @@ def site(gtf,
     """
     site mode, plot the last site coverage of the gene direction
     """
-
-    logger = set_logging("SITE", verbose=verbose)
 
     if not all([gtf, bam, fileout, loc]):
         cli(['site', '--help'])

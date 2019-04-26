@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/10 4:18 PM
 __author__ = 'Zhou Ran'
-import logging
 import sys
 
 import matplotlib.gridspec as gridspec
@@ -10,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pylab
 import seaborn as sns
+from loguru import logger
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 from scipy import stats
@@ -22,8 +22,6 @@ from .Constant import DOMAINFILTER
 from .siteplot import plot_density_single_site
 from .probability import modelrate
 from .probability import modelrate_
-
-logger = logging.getLogger('MAIN')
 
 
 def r2(x, y):

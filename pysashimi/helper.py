@@ -1,57 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/22 3:16 PM
-import os
-import logging
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import seaborn as sns
+import matplotlib.pyplot as plt
 import numpy as np
-
-from logging.handlers import RotatingFileHandler
-
-
-def set_logging(log_name, verbose=False):
-    """
-    return a two logger object, one for stream and another for the log file
-    :param log_name:
-    :param infolevel:
-    :return:
-    """
-
-    formatter = logging.Formatter(
-        fmt="[%(asctime)s] - [%(levelname)s]: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S"
-    )
-
-    # streamhandler
-    sh = logging.StreamHandler()
-    sh.setFormatter(formatter)
-    sh.setLevel(logging.INFO)
-
-    # filehandler
-
-    fh = RotatingFileHandler(
-        os.path.join("{}_error.log".format(log_name)),
-        mode='a+',
-        encoding="utf-8",
-        maxBytes=20 * 1024 * 1024,
-        backupCount=2,
-        delay=0
-    )
-
-    fh.setFormatter(formatter)
-    fh.setLevel(logging.ERROR)
-
-    log = logging.getLogger(log_name)
-    if verbose:
-        log.setLevel(logging.DEBUG)
-    else:
-        log.setLevel(logging.INFO)
-    log.addHandler(sh)
-    log.addHandler(fh)
-
-    return log
+import seaborn as sns
 
 
 class SeabornFig2Grid():

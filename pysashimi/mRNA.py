@@ -3,15 +3,14 @@
 # @Time    : 2019/1/10 4:25 PM
 __author__ = 'Zhou Ran'
 
-import pysam
 from collections import defaultdict
 from itertools import chain
+
+import pysam
+
+from .DomainCds import *
 from .FetchGene import Myinfo
 from .pyUniprot import *
-from .DomainCds import *
-import logging
-
-logger = logging.getLogger("MAIN")
 
 
 class AttrDict(dict):
@@ -333,6 +332,7 @@ def main(file):
 
 if __name__ == '__main__':
     import sys
+    import logging
 
     logger = logging.getLogger()
     handler = logging.StreamHandler()
