@@ -7,10 +7,11 @@ __author__ = 'Zhou Ran'
 This class is for plotting the site class
 """
 
-import pysam
 import numpy as np
-from .utils import checkbam
+import pysam
+
 from .bamfilter import pafilter
+from .utils import checkbam
 
 
 class SiteDepth:
@@ -34,7 +35,7 @@ class SiteDepth:
                         end_coord,
                         libtype,
                         singlestrand=None,
-                        readfilter=None):
+                        readFilter=None):
 
         """
         calculate the site coverage based the libtype and the input strand.
@@ -61,8 +62,8 @@ class SiteDepth:
             minus = np.zeros(end_coord - start_coord + 1, dtype='f')
 
             for read in relevant_reads:
-                if readfilter:
-                    if not pafilter(read, readfilter):
+                if readFilter:
+                    if not pafilter(read, readFilter):
                         continue
 
                 if singlestrand == 'R1' and read.is_read2:

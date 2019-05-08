@@ -16,14 +16,13 @@ def pafilter(reads, peak):
     chrom, st, en, strand = peak.split(':')
 
     cigarinfo = reads.cigar
+
     if reads.is_read1:
         if not reads.is_reverse and strand == '+':
             reads_site = reads.reference_start + 1
-            pass
 
         elif reads.is_reverse and strand == '-':
             reads_site = reads.reference_end + 1
-            pass
 
         else:
             return False
@@ -49,4 +48,5 @@ def pafilter(reads, peak):
 
     if int(st) <= reads_site <= int(en):
         return True
+
     return False

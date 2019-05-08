@@ -38,7 +38,7 @@ class ReadDepth:
                         chrm,
                         start_coord,
                         end_coord,
-                        readfilter=None):
+                        readFilter=None):
         """
         calculate the coverage at each base between start_coord and endcoord.
 
@@ -58,8 +58,8 @@ class ReadDepth:
             spanned_junctions = defaultdict(int)
 
             for read in relevant_reads:
-                if readfilter:
-                    if not pafilter(read, readfilter):
+                if readFilter:
+                    if not pafilter(read, readFilter):
                         continue
 
                 # make sure that the read can be used

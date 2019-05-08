@@ -8,7 +8,6 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import pylab
-import seaborn as sns
 from loguru import logger
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
@@ -20,8 +19,7 @@ from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
 from .siteplot import plot_density_single_site
-from .probability import modelrate
-from .probability import modelrate_
+from .EM import EM
 
 
 def r2(x, y):
@@ -550,7 +548,7 @@ def plot_density(read_depth_object,
                                      logtrans=logtrans
                                      )
     # modelrate(chrom, peak_s, peak_e, plotregion_s, plotregion_e, strand, model):
-
+    """ For CNN
     if prob:
         chrom, peaks, peake, strand = prob.split(':')
         if addexpress == True:
@@ -597,6 +595,40 @@ def plot_density(read_depth_object,
         ax.spines['bottom'].set_visible(False)
         # ax.spines['left'].set_visible(False)
         pylab.xlim(0, max(graphcoords))
+    """
+
+    """For EM"""
+    if prob:
+        chrom, peaks, peake, strand = prob.split(':')
+        plusCounts = bamread.plus
+        minusCounts = bamread.minus
+        if np.sum(plusCounts) > - np.sum(minusCounts):
+            strand = '+'
+            expInfo = plusCounts
+        else:
+            strand = '-'
+            expInfo = -minusCounts[::-1]
+
+        _expInfo = expInfo[int(peaks) - txstart: int(peake) - txstart + 1]
+        emMAP = EM(_expInfo)
+        emMAP.fit()
+        if strand == '+':
+            expInfo[int(peaks) - txstart: int(peake) - txstart + 1] = emMAP.pi
+        else:
+            expInfo[int(peaks) - txstart: int(peake) - txstart + 1] = emMAP.pi[::-1]
+
+        ax = pylab.subplot(gs[fileindex_grid + 2, :])
+
+        plt.scatter(graphcoords, expInfo, s=0.5, color='blue')
+        for axvline in graphcoords[expInfo > 0.1]:
+            plt.axvline(x=axvline, color='black', linewidth=.5)
+
+        ax.get_xaxis().set_ticks([])
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['bottom'].set_visible(False)
+        pylab.xlim(0, max(graphcoords))
+        pylab.ylim(0, 1)
 
     pylab.subplot(gs[nfile:, :])
 
@@ -628,6 +660,8 @@ def plot_density(read_depth_object,
 
     plt.savefig(fileout,
                 bbox_inches='tight')
+
+    """ This is the older code for analysis the cnn model
     if prob:
         fig, (ax1, ax2) = pylab.subplots(2, 1)
         sns.regplot(np.log2(abs(bamread.plus) + 1), probdat, ax=ax1)
@@ -651,6 +685,13 @@ def plot_density(read_depth_object,
 
         fig.savefig(fileout.replace('pdf', 'cor.pdf'),
                     bbox_inches='tight')
+
+    fig, (ax1, ax2) = pylab.subplots(2, 1)
+    ax1.scatter(np.arange(0, len(bamread.plus)), np.log2(np.array(bamread.plus) + 1))
+    ax2.scatter(np.arange(0, len(bamread.minus)), np.log(-np.array(bamread.minus) + 1))
+    fig.savefig(fileout.replace('pdf', 'readdistribution.pdf'),
+                bbox_inches='tight')
+    """
 
 
 def main(file):

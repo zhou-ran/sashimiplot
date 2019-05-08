@@ -238,7 +238,7 @@ def junc(gtf,
                                                     mRNAobject.chr,
                                                     mRNAobject.tstart,
                                                     mRNAobject.tend,
-                                                    readfilter=peakfilter)
+                                                    readFilter=peakfilter)
         bamlst.append({label: readdepth_})
         if ps:
             sitedepth_ = SiteDepth.generateobj()
@@ -249,7 +249,7 @@ def junc(gtf,
                                                         mRNAobject.tend,
                                                         ps,
                                                         singlestrand=ssm,
-                                                        readfilter=peakfilter)
+                                                        readFilter=peakfilter)
             bamsitelst.append({label: sitedepth_})
     logger.info("plot")
 
@@ -343,14 +343,14 @@ def site(gtf,
                                                        mRNAobject.tstart,
                                                        mRNAobject.tend,
                                                        "FR",
-                                                       readfilter=peakfilter)
+                                                       readFilter=peakfilter)
             else:
                 readdepth_ += SiteDepth.determine_depth(bam_,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
                                                         mRNAobject.tend,
                                                         "FR",
-                                                        readfilter=peakfilter)
+                                                        readFilter=peakfilter)
 
         bamlst.append({label: readdepth_})
 

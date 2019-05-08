@@ -116,3 +116,5 @@ def modelrate(chrom, peak_s, peak_e, plotregion_s, plotregion_e, strand, model):
     prob[peak_s - plotregion_s:peak_e - plotregion_s] = pred_[:, 1]
 
     return prob
+
+# def emmodelrate():
