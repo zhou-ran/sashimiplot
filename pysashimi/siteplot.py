@@ -4,14 +4,15 @@
 __author__ = 'Zhou Ran'
 
 import sys
-import pylab
+
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
+import pylab
 
 from .Constant import COLOR
-from .sitedepth import SiteDepth
 from .mRNA import mRNA
+from .sitedepth import SiteDepth
 
 
 def plot_density_single_site(read_depth_object,

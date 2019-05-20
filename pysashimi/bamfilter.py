@@ -47,6 +47,6 @@ def pafilter(reads, peak):
             return False
 
     if int(st) <= reads_site <= int(en):
-        return True
+        return reads_site
 
     return False

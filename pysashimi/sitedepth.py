@@ -63,7 +63,8 @@ class SiteDepth:
 
             for read in relevant_reads:
                 if readFilter:
-                    if not pafilter(read, readFilter):
+                    pasite = pafilter(read, readFilter)
+                    if not pasite:
                         continue
 
                 if singlestrand == 'R1' and read.is_read2:
@@ -79,20 +80,25 @@ class SiteDepth:
                 # each read must have a cigar string
                 if cigar_string == None:
                     continue
-
-                if not start_coord <= read.reference_start + 1 <= end_coord or not start_coord <= read.reference_end + 1 <= end_coord: continue
-
+                # if not start_coord <= read.reference_start + 1 <= end_coord and not start_coord <= read.reference_end + 1 <= end_coord: continue
                 if read.is_reverse:
-
                     if read.is_read1:
+                        if not start_coord <= read.reference_end + 1 <= end_coord:
+                            continue
                         plus[read.reference_end - start_coord + 1] += 1
                     else:
+                        if not start_coord <= read.reference_start + 1 <= end_coord:
+                            continue
                         minus[read.reference_start - start_coord + 1] += 1
 
                 else:
                     if read.is_read1:
+                        if not start_coord <= read.reference_start + 1 <= end_coord:
+                            continue
                         minus[read.reference_start - start_coord + 1] += 1
                     else:
+                        if not start_coord <= read.reference_end + 1 <= end_coord:
+                            continue
                         plus[read.reference_end - start_coord + 1] += 1
 
             if libtype == "FR":
