@@ -13,13 +13,14 @@ from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 from scipy import stats
 
-plt.switch_backend('agg')
 
 from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
 from .siteplot import plot_density_single_site
 from .EM import EM
+
+plt.switch_backend('agg')
 
 
 def r2(x, y):
@@ -214,7 +215,7 @@ def plot_density_single(read_depth_object,
         avx.xaxis.set_ticks_position('bottom')
 
         max_graphcoords = max(graphcoords)
-
+        # print(max_graphcoords, nxticks)
         pylab.xticks(pylab.linspace(0, max_graphcoords, nxticks),
                      [graphToGene[int(x)] for x in \
                       pylab.linspace(0, max_graphcoords, nxticks)],
@@ -246,14 +247,14 @@ def getScaling(tx_start,
     """
     exoncoords = pylab.zeros((tx_end - tx_start + 1))
 
-    for i in range(len(exon_starts)):
-        '''
-        1.22 add a if-else to solve these condition that exons were greater than the given region
-        '''
-        leftsite = exon_starts[i] - tx_start if exon_starts[i] - tx_start > 0 else 0
-        rightsite = exon_ends[i] - tx_start if exon_ends[i] - tx_end < 0 else tx_start - tx_end
+    # for i in range(len(exon_starts)):
+    #     '''
+    #     1.22 add a if-else to solve these condition that exons were greater than the given region
+    #     '''
+    #     leftsite = exon_starts[i] - tx_start if exon_starts[i] - tx_start > 0 else 0
+    #     rightsite = exon_ends[i] - tx_start if exon_ends[i] - tx_end < 0 else tx_start - tx_end
 
-        exoncoords[leftsite: rightsite] = 1
+    #     exoncoords[leftsite: rightsite] = 1
 
     graphToGene = {}
     graphcoords = pylab.zeros((tx_end - tx_start + 1), dtype='f')
@@ -307,7 +308,7 @@ def plotdomain(region,
             continue
 
         dregion = calculateinterval(dregion, (tx_start, tx_end))
-
+        print(domainname)
         minsite = min(map(lambda x: x[0], dregion))
         maxsite = max(map(lambda x: x[1], dregion))
         min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
@@ -338,7 +339,8 @@ def plot_mRNAs(tx_start,
                mRNAs,
                graphcoords,
                domain=True,
-               focus=None
+               focus=None,
+               id_keep = None
                ):
     """
     Draw the gene structure.
@@ -353,23 +355,35 @@ def plot_mRNAs(tx_start,
 
     for allinfo in mRNAs:
         for tid, info in allinfo.items():
+            if id_keep is not None:
+                if tid not in id_keep:
+                    continue
+                else:
+                    pass
+            else:
+                pass
+
             strand = info['strand']
             # print(info)
             minsite, maxsite = info['maxinfo'][0]
             logger.debug('ploting {}'.format(tid))
+
             '''
             1.21 add plot the splicing plot
             '''
+
             toplot = ['domain', 'CDS', 'exon'] if domain else ['exon']
 
             for type_ in toplot:
 
-                logger.debug("ploting the {}".format(type_))
+                logger.debug("plotting the {}".format(type_))
                 try:
                     region = info[type_]
                 except KeyError:
+                    logger.warning(f'There was no {type_} information')
                     continue
 
+                # print(region)
                 if not region:
                     continue
 
@@ -448,6 +462,7 @@ def plot_density(read_depth_object,
                  sitedepth=None,
                  logtrans=None,
                  prob=None,
+                 id_keep =None,
                  model=None,
                  addexpress=None
                  ):
@@ -455,9 +470,19 @@ def plot_density(read_depth_object,
 
     :param read_depth_object:
     :param mRNAobject:
-    :param strand:
     :param fileout:
+    :param sjthread:
+    :param wide:
+    :param height:
     :param pasite:
+    :param focus:
+    :param domain:
+    :param sitedepth:
+    :param logtrans:
+    :param prob:
+    :param id_keep:
+    :param model:
+    :param addexpress:
     :return:
     """
     txstart = mRNAobject.tstart
@@ -486,7 +511,12 @@ def plot_density(read_depth_object,
 
     if prob:
         nfile += 2
-    mRNAnum = len(mRNAobject.txlst) * 2 if len(mRNAobject.txlst) != 0 else 1
+
+    # if add id_keep parameters
+    if id_keep is not None:
+        mRNAnum  = len(id_keep) * 3
+    else:
+        mRNAnum = len(mRNAobject.txlst) * 2 if len(mRNAobject.txlst) != 0 else 1
 
     gs = gridspec.GridSpec(int(nfile + mRNAnum),
                            1,
@@ -637,7 +667,8 @@ def plot_density(read_depth_object,
                mRNAobject.txlst,
                graphcoords,
                domain,
-               focus=focus)
+               focus=focus,
+               id_keep=id_keep)
 
     # if pasite:
     #     pasite = map(int, pasite.split(','))

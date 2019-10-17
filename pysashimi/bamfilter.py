@@ -14,10 +14,14 @@ def pafilter(reads, peak):
     :return:
     """
     chrom, st, en, strand = peak.split(':')
-
     cigarinfo = reads.cigar
+    sequence = reads.seq
 
     if reads.is_read1:
+        u'''
+        To check the R1 whether there were softclip or there were polyA or polyT on sequence?
+        '''
+
         if not reads.is_reverse and strand == '+':
             reads_site = reads.reference_start + 1
 
@@ -28,21 +32,31 @@ def pafilter(reads, peak):
             return False
 
     else:
-        if not reads.is_reverse and strand == '-':
+        if reads.is_reverse and strand == '-':
+
             reads_site = reads.reference_end + 1
-
-            if cigarinfo[-1][0] != 4:
-                return False
-            else:
-                pass
-
-        elif reads.is_reverse and strand == '+':
-            reads_site = reads.reference_start + 1
             if cigarinfo[0][0] != 4:
                 return False
             else:
-                pass
-
+                if 'TTTTTT' not in sequence:
+                    return False
+                elif cigarinfo[-1][0] == 4:
+                    return False
+                else:
+                    pass
+        elif not reads.is_reverse and strand == '+':
+            reads_site = reads.reference_start + 1
+            if cigarinfo[-1][0] != 4:
+                return False
+            else:
+                if 'AAAAAAAAAAAA' not in sequence:
+                    return False
+                elif cigarinfo[0][0] == 4:
+                    return False
+                else:
+                    pass
+                    # return (read.reference_end + 1, '+')
+                    # return (read.reference_end, '+')
         else:
             return False
 

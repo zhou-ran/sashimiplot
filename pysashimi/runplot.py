@@ -168,6 +168,12 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               type=str,
               help="probability, given a region"
               )
+@click.option('--id_keep',
+              default=None,
+              type=str,
+              help="keep the given isoform, if there were multiple isoform id, please seperate by comma"
+              )
+
 @click.option('--ssm',
               default=None,
               type=str,
@@ -176,6 +182,10 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
 @click.option('--ade',
               is_flag=True,
               help="add expression for plot."
+              )
+@click.option('--domain',
+              is_flag=True,
+              help="add gene structure."
               )
 @click.option('--model',
               default=None,
@@ -196,9 +206,11 @@ def junc(gtf,
          log,
          prob,
          ssm,
+         domain,
          verbose,
          model,
-         ade
+         ade,
+         id_keep
          ):
     """
     Junction mode, not need network to plot
@@ -211,7 +223,6 @@ def junc(gtf,
     chr, s, e = junc.split(':')
     wide = 8
     height = 12
-    domain = False
 
     logger.info("prepare the mRNA data")
     mRNAobject = mRNA(
@@ -219,7 +230,7 @@ def junc(gtf,
         s,
         e,
         gtf,
-        exonstat=True
+        exonstat=True if not domain else False
     )
 
     if focus:
@@ -253,6 +264,9 @@ def junc(gtf,
             bamsitelst.append({label: sitedepth_})
     logger.info("plot")
 
+    # id to keep
+    id_keep = set(id_keep.split(','))
+
     try:
         plot_density(bamlst,
                      mRNAobject,
@@ -267,7 +281,8 @@ def junc(gtf,
                      logtrans=log,
                      prob=prob,
                      model=model,
-                     addexpress=ade
+                     addexpress=ade,
+                     id_keep = id_keep
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
@@ -364,7 +379,6 @@ def site(gtf,
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
         logger.exception(e)
-
 
 cli.add_command(gene)
 cli.add_command(junc)
