@@ -16,18 +16,23 @@ def readbamlist(bamlists):
     """
 
     bamdict = defaultdict(list)
+    colordict = defaultdict(set)
     try:
         with open(bamlists) as fi:
             for line in fi.readlines():
                 try:
-                    label, bampath = line.strip().split('\t')
-                    bamdict[label].append(bampath)
-
-                except ValueError:
                     line = line.strip().split('\t')
-                    bamdict[line[0]].extend(line[1:])
+                    if len(line) == 2:
+                        label, bampath = line
+                        bamdict[label].append(bampath)
+                    else:
+                        label, bampath, color = line
+                        colordict[label].add(color)
+                        bamdict[label].append(bampath)
+                except ValueError:
+                    raise "There was more than three or only one columns in {} file".format(bamlists)
 
-        return bamdict
+        return bamdict,colordict
     except IOError:
         raise "{} file can't be found".format(bamlists)
 

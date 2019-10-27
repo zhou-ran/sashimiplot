@@ -95,13 +95,17 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
     )
 
     logger.info("retrieve expression data")
-    bamdict = readbamlist(bam)
+    bamdict, colordict = readbamlist(bam)
     bamlst = []
+    # colors = []
     for label, filepath in bamdict.items():
+
         bamlst.append({label: ReadDepth.determine_depth(filepath,
                                                         mRNAobject.chr,
                                                         mRNAobject.tstart,
                                                         mRNAobject.tend)})
+        # colors.append(color)
+
     logger.info("plot")
     try:
         plot_density(bamlst,
@@ -110,6 +114,7 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
                      sj,
                      wide,
                      height,
+                     colors = colordict,
                      pasite=pa,
                      focus=focus,
                      logtrans=log
@@ -237,10 +242,11 @@ def junc(gtf,
         focus = focus.split(',')
         focus = map(lambda x: x.split('-'), focus)
 
-    bamdict = readbamlist(bam)
+    bamdict, colordict = readbamlist(bam)
     bamlst = []
     bamsitelst = [] if ps else None
     logger.info("retrieve expression data")
+
     for label, filepath in bamdict.items():
         readdepth_ = ReadDepth.generateobj()
 
@@ -265,7 +271,8 @@ def junc(gtf,
     logger.info("plot")
 
     # id to keep
-    id_keep = set(id_keep.split(','))
+    if id_keep:
+        id_keep = set(id_keep.split(','))
 
     try:
         plot_density(bamlst,
@@ -274,6 +281,7 @@ def junc(gtf,
                      sj,
                      wide,
                      height,
+                     colors = colordict,
                      pasite=pa,
                      focus=focus,
                      domain=domain,
@@ -345,7 +353,7 @@ def site(gtf,
         exonstat=True
     )
 
-    bamdict = readbamlist(bam)
+    bamdict, colordict = readbamlist(bam)
     bamlst = []
     logger.info("retrieve expression data")
 

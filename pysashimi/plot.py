@@ -456,6 +456,7 @@ def plot_density(read_depth_object,
                  sjthread=1,
                  wide=8,
                  height=12,
+                 colors=None,
                  pasite=None,
                  focus=None,
                  domain=True,
@@ -536,10 +537,13 @@ def plot_density(read_depth_object,
         bamread = list(bamfileinfo.values())[0]
         bamname = list(bamfileinfo.keys())[0]
 
-        try:
-            color = COLOR[fileindex]
-        except IndexError:
-            color = COLOR[fileindex % 11]
+        if colors:
+            color = colors[bamname]
+        else:
+            try:
+                color = COLOR[fileindex]
+            except IndexError:
+                color = COLOR[fileindex % 11]
 
         plot_density_single(bamread,
                             mRNAlist,
