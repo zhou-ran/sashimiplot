@@ -49,7 +49,7 @@ class ReadDepth:
         :return: Numpy array
         """
 
-        checkbam(bam_file_path)
+        # checkbam(bam_file_path)
         try:
             bam_file = pysam.Samfile(bam_file_path, 'rb')
             relevant_reads = bam_file.fetch(reference=chrm, start=start_coord, end=end_coord)
@@ -82,7 +82,7 @@ class ReadDepth:
 
                 for index, base_position in enumerate(read.positions):
                     base_position += 1
-                    if base_position >= start_coord and base_position <= end_coord:
+                    if start_coord <= base_position <= end_coord:
                         depth_vector[base_position - start_coord] += 1
 
                 intronbound = fetch_intron(read.reference_start, cigar_string)

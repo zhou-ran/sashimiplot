@@ -196,9 +196,19 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               default=None,
               type=str,
               help="The deep learning model.")
-@click.option('--verbose',
-              is_flag=True,
-              help='set the logging level, if Ture -> INFO')
+
+@click.option('--hl',
+              default=None,
+              type=str,
+              help="highlight the given splice junction.egg, sj1:sj2,sj3:sj4")
+@click.option('--dim',
+              default=None,
+              type=str,
+              help="The picture's size,(width, height), default: 8,12")
+
+# @click.option('--verbose',
+#               is_flag=True,
+#               help='set the logging level, if Ture -> INFO')
 def junc(gtf,
          bam,
          fileout,
@@ -212,7 +222,9 @@ def junc(gtf,
          prob,
          ssm,
          domain,
-         verbose,
+         hl,
+         dim,
+         # verbose,
          model,
          ade,
          id_keep
@@ -226,8 +238,6 @@ def junc(gtf,
         sys.exit(1)
 
     chr, s, e = junc.split(':')
-    wide = 8
-    height = 12
 
     logger.info("prepare the mRNA data")
     mRNAobject = mRNA(
@@ -238,9 +248,25 @@ def junc(gtf,
         exonstat=True if not domain else False
     )
 
+    # focus the given regions
     if focus:
         focus = focus.split(',')
         focus = map(lambda x: x.split('-'), focus)
+
+    # highlight the splice junction
+    if hl:
+        # incase somebody add space in the given splice junction
+        hl = set(map(lambda x: x.strip(), hl.split(',')))
+
+    # id to keep
+    if id_keep:
+        id_keep = set(id_keep.split(','))
+
+    # figdim
+    if dim:
+        width, height = map(lambda x: float(x), map(lambda x: x.strip(), dim.split(',')))
+    else:
+        width, height = 8.0, 12.0
 
     bamdict, colordict = readbamlist(bam)
     bamlst = []
@@ -270,17 +296,13 @@ def junc(gtf,
             bamsitelst.append({label: sitedepth_})
     logger.info("plot")
 
-    # id to keep
-    if id_keep:
-        id_keep = set(id_keep.split(','))
-
     try:
         plot_density(bamlst,
                      mRNAobject,
                      fileout,
                      sj,
-                     wide,
-                     height,
+                     width=width,
+                     height=height,
                      colors = colordict,
                      pasite=pa,
                      focus=focus,
@@ -290,7 +312,8 @@ def junc(gtf,
                      prob=prob,
                      model=model,
                      addexpress=ade,
-                     id_keep = id_keep
+                     id_keep=id_keep,
+                     hl=hl
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

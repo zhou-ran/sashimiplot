@@ -1,6 +1,26 @@
 """Color palettes in addition to matplotlib's palettes."""
 
 from matplotlib import cm, colors
+import colorsys
+
+# reference: https://stackoverflow.com/a/49601444
+def darken_rgb(color, amount=1.5):
+    """
+    Lightens the given color by multiplying (1-luminosity) by the given amount.
+    Input can be matplotlib color string, hex string, or RGB tuple.
+
+    Examples:
+    >> lighten_color('g', 0.3)
+    >> lighten_color('#F034A3', 0.6)
+    >> lighten_color((.3,.55,.1), 0.5)
+    """
+    try:
+        c = colors.cnames[color]
+    except:
+        c = color
+    c = colorsys.rgb_to_hls(*colors.to_rgb(c))
+    c = colorsys.rgb_to_hls(c[0], max(0, min(1, amount * c[1])), c[2])
+    return colors.to_hex(c)
 
 # Colorblindness adjusted vega_10
 # See https://github.com/theislab/scanpy/issues/387

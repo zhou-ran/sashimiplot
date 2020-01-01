@@ -3,7 +3,7 @@
 # @Time    : 2019/1/16 3:41 PM
 __author__ = 'Zhou Ran'
 import os
-import logging
+from loguru import logger
 from collections import defaultdict
 import pysam
 
@@ -44,14 +44,18 @@ def checkbam(bamfile):
     :return:
     """
     if not os.path.exists(bamfile + '.bai'):
-        logging.info("Index the bam file with 4 cores")
+        logger.info("Index the bam file with 4 cores")
         pysam.index(bamfile, "-@", "4")
     else:
         # Check the index file whether is elder than bam file, if not re-generate
         if os.path.getmtime(bamfile) > os.path.getmtime(bamfile + '.bai'):
-            logging.info('The index file is older than %s file, removing the index file' % bamfile)
-            os.remove(bamfile + '.bai')
-            logging.info("Index the bam file with 4 cores")
-            pysam.index(bamfile, "-@", "4")
+            logger.info('The index file is older than %s file, removing the index file' % bamfile)
+            try:
+                os.remove(bamfile + '.bai')
+                logger.info("Index the bam file with 4 cores")
+                pysam.index(bamfile, "-@", "4")
+            except PermissionError:
+                logger.info("Index time error, but no permission to process, Skip")
+
         else:
-            logging.info("Index of the bam file was complete!")
+            logger.info("Index of the bam file was complete!")

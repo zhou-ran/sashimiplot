@@ -8,9 +8,7 @@ def pafilter(reads, peak):
     """
     polyA filter for bam file
     :param reads:
-    :param st:
-    :param ed:
-    :param strand:
+    :param peak:
     :return:
     """
     chrom, st, en, strand = peak.split(':')
@@ -19,7 +17,7 @@ def pafilter(reads, peak):
 
     if reads.is_read1:
         u'''
-        To check the R1 whether there were softclip or there were polyA or polyT on sequence?
+        To check the R1 whether there were soft clip or there were polyA or polyT on sequence?
         '''
 
         if not reads.is_reverse and strand == '+':

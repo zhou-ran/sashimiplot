@@ -18,6 +18,7 @@ from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
 from .siteplot import plot_density_single_site
+from .color import darken_rgb
 from .EM import EM
 
 plt.switch_backend('agg')
@@ -47,7 +48,7 @@ def cubic_bezier(pts, t):
 
 
 def plot_density_single(read_depth_object,
-                        mRNAs,
+                        # mRNAs,
                         samplename,
                         graphcoords,
                         graphToGene,
@@ -61,13 +62,14 @@ def plot_density_single(read_depth_object,
                         font_size=8,
                         numbering_font_size=6,
                         junction_log_base=10,
+                        highlight=None,
                         pasite=None,
                         logtrans=None
                         ):
     """
 
     :param read_depth_object:
-    :param mRNAs:
+    # :param mRNAs:
     :param samplename:
     :param graphcoords:
     :param graphToGene:
@@ -86,6 +88,11 @@ def plot_density_single(read_depth_object,
     """
 
     # TODO, if given a known junction list, highligh the given junction line
+    if highlight:
+        assert isinstance(highlight,set),"The highlight junction was not a set, pls check your highlight input"
+    else:
+        highlight = set("")
+
     tx_start = read_depth_object.low
 
     wiggle = read_depth_object.wiggle
@@ -127,12 +134,16 @@ def plot_density_single(read_depth_object,
             continue
         u'''
         1.13 add a junction in half, delete this?
+        just skip the junction plot
         '''
+        junc_label = "{}:{}".format(leftss,
+                                    rightss)
 
         leftstatus = False
         rightstatus = False
 
         try:
+
             ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[rightss - tx_start + 1]]
         except IndexError:
             continue
@@ -170,7 +181,16 @@ def plot_density_single(read_depth_object,
             t.set_bbox(dict(alpha=0, ))
 
         a = Path(pts, [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4])
-        p = PathPatch(a, ec=color, lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5, fc='none')
+        # here to add the highlight information for sj
+        if junc_label in highlight:
+            # 	#FF0000
+            p = PathPatch(a, ec="#FF0000",
+                          lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5,
+                          fc='none')
+            # p = PathPatch(a, ec=darken_rgb(color), lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5, fc='none')
+        else:
+            p = PathPatch(a, ec=color, lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5, fc='none')
+
         avx.add_patch(p)
 
     # set the y limit
@@ -454,8 +474,8 @@ def plot_density(read_depth_object,
                  mRNAobject,
                  fileout,
                  sjthread=1,
-                 wide=8,
-                 height=12,
+                 width=8.0,
+                 height=12.0,
                  colors=None,
                  pasite=None,
                  focus=None,
@@ -465,7 +485,8 @@ def plot_density(read_depth_object,
                  prob=None,
                  id_keep =None,
                  model=None,
-                 addexpress=None
+                 addexpress=None,
+                 hl=None
                  ):
     """
 
@@ -473,7 +494,7 @@ def plot_density(read_depth_object,
     :param mRNAobject:
     :param fileout:
     :param sjthread:
-    :param wide:
+    :param width:
     :param height:
     :param pasite:
     :param focus:
@@ -484,6 +505,7 @@ def plot_density(read_depth_object,
     :param id_keep:
     :param model:
     :param addexpress:
+    :param hL:
     :return:
     """
     txstart = mRNAobject.tstart
@@ -496,7 +518,7 @@ def plot_density(read_depth_object,
     intron_scale = 30
     exon_scale = 1
 
-    plt.rcParams["figure.figsize"] = (wide, height)
+    plt.rcParams["figure.figsize"] = (width, height)
 
     graphcoords, graphToGene = getScaling(txstart,
                                           txend,
@@ -546,7 +568,7 @@ def plot_density(read_depth_object,
                 color = COLOR[fileindex % 11]
 
         plot_density_single(bamread,
-                            mRNAlist,
+                            # mRNAlist,
                             bamname,
                             graphcoords,
                             graphToGene,
@@ -561,7 +583,8 @@ def plot_density(read_depth_object,
                             numbering_font_size=6,
                             junction_log_base=10,
                             pasite=pasite,
-                            logtrans=logtrans
+                            logtrans=logtrans,
+                            highlight=hl
                             )
         if sitedepth:
             axvar = pylab.subplot(gs[fileindex_grid + 1, :])
@@ -694,6 +717,8 @@ def plot_density(read_depth_object,
     # plt.axvline(graphcoords[r - txstart], lw=.5)
 
     plt.savefig(fileout,
+                # figsize = c(float(width),
+                #             float(height)),
                 bbox_inches='tight')
 
     """ This is the older code for analysis the cnn model
