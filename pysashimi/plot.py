@@ -184,7 +184,7 @@ def plot_density_single(read_depth_object,
         # here to add the highlight information for sj
         if junc_label in highlight:
             # 	#FF0000
-            p = PathPatch(a, ec="#FF0000",
+            p = PathPatch(a, ec="#282828",
                           lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5,
                           fc='none')
             # p = PathPatch(a, ec=darken_rgb(color), lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5, fc='none')
@@ -255,31 +255,58 @@ def plot_density_single(read_depth_object,
     return avx
 
 
+# def getScaling(tx_start,
+#                tx_end,
+#                exon_starts,
+#                exon_ends,
+#                intron_scale,
+#                exon_scale
+#                ):
+#     """
+#     Compute the scaling factor across various genic regions.
+#     """
+#     exoncoords = pylab.zeros((tx_end - tx_start + 1))
+#
+#     # for i in range(len(exon_starts)):
+#     #     '''
+#     #     1.22 add a if-else to solve these condition that exons were greater than the given region
+#     #     '''
+#     #     leftsite = exon_starts[i] - tx_start if exon_starts[i] - tx_start > 0 else 0
+#     #     rightsite = exon_ends[i] - tx_start if exon_ends[i] - tx_end < 0 else tx_start - tx_end
+#
+#     #     exoncoords[leftsite: rightsite] = 1
+#
+#     graphToGene = {}
+#     graphcoords = pylab.zeros((tx_end - tx_start + 1), dtype='f')
+#     x = 0
+#
+#     for i in range(tx_end - tx_start + 1):
+#         graphcoords[i] = x
+#         graphToGene[int(x)] = i + tx_start
+#         if exoncoords[i] == 1:
+#             x += 1. / exon_scale
+#         else:
+#             x += 1. / intron_scale
+#
+#     return graphcoords, graphToGene
+
 def getScaling(tx_start,
                tx_end,
                exon_starts,
                exon_ends,
-               intron_scale,
-               exon_scale
-               ):
+               intron_scale=15,
+               exon_scale=1):
     """
     Compute the scaling factor across various genic regions.
     """
-    exoncoords = pylab.zeros((tx_end - tx_start + 1))
 
-    # for i in range(len(exon_starts)):
-    #     '''
-    #     1.22 add a if-else to solve these condition that exons were greater than the given region
-    #     '''
-    #     leftsite = exon_starts[i] - tx_start if exon_starts[i] - tx_start > 0 else 0
-    #     rightsite = exon_ends[i] - tx_start if exon_ends[i] - tx_end < 0 else tx_start - tx_end
-
-    #     exoncoords[leftsite: rightsite] = 1
+    exoncoords = np.zeros((tx_end - tx_start + 1))
+    for i in range(len(exon_starts)):
+        exoncoords[exon_starts[i] - tx_start : exon_ends[i] - tx_start] = 1
 
     graphToGene = {}
-    graphcoords = pylab.zeros((tx_end - tx_start + 1), dtype='f')
+    graphcoords = np.zeros((tx_end - tx_start + 1), dtype='f')
     x = 0
-
     for i in range(tx_end - tx_start + 1):
         graphcoords[i] = x
         graphToGene[int(x)] = i + tx_start
@@ -289,7 +316,6 @@ def getScaling(tx_start,
             x += 1. / intron_scale
 
     return graphcoords, graphToGene
-
 
 def plotdomain(region,
                tx_start,
@@ -384,7 +410,6 @@ def plot_mRNAs(tx_start,
                 pass
 
             strand = info['strand']
-            # print(info)
             minsite, maxsite = info['maxinfo'][0]
             logger.debug('ploting {}'.format(tid))
 
@@ -412,7 +437,10 @@ def plot_mRNAs(tx_start,
                     yloc += 1
                     continue
 
+
                 region = calculateinterval(region, (tx_start, tx_end))
+
+                if not region:continue
 
                 min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
                 max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
@@ -515,17 +543,18 @@ def plot_density(read_depth_object,
     exon_starts = mRNAobject.exonstarts
     exon_ends = mRNAobject.exonend
 
-    intron_scale = 30
+    intron_scale = 15
     exon_scale = 1
 
     plt.rcParams["figure.figsize"] = (width, height)
 
+    # print(txstart, txend)
     graphcoords, graphToGene = getScaling(txstart,
                                           txend,
                                           exon_starts,
                                           exon_ends,
-                                          intron_scale,
-                                          exon_scale
+                                          intron_scale=intron_scale,
+                                          exon_scale=exon_scale
                                           )
     if sitedepth:
         nfile = 2 * len(read_depth_object)

@@ -61,7 +61,7 @@ zeileis_26 = [
 
 default_26 = zeileis_26[13:24]
 
-print(default_26)
+# print(default_26)
 # from http://godsnotwheregodsnot.blogspot.de/2012/09/color-distribution-methodology.html
 godsnot_64 = [
     # "#000000",  # remove the black, as often, we have black colored annotation
