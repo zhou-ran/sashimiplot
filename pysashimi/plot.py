@@ -64,6 +64,9 @@ def plot_density_single(read_depth_object,
                         junction_log_base=10,
                         highlight=None,
                         pasite=None,
+                        wt_pasite=None,
+                        pasite2=None,
+                        wt_pasite2=None,
                         logtrans=None
                         ):
     """
@@ -247,9 +250,40 @@ def plot_density_single(read_depth_object,
 
     # Here to plot the highlight site, for example pasite.
     if pasite:
-        pasite = map(int, pasite.split(','))
-        for subsite in pasite:
-            pylab.axvline(graphcoords[subsite - tx_start], lw=.5)
+        pasite = list(map(int, pasite.split(',')))
+        wt_pasite = list(map(float, wt_pasite.split(','))) if wt_pasite else wt_pasite
+
+        for site_index, subsite in enumerate(pasite):
+            pylab.axvline(graphcoords[subsite - tx_start],
+                          color="blue",
+                          lw=.5)
+            if wt_pasite:
+                if len(pasite) != len(wt_pasite):
+                    logger.error("The length of pasite and wt_pasite was not same!")
+                    sys.exit()
+
+                pylab.text(x=graphcoords[subsite - tx_start],
+                           y=max_used_yval/2,
+                           s=np.round(wt_pasite[site_index],3),
+                           fontsize=font_size)
+
+    if pasite2:
+        pasite2 = list(map(int, pasite2.split(',')))
+        wt_pasite2 = list(map(float, wt_pasite2.split(','))) if wt_pasite2 else wt_pasite2
+
+        for site_index, subsite in enumerate(pasite2):
+            pylab.axvline(graphcoords[subsite - tx_start],
+                          color="red",
+                          lw=.5)
+            if wt_pasite2:
+                if len(pasite) != len(wt_pasite2):
+                    logger.error("The length of pasite and wt_pasite was not same!")
+                    sys.exit()
+
+                pylab.text(x=graphcoords[subsite - tx_start],
+                           y=max_used_yval/2,
+                           s=np.round(wt_pasite2[site_index],3),
+                           fontsize=font_size)
 
     pylab.xlim(0, max(graphcoords))
     return avx
@@ -506,6 +540,9 @@ def plot_density(read_depth_object,
                  height=12.0,
                  colors=None,
                  pasite=None,
+                 wt_pasite=None,
+                 pasite2=None,
+                 wt_pasite2=None,
                  focus=None,
                  domain=True,
                  sitedepth=None,
@@ -612,6 +649,9 @@ def plot_density(read_depth_object,
                             numbering_font_size=6,
                             junction_log_base=10,
                             pasite=pasite,
+                            wt_pasite=wt_pasite,
+                            pasite2=pasite2,
+                            wt_pasite2=wt_pasite2,
                             logtrans=logtrans,
                             highlight=hl
                             )

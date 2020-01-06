@@ -150,6 +150,23 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               default=None,
               help="The pA site, if there were multiple sites, pls seperate by `,`. default: None"
               )
+@click.option('--wt',
+              type=str,
+              default=None,
+              help="The weight for every pa sites from `--pa`, the number of wt must be same to `--pa`,seperate by `,`"
+              )
+
+@click.option('--pa2',
+              type=str,
+              default=None,
+              help="The pA site with different color, if there were multiple sites, pls seperate by `,`. default: None"
+              )
+@click.option('--wt2',
+              type=str,
+              default=None,
+              help="The weight for every pa sites from `--pa2`, the number of wt must be same to `--pa`,seperate by `,`"
+              )
+
 @click.option('--focus',
               default=None,
               help="Highlight the given region. for one region: start-end, if multiple, pls seperate by ,")
@@ -215,6 +232,9 @@ def junc(gtf,
          junc,
          sj,
          pa,
+         wt,
+         pa2,
+         wt2,
          focus,
          ps,
          peakfilter,
@@ -305,6 +325,9 @@ def junc(gtf,
                      height=height,
                      colors = colordict,
                      pasite=pa,
+                     wt_pasite=wt,
+                     pasite2=pa2,
+                     wt_pasite2=wt2,
                      focus=focus,
                      domain=domain,
                      sitedepth=bamsitelst,
