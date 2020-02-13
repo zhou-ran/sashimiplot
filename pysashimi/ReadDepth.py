@@ -38,6 +38,7 @@ class ReadDepth:
                         chrm,
                         start_coord,
                         end_coord,
+                        scale=False,
                         readFilter=None):
         """
         calculate the coverage at each base between start_coord and endcoord.
@@ -93,6 +94,10 @@ class ReadDepth:
                                                           intronbound_[1]
                                                           )
                         spanned_junctions[junction_name] += 1
+            if scale:
+                max_value = numpy.max(depth_vector)
+                if max_value != 0:
+                    depth_vector = depth_vector/max_value * 100
 
             return cls(chrm, start_coord, end_coord, depth_vector, spanned_junctions)
         except IOError:

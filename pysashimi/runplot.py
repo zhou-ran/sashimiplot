@@ -222,7 +222,9 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               default=None,
               type=str,
               help="The picture's size,(width, height), default: 8,12")
-
+@click.option('--scale',
+              is_flag=True,
+              help="Scale the count into 10%")
 # @click.option('--verbose',
 #               is_flag=True,
 #               help='set the logging level, if Ture -> INFO')
@@ -247,7 +249,8 @@ def junc(gtf,
          # verbose,
          model,
          ade,
-         id_keep
+         id_keep,
+         scale
          ):
     """
     Junction mode, not need network to plot
@@ -258,7 +261,7 @@ def junc(gtf,
         sys.exit(1)
 
     chr, s, e = junc.split(':')
-
+    # print(scale)
     logger.info("prepare the mRNA data")
     mRNAobject = mRNA(
         chr,
@@ -301,6 +304,7 @@ def junc(gtf,
                                                     mRNAobject.chr,
                                                     mRNAobject.tstart,
                                                     mRNAobject.tend,
+                                                    scale=scale,
                                                     readFilter=peakfilter)
         bamlst.append({label: readdepth_})
         if ps:

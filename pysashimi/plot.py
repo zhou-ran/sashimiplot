@@ -111,7 +111,13 @@ def plot_density_single(read_depth_object,
     maxheight = max(wiggle)
 
     if ymax is None:
-        ymax = 1.1 * maxheight
+        """
+        2020.2.13 for scale mode
+        """
+        if maxheight == 100:
+            ymax = 100
+        else:
+            ymax = 1.1 * maxheight
     else:
         ymax = ymax
     ymin = -.6 * ymax
@@ -199,8 +205,10 @@ def plot_density_single(read_depth_object,
     # set the y limit
     max_used_yval = avx.get_ylim()[1]
     fake_ymin = -0.5 * max_used_yval
-
-    avx.set_ybound(lower=fake_ymin, upper=1.2 * max_used_yval)
+    if ymax == 100:
+        avx.set_ybound(lower=fake_ymin, upper=max_used_yval)
+    else:
+        avx.set_ybound(lower=fake_ymin, upper=1.2 * max_used_yval)
     universal_yticks = pylab.linspace(0, max_used_yval, 2 + 1)
     # universal_ticks = map(math.ceil, universal_yticks)
     curr_yticklabels = []
