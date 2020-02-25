@@ -63,6 +63,7 @@ def plot_density_single(read_depth_object,
                         numbering_font_size=6,
                         junction_log_base=10,
                         highlight=None,
+                        include_sj=None,
                         pasite=None,
                         wt_pasite=None,
                         pasite2=None,
@@ -90,7 +91,13 @@ def plot_density_single(read_depth_object,
     :return:
     """
 
-    # TODO, if given a known junction list, highligh the given junction line
+    if include_sj:
+        assert isinstance(include_sj,set),"The including junction was not a set, pls check your including input"
+
+    if include_sj and highlight:
+        if not include_sj & highlight:
+            raise Exception("There was no overlap bewteen including and highlight junction!")
+
     if highlight:
         assert isinstance(highlight,set),"The highlight junction was not a set, pls check your highlight input"
     else:
@@ -147,6 +154,9 @@ def plot_density_single(read_depth_object,
         '''
         junc_label = "{}:{}".format(leftss,
                                     rightss)
+
+        if include_sj and junc_label not in include_sj:
+            continue
 
         leftstatus = False
         rightstatus = False
@@ -559,7 +569,8 @@ def plot_density(read_depth_object,
                  id_keep =None,
                  model=None,
                  addexpress=None,
-                 hl=None
+                 highlight_sj=None,
+                 include_sj=None
                  ):
     """
 
@@ -661,7 +672,8 @@ def plot_density(read_depth_object,
                             pasite2=pasite2,
                             wt_pasite2=wt_pasite2,
                             logtrans=logtrans,
-                            highlight=hl
+                            highlight=highlight_sj,
+                            include_sj=include_sj
                             )
         if sitedepth:
             axvar = pylab.subplot(gs[fileindex_grid + 1, :])

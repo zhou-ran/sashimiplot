@@ -213,11 +213,14 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
               default=None,
               type=str,
               help="The deep learning model.")
-
 @click.option('--hl',
               default=None,
               type=str,
-              help="highlight the given splice junction.egg, sj1:sj2,sj3:sj4")
+              help="highlight the given splice junction. Egg, sj1:sj2,sj3:sj4")
+@click.option('--inc',
+              default=None,
+              type=str,
+              help="Only plot the given splice junction. Egg, sj1:sj2,sj3:sj4")
 @click.option('--dim',
               default=None,
               type=str,
@@ -245,6 +248,7 @@ def junc(gtf,
          ssm,
          domain,
          hl,
+         inc,
          dim,
          # verbose,
          model,
@@ -280,6 +284,11 @@ def junc(gtf,
     if hl:
         # incase somebody add space in the given splice junction
         hl = set(map(lambda x: x.strip(), hl.split(',')))
+
+    # which sj will be plot
+    if inc:
+        # incase somebody add space in the given splice junction
+        inc = set(map(lambda x: x.strip(), inc.split(',')))
 
     # id to keep
     if id_keep:
@@ -327,7 +336,7 @@ def junc(gtf,
                      sj,
                      width=width,
                      height=height,
-                     colors = colordict,
+                     colors=colordict,
                      pasite=pa,
                      wt_pasite=wt,
                      pasite2=pa2,
@@ -340,7 +349,8 @@ def junc(gtf,
                      model=model,
                      addexpress=ade,
                      id_keep=id_keep,
-                     hl=hl
+                     highlight_sj=hl,
+                     include_sj=inc
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
