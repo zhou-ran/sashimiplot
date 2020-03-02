@@ -283,12 +283,13 @@ def junc(gtf,
     # highlight the splice junction
     if hl:
         # incase somebody add space in the given splice junction
-        hl = set(map(lambda x: x.strip(), hl.split(',')))
+        hl = list(map(lambda x: x.strip(), hl.split(',')))
 
     # which sj will be plot
     if inc:
         # incase somebody add space in the given splice junction
-        inc = set(map(lambda x: x.strip(), inc.split(',')))
+        inc = list(map(lambda x: x.strip(), inc.split(',')))
+
 
     # id to keep
     if id_keep:

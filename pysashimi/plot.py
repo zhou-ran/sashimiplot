@@ -73,7 +73,6 @@ def plot_density_single(read_depth_object,
     """
 
     :param read_depth_object:
-    # :param mRNAs:
     :param samplename:
     :param graphcoords:
     :param graphToGene:
@@ -83,23 +82,29 @@ def plot_density_single(read_depth_object,
     :param color:
     :param ymax:
     :param number_junctions:
-    :param resolution:
     :param nxticks:
     :param font_size:
     :param numbering_font_size:
     :param junction_log_base:
+    :param highlight:
+    :param include_sj:
+    :param pasite:
+    :param wt_pasite:
+    :param pasite2:
+    :param wt_pasite2:
+    :param logtrans:
     :return:
     """
 
     if include_sj:
-        assert isinstance(include_sj,set),"The including junction was not a set, pls check your including input"
+        assert isinstance(include_sj,list),"The including junction was not a set, pls check your including input"
 
     if include_sj and highlight:
         if not include_sj & highlight:
             raise Exception("There was no overlap bewteen including and highlight junction!")
 
     if highlight:
-        assert isinstance(highlight,set),"The highlight junction was not a set, pls check your highlight input"
+        assert isinstance(highlight,list),"The highlight junction was not a set, pls check your highlight input"
     else:
         highlight = set("")
 
@@ -142,6 +147,31 @@ def plot_density_single(read_depth_object,
     '''
     jxns_sorted_list = sorted(jxns.keys(), key=lambda x: int(x.split(':')[1].split('-')[0]))
     current_height = -3 * ymin / 4
+
+    jxns_new = {}
+
+    for sj_id, sj_counts in jxns.items():
+        sj_id = sj_id.split(":")[-1].replace("-",":")
+        jxns_new[sj_id] = sj_counts
+
+    if len(include_sj) == 2:
+        psi_numerator = jxns_new.get(include_sj[0]) if jxns_new.get(include_sj[0]) is not None else 0
+        psi_denominator = [jxns_new.get(key) for key in include_sj]
+        psi = psi_numerator / np.sum([0 if i is None else i for i in psi_denominator])
+
+    elif len(include_sj) >= 3:
+        psi_numerator = [jxns_new.get(key) for key in include_sj[:2]]
+        psi_denominator = [jxns_new.get(key) for key in include_sj]
+        psi = np.sum([0 if i is None else i for i in psi_numerator]) / np.sum([0 if i is None else i for i in psi_denominator])
+    else:
+        psi = None
+
+    if psi:
+        psi = np.round(psi, 3)
+    else:
+        psi = "NA"
+
+
 
     for plotted_count, jxn in enumerate(jxns_sorted_list):
 
@@ -201,7 +231,7 @@ def plot_density_single(read_depth_object,
 
         a = Path(pts, [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4])
         # here to add the highlight information for sj
-        if junc_label in highlight:
+        if junc_label in set(highlight):
             # 	#FF0000
             p = PathPatch(a, ec="#282828",
                           lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5,
@@ -241,7 +271,7 @@ def plot_density_single(read_depth_object,
 
     # ylab
     y_horz_alignment = 'right'
-    avx.set_ylabel(samplename,
+    avx.set_ylabel('{}\npsi:{}'.format(samplename,psi),
                    fontsize=font_size * 1.25,
                    va="center",
                    rotation="horizontal",
