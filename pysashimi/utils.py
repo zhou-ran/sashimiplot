@@ -32,7 +32,7 @@ def readbamlist(bamlists):
                 except ValueError:
                     raise "There was more than three or only one columns in {} file".format(bamlists)
 
-        return bamdict,colordict
+        return bamdict, colordict
     except IOError:
         raise "{} file can't be found".format(bamlists)
 

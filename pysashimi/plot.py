@@ -13,7 +13,6 @@ from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 from scipy import stats
 
-
 from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
@@ -134,6 +133,11 @@ def plot_density_single(read_depth_object,
         ymax = ymax
     ymin = -.6 * ymax
 
+    if isinstance(color, set):
+        color = list(color)[0]
+    else:
+        pass
+
     pylab.fill_between(graphcoords,
                        wiggle,
                        y2=0,
@@ -153,23 +157,23 @@ def plot_density_single(read_depth_object,
     for sj_id, sj_counts in jxns.items():
         sj_id = sj_id.split(":")[-1].replace("-",":")
         jxns_new[sj_id] = sj_counts
+    if include_sj:
+        if len(include_sj) == 2:
+            psi_numerator = jxns_new.get(include_sj[0]) if jxns_new.get(include_sj[0]) is not None else 0
+            psi_denominator = [jxns_new.get(key) for key in include_sj]
+            psi = psi_numerator / np.sum([0 if i is None else i for i in psi_denominator])
 
-    if len(include_sj) == 2:
-        psi_numerator = jxns_new.get(include_sj[0]) if jxns_new.get(include_sj[0]) is not None else 0
-        psi_denominator = [jxns_new.get(key) for key in include_sj]
-        psi = psi_numerator / np.sum([0 if i is None else i for i in psi_denominator])
+        elif len(include_sj) >= 3:
+            psi_numerator = [jxns_new.get(key) for key in include_sj[:2]]
+            psi_denominator = [jxns_new.get(key) for key in include_sj]
+            psi = np.sum([0 if i is None else i for i in psi_numerator]) / np.sum([0 if i is None else i for i in psi_denominator])
+        else:
+            psi = None
 
-    elif len(include_sj) >= 3:
-        psi_numerator = [jxns_new.get(key) for key in include_sj[:2]]
-        psi_denominator = [jxns_new.get(key) for key in include_sj]
-        psi = np.sum([0 if i is None else i for i in psi_numerator]) / np.sum([0 if i is None else i for i in psi_denominator])
-    else:
-        psi = None
-
-    if psi:
-        psi = np.round(psi, 3)
-    else:
-        psi = "NA"
+        if psi:
+            psi = np.round(psi, 3)
+        else:
+            psi = "NA"
 
 
 
@@ -232,13 +236,12 @@ def plot_density_single(read_depth_object,
         a = Path(pts, [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4])
         # here to add the highlight information for sj
         if junc_label in set(highlight):
-            # 	#FF0000
-            p = PathPatch(a, ec="#282828",
+            p = PathPatch(a, color="#282828",
                           lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5,
                           fc='none')
-            # p = PathPatch(a, ec=darken_rgb(color), lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5, fc='none')
         else:
-            p = PathPatch(a, ec=color, lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5, fc='none')
+            p = PathPatch(a, color=color,
+                          lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5, fc='none')
 
         avx.add_patch(p)
 
@@ -271,13 +274,22 @@ def plot_density_single(read_depth_object,
 
     # ylab
     y_horz_alignment = 'right'
-    avx.set_ylabel('{}\npsi:{}'.format(samplename,psi),
-                   fontsize=font_size * 1.25,
-                   va="center",
-                   rotation="horizontal",
-                   ha=y_horz_alignment,
-                   labelpad=10
-                   )
+    if include_sj:
+        avx.set_ylabel('{}\npsi:{}'.format(samplename,psi),
+                       fontsize=font_size * 1.25,
+                       va="center",
+                       rotation="horizontal",
+                       ha=y_horz_alignment,
+                       labelpad=10
+                       )
+    else:
+        avx.set_ylabel('{}'.format(samplename),
+                       fontsize=font_size * 1.25,
+                       va="center",
+                       rotation="horizontal",
+                       ha=y_horz_alignment,
+                       labelpad=10
+                       )
 
     avx.spines['right'].set_color('none')
     avx.spines['top'].set_color('none')
@@ -468,7 +480,8 @@ def plot_mRNAs(tx_start,
                graphcoords,
                domain=True,
                focus=None,
-               id_keep = None
+               weight_color=None,
+               id_keep=None
                ):
     """
     Draw the gene structure.
@@ -568,13 +581,24 @@ def plot_mRNAs(tx_start,
     pylab.xlim(0, max(graphcoords))
     pylab.ylim(-.5, yloc + .5)
     pylab.box(on=False)
+
+    cmap = plt.get_cmap('jet')
+    color_ramp = cmap(np.linspace(0.1, 1, 10))
+
     if focus:
-        for focus_ in focus:
+        if weight_color:
+            weight_color = list(map(float, weight_color.split(',')))
+
+        for index_, focus_ in enumerate(focus):
             l, r = list(map(int, focus_))
             fill_x = [graphcoords[l - tx_start], graphcoords[r - tx_start],
                       graphcoords[r - tx_start], graphcoords[l - tx_start]]
             fill_y = [0, 0, yloc, yloc]
-            pylab.fill(fill_x, fill_y, alpha=0.1, color='grey')
+            if weight_color:
+                color_for_weight = color_ramp[int(10 * weight_color[index_])]
+            else:
+                color_for_weight = 'grey'
+            pylab.fill(fill_x, fill_y, alpha=0.1, color=color_for_weight)
 
     pylab.xticks([])
     pylab.yticks([])
@@ -596,7 +620,7 @@ def plot_density(read_depth_object,
                  sitedepth=None,
                  logtrans=None,
                  prob=None,
-                 id_keep =None,
+                 id_keep=None,
                  model=None,
                  addexpress=None,
                  highlight_sj=None,
@@ -808,12 +832,17 @@ def plot_density(read_depth_object,
 
     pylab.subplot(gs[nfile:, :])
 
+    if wt_pasite is not None or wt_pasite2 is not None:
+        weight_color = wt_pasite if wt_pasite is not None else wt_pasite2
+    else:
+        weight_color = None
     plot_mRNAs(txstart,
                txend,
                mRNAobject.txlst,
                graphcoords,
                domain,
                focus=focus,
+               weight_color=weight_color,
                id_keep=id_keep)
 
     # if pasite:
