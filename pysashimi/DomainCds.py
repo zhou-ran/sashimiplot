@@ -52,7 +52,6 @@ def calculateinterval(cdsinterval, txregion):
 
     info = cdsinterval[lindex:rindex]
 
-
     if info[0][0] < txregion[0]:
         info[0][0] = txregion[0]
 
@@ -68,6 +67,7 @@ class CdsDmain:
 
         :param cdsinfo: a list contain the cds region information. `[(),(),()]`
         :param domaininfo: a list contain the domain information
+        :param strand:
         """
         self.cdsinfo = sorted(cdsinfo, key=lambda x: x[0])
         self.domaininfo = domaininfo

@@ -99,9 +99,12 @@ class mRNA:
         """
 
         :param chr:
-        :param estart:
-        :param eend:
+        :param tstart:
+        :param tend:
         :param gtf:
+        :param exonstat:
+        :param genename:
+        :param strand:
         """
 
         self.chr = chr
@@ -113,9 +116,9 @@ class mRNA:
         self.exonstat = exonstat
 
         if not self.exonstat:
-            self._validfeature = set(["exon", "CDS"])
+            self._validfeature = {"exon", "CDS"}
         else:
-            self._validfeature = set(["exon"])
+            self._validfeature = {"exon"}
 
         self.txlst_ = self.__txlst()
 
@@ -280,6 +283,7 @@ class mRNA:
         Convert the geneid into interval, and return a mRNA object
         :param gene:
         :param gtf:
+        :param offset:
         :return:
         """
         geneinfo = Myinfo(

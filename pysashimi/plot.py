@@ -147,7 +147,7 @@ def plot_density_single(read_depth_object,
                        linewidth=0,
                        step='pre',
                        interpolate=False,
-                       rasterized = True)
+                       rasterized=True)
 
     u'''
     1.13 sorted the list by the location
@@ -444,12 +444,22 @@ def plotdomain(region,
 
     RGB_tuples = ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"]
     for index, subdomain in enumerate(region):
-        logger.debug("ploting domain")
+        logger.debug("plotting domain")
+
+        if index % 2 == 0:
+            u'''
+            2020 4.18 to distinguish the different domain information
+            '''
+            y_axis_offset = 0.3
+            yloc_offset_at_y = 0.05 + yloc
+        else:
+            y_axis_offset = -0.6
+            yloc_offset_at_y = -0.05 + yloc
 
         dregion, domainname = subdomain
         logger.debug("{}".format(domainname))
 
-        domainname = domainname.split(';;')[-1]
+        domain_detail, domainname = domainname.split(';;')
 
         '''
         1.23 add domain information, retrieve from the nature communication
@@ -468,18 +478,28 @@ def plotdomain(region,
             e = e - tx_start
             x = [graphcoords[s], graphcoords[e], graphcoords[e], graphcoords[s]]
 
-            y = [yloc - exonwidth / 2, yloc - exonwidth / 2,
-                 yloc + exonwidth / 2, yloc + exonwidth / 2]
+            y = [yloc_offset_at_y - exonwidth / 2, yloc_offset_at_y - exonwidth / 2,
+                 yloc_offset_at_y + exonwidth / 2, yloc_offset_at_y + exonwidth / 2]
 
             '''
             1.16 domain numbers more than color numbers
             '''
             try:
-                pylab.fill(x, y, RGB_tuples[index], lw=.5, zorder=20)
-                pylab.plot([min_, max_], [yloc, yloc], color=RGB_tuples[index], lw=0.2)
+                color_use = RGB_tuples[index]
             except IndexError:
-                pylab.fill(x, y, RGB_tuples[index % 8], lw=.5, zorder=20)
-                pylab.plot([min_, max_], [yloc, yloc], color=RGB_tuples[index % 8], lw=0.2)
+                color_use = RGB_tuples[index % 8]
+
+            pylab.fill(x, y, color_use, lw=.5, zorder=20)
+
+        pylab.plot([min_, max_], [yloc_offset_at_y, yloc_offset_at_y], color=color_use, lw=0.2)
+        pylab.text(graphcoords[s], yloc + y_axis_offset,
+                   domain_detail,
+                   color=color_use,
+                   fontdict={'fontsize': 4},
+                   bbox=dict(facecolor='none',
+                             edgecolor='none')
+        )
+
     plt.text(xaxisloc, yloc - 0.05, '{}_domain'.format(tid), fontsize=8)
 
 
@@ -543,7 +563,8 @@ def plot_mRNAs(tx_start,
 
                 region = calculateinterval(region, (tx_start, tx_end))
 
-                if not region: continue
+                if not region:
+                    continue
 
                 min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
                 max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]

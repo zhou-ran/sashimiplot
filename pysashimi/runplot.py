@@ -109,7 +109,6 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
         offset
     )
 
-
     bamdict, colordict = readbamlist(bam)
     bamlst = []
     logger.info("retrieve expression data")
@@ -132,7 +131,7 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
                      sj,
                      width=width,
                      height=height,
-                     colors = colordict,
+                     colors=colordict,
                      pasite=pa,
                      focus=focus,
                      include_sj=inc,
@@ -174,7 +173,6 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
               default=None,
               help="The weight for every pa sites from `--pa`, the number of wt must be same to `--pa`,seperate by `,`"
               )
-
 @click.option('--pa2',
               type=str,
               default=None,
@@ -185,7 +183,6 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
               default=None,
               help="The weight for every pa sites from `--pa2`, the number of wt must be same to `--pa`,seperate by `,`"
               )
-
 @click.option('--focus',
               default=None,
               help="Highlight the given region. for one region: start-end, if multiple, pls seperate by ,")
@@ -214,7 +211,6 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
               type=str,
               help="keep the given isoform, if there were multiple isoform id, please seperate by comma"
               )
-
 @click.option('--ssm',
               default=None,
               type=str,
@@ -308,7 +304,6 @@ def junc(gtf,
     if inc:
         # incase somebody add space in the given splice junction
         inc = list(map(lambda x: x.strip(), inc.split(',')))
-
 
     # id to keep
     if id_keep:
@@ -467,6 +462,7 @@ def site(gtf,
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
         logger.exception(e)
+
 
 cli.add_command(gene)
 cli.add_command(junc)

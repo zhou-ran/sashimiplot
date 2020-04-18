@@ -22,6 +22,7 @@ COLOR = [
 DOMAINFILTER = set(
     ["active site",
      "domain",
+     "signal peptide",
      "transmembrane region",
      "repeat",
      "zinc ﬁnger region",
