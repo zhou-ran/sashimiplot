@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/pysashimi.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pysashimi.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/runplot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/runplot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/siteplot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/siteplot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -94,6 +93,8 @@
       <workItem from="1583209671723" duration="1986000" />
       <workItem from="1584966700448" duration="3000000" />
       <workItem from="1585102404747" duration="329000" />
+      <workItem from="1587009714575" duration="2271000" />
+      <workItem from="1587086691793" duration="1134000" />
     </task>
     <servers />
   </component>
@@ -112,16 +113,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/pysashimi/DomainCds.py</url>
-          <line>24</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

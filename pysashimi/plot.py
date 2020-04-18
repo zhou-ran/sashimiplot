@@ -35,7 +35,10 @@ def r2(x, y):
 
 def cubic_bezier(pts, t):
     """
-    Get points in a cubic bezier.
+
+    :param pts:
+    :param t:
+    :return:
     """
     p0, p1, p2, p3 = pts
     p0 = pylab.array(p0)
@@ -47,7 +50,6 @@ def cubic_bezier(pts, t):
 
 
 def plot_density_single(read_depth_object,
-                        # mRNAs,
                         samplename,
                         graphcoords,
                         graphToGene,
@@ -96,14 +98,14 @@ def plot_density_single(read_depth_object,
     """
 
     if include_sj:
-        assert isinstance(include_sj,list),"The including junction was not a set, pls check your including input"
+        assert isinstance(include_sj, list), "The including junction was not a set, pls check your including input"
 
     if include_sj and highlight:
         if not include_sj & highlight:
             raise Exception("There was no overlap bewteen including and highlight junction!")
 
     if highlight:
-        assert isinstance(highlight,list),"The highlight junction was not a set, pls check your highlight input"
+        assert isinstance(highlight, list), "The highlight junction was not a set, pls check your highlight input"
     else:
         highlight = set("")
 
@@ -144,7 +146,8 @@ def plot_density_single(read_depth_object,
                        color=color,
                        linewidth=0,
                        step='pre',
-                       interpolate=False)
+                       interpolate=False,
+                       rasterized = True)
 
     u'''
     1.13 sorted the list by the location
@@ -155,7 +158,7 @@ def plot_density_single(read_depth_object,
     jxns_new = {}
 
     for sj_id, sj_counts in jxns.items():
-        sj_id = sj_id.split(":")[-1].replace("-",":")
+        sj_id = sj_id.split(":")[-1].replace("-", ":")
         jxns_new[sj_id] = sj_counts
     if include_sj:
         if len(include_sj) == 2:
@@ -166,7 +169,8 @@ def plot_density_single(read_depth_object,
         elif len(include_sj) >= 3:
             psi_numerator = [jxns_new.get(key) for key in include_sj[:2]]
             psi_denominator = [jxns_new.get(key) for key in include_sj]
-            psi = np.sum([0 if i is None else i for i in psi_numerator]) / np.sum([0 if i is None else i for i in psi_denominator])
+            psi = np.sum([0 if i is None else i for i in psi_numerator]) / np.sum(
+                [0 if i is None else i for i in psi_denominator])
         else:
             psi = None
 
@@ -174,8 +178,6 @@ def plot_density_single(read_depth_object,
             psi = np.round(psi, 3)
         else:
             psi = "NA"
-
-
 
     for plotted_count, jxn in enumerate(jxns_sorted_list):
 
@@ -275,7 +277,7 @@ def plot_density_single(read_depth_object,
     # ylab
     y_horz_alignment = 'right'
     if include_sj:
-        avx.set_ylabel('{}\npsi:{}'.format(samplename,psi),
+        avx.set_ylabel('{}\npsi:{}'.format(samplename, psi),
                        fontsize=font_size * 1.25,
                        va="center",
                        rotation="horizontal",
@@ -323,8 +325,8 @@ def plot_density_single(read_depth_object,
                     sys.exit()
 
                 pylab.text(x=graphcoords[subsite - tx_start],
-                           y=max_used_yval/2,
-                           s=np.round(wt_pasite[site_index],3),
+                           y=max_used_yval / 2,
+                           s=np.round(wt_pasite[site_index], 3),
                            fontsize=font_size)
 
     if pasite2:
@@ -341,8 +343,8 @@ def plot_density_single(read_depth_object,
                     sys.exit()
 
                 pylab.text(x=graphcoords[subsite - tx_start],
-                           y=max_used_yval/2,
-                           s=np.round(wt_pasite2[site_index],3),
+                           y=max_used_yval / 2,
+                           s=np.round(wt_pasite2[site_index], 3),
                            fontsize=font_size)
 
     pylab.xlim(0, max(graphcoords))
@@ -391,12 +393,18 @@ def getScaling(tx_start,
                intron_scale=15,
                exon_scale=1):
     """
-    Compute the scaling factor across various genic regions.
-    """
 
+    :param tx_start:
+    :param tx_end:
+    :param exon_starts:
+    :param exon_ends:
+    :param intron_scale:
+    :param exon_scale:
+    :return:
+    """
     exoncoords = np.zeros((tx_end - tx_start + 1))
     for i in range(len(exon_starts)):
-        exoncoords[exon_starts[i] - tx_start : exon_ends[i] - tx_start] = 1
+        exoncoords[exon_starts[i] - tx_start: exon_ends[i] - tx_start] = 1
 
     graphToGene = {}
     graphcoords = np.zeros((tx_end - tx_start + 1), dtype='f')
@@ -411,6 +419,7 @@ def getScaling(tx_start,
 
     return graphcoords, graphToGene
 
+
 def plotdomain(region,
                tx_start,
                tx_end,
@@ -424,11 +433,12 @@ def plotdomain(region,
 
     :param region:
     :param tx_start:
+    :param tx_end:
     :param graphcoords:
     :param exonwidth:
     :param yloc:
-    :param min_:
-    :param max_:
+    :param xaxisloc:
+    :param tid:
     :return:
     """
 
@@ -448,7 +458,6 @@ def plotdomain(region,
             continue
 
         dregion = calculateinterval(dregion, (tx_start, tx_end))
-        print(domainname)
         minsite = min(map(lambda x: x[0], dregion))
         maxsite = max(map(lambda x: x[1], dregion))
         min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
@@ -459,7 +468,7 @@ def plotdomain(region,
             e = e - tx_start
             x = [graphcoords[s], graphcoords[e], graphcoords[e], graphcoords[s]]
 
-            y = [yloc - exonwidth / 2, yloc - exonwidth / 2, \
+            y = [yloc - exonwidth / 2, yloc - exonwidth / 2,
                  yloc + exonwidth / 2, yloc + exonwidth / 2]
 
             '''
@@ -532,10 +541,9 @@ def plot_mRNAs(tx_start,
                     yloc += 1
                     continue
 
-
                 region = calculateinterval(region, (tx_start, tx_end))
 
-                if not region:continue
+                if not region: continue
 
                 min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
                 max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
@@ -676,7 +684,7 @@ def plot_density(read_depth_object,
 
     # if add id_keep parameters
     if id_keep is not None:
-        mRNAnum  = len(id_keep) * 3
+        mRNAnum = len(id_keep) * 3
     else:
         mRNAnum = len(mRNAobject.txlst) * 2 if len(mRNAobject.txlst) != 0 else 1
 

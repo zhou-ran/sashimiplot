@@ -71,14 +71,16 @@ def plot_density_single_site(read_depth_object,
                        color=color,
                        linewidth=0,
                        step='pre',
-                       interpolate=False)
+                       interpolate=False,
+                       rasterized=True)
     pylab.fill_between(graphcoords,
                        minus,
                        y2=0,
                        color=color,
                        linewidth=0,
                        step='pre',
-                       interpolate=False)
+                       interpolate=False,
+                       rasterized=True)
 
     # set the y limit
 

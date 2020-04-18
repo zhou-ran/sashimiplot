@@ -64,12 +64,20 @@ def cli():
 @click.option('--verbose',
               is_flag=True,
               help='set the logging level, if Ture -> INFO')
+@click.option('--dim',
+              default=None,
+              type=str,
+              help="The picture's size,(width, height), default: 8,12")
+@click.option('--inc',
+              default=None,
+              type=str,
+              help="Only plot the given splice junction. Egg, sj1:sj2,sj3:sj4")
 @click.option('--log',
               default=None,
               type=str,
               help="plot the log-tranformed expression values, and support log2 and log10. default: None"
               )
-def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
+def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose):
     """
     Normal mode to generate sashimi plot
     """
@@ -78,11 +86,18 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
         cli(['gene', '--help'])
         sys.exit(1)
 
-    wide = 8
-    height = 12
+    # figdim
+    if dim:
+        width, height = map(lambda x: float(x), map(lambda x: x.strip(), dim.split(',')))
+    else:
+        width, height = 8.0, 12.0
 
     if focus:
         focus = focus.split('-')
+    # which sj will be plot
+    if inc:
+        # incase somebody add space in the given splice junction
+        inc = list(map(lambda x: x.strip(), inc.split(',')))
 
     '''
     1.21 add transcript support
@@ -94,17 +109,20 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
         offset
     )
 
-    logger.info("retrieve expression data")
+
     bamdict, colordict = readbamlist(bam)
     bamlst = []
-    # colors = []
-    for label, filepath in bamdict.items():
+    logger.info("retrieve expression data")
 
-        bamlst.append({label: ReadDepth.determine_depth(filepath,
-                                                        mRNAobject.chr,
-                                                        mRNAobject.tstart,
-                                                        mRNAobject.tend)})
-        # colors.append(color)
+    for label, filepath in bamdict.items():
+        readdepth_ = ReadDepth.generateobj()
+
+        for bam_ in filepath:
+            readdepth_ += ReadDepth.determine_depth(bam_,
+                                                    mRNAobject.chr,
+                                                    mRNAobject.tstart,
+                                                    mRNAobject.tend)
+        bamlst.append({label: readdepth_})
 
     logger.info("plot")
     try:
@@ -112,11 +130,12 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, verbose):
                      mRNAobject,
                      fileout,
                      sj,
-                     wide,
-                     height,
+                     width=width,
+                     height=height,
                      colors = colordict,
                      pasite=pa,
                      focus=focus,
+                     include_sj=inc,
                      logtrans=log
                      )
 
