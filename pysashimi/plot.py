@@ -179,8 +179,11 @@ def plot_density_single(read_depth_object,
         else:
             psi = "NA"
 
-    for plotted_count, jxn in enumerate(jxns_sorted_list):
+    # for plotted_count, jxn in enumerate(jxns_sorted_list):
+    # Ensure normal sj display when including_sj mode was on
 
+    plotted_count = 0
+    for jxn in jxns_sorted_list:
         leftss, rightss = map(int, jxn.split(":")[1].split("-"))
         if round(jxns[jxn], 2) <= sjthread:
             continue
@@ -208,7 +211,6 @@ def plot_density_single(read_depth_object,
         if plotted_count % 2 == 1:
             pts = [(ss1, 0), (ss1, -current_height), (ss2, -current_height), (ss2, 0)]
             midpt = cubic_bezier(pts, .5)
-
         # draw junction on top
         else:
             if not leftstatus:
@@ -227,6 +229,7 @@ def plot_density_single(read_depth_object,
                    (ss2, rightdens)]
             midpt = cubic_bezier(pts, .5)
 
+        plotted_count += 1
         if number_junctions:
             t = pylab.text(midpt[0], midpt[1], '{0}'.format(round(jxns[jxn], 2)), fontsize=numbering_font_size,
                            ha='center',
@@ -313,7 +316,7 @@ def plot_density_single(read_depth_object,
     # Here to plot the highlight site, for example pasite.
     if pasite:
         pasite = list(map(int, pasite.split(',')))
-        wt_pasite = list(map(float, wt_pasite.split(','))) if wt_pasite else wt_pasite
+        wt_pasite = list(map(str, wt_pasite.split(','))) if wt_pasite else wt_pasite
 
         for site_index, subsite in enumerate(pasite):
             pylab.axvline(graphcoords[subsite - tx_start],
@@ -326,25 +329,25 @@ def plot_density_single(read_depth_object,
 
                 pylab.text(x=graphcoords[subsite - tx_start],
                            y=max_used_yval / 2,
-                           s=np.round(wt_pasite[site_index], 3),
+                           s=wt_pasite[site_index],
                            fontsize=font_size)
 
     if pasite2:
         pasite2 = list(map(int, pasite2.split(',')))
-        wt_pasite2 = list(map(float, wt_pasite2.split(','))) if wt_pasite2 else wt_pasite2
+        wt_pasite2 = list(map(str, wt_pasite2.split(','))) if wt_pasite2 else wt_pasite2
 
         for site_index, subsite in enumerate(pasite2):
             pylab.axvline(graphcoords[subsite - tx_start],
                           color="red",
                           lw=.5)
             if wt_pasite2:
-                if len(pasite) != len(wt_pasite2):
+                if len(pasite2) != len(wt_pasite2):
                     logger.error("The length of pasite and wt_pasite was not same!")
                     sys.exit()
 
                 pylab.text(x=graphcoords[subsite - tx_start],
                            y=max_used_yval / 2,
-                           s=np.round(wt_pasite2[site_index], 3),
+                           s=wt_pasite2[site_index],
                            fontsize=font_size)
 
     pylab.xlim(0, max(graphcoords))
@@ -678,7 +681,7 @@ def plot_density(read_depth_object,
     txstart = mRNAobject.tstart
     txend = mRNAobject.tend
 
-    mRNAlist = mRNAobject.exon
+    # mRNAlist = mRNAobject.exon
     exon_starts = mRNAobject.exonstarts
     exon_ends = mRNAobject.exonend
 

@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/Constant.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/Constant.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/DomainCds.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/DomainCds.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/mRNA.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/mRNA.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/runplot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/runplot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +92,13 @@
       <workItem from="1584966700448" duration="3000000" />
       <workItem from="1585102404747" duration="329000" />
       <workItem from="1587009714575" duration="2271000" />
-      <workItem from="1587086691793" duration="7091000" />
+      <workItem from="1587086691793" duration="8594000" />
+      <workItem from="1587392780460" duration="137000" />
+      <workItem from="1587518955252" duration="303000" />
+      <workItem from="1587524540839" duration="6000" />
+      <workItem from="1588228718872" duration="7000" />
+      <workItem from="1589377815506" duration="925000" />
+      <workItem from="1589423626354" duration="283000" />
     </task>
     <servers />
   </component>
