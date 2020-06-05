@@ -6,6 +6,7 @@ import logging
 from collections import namedtuple
 import requests as rq
 import xmltodict
+from xml.parsers.expat import ExpatError
 
 logger = logging.getLogger("MAIN")
 
@@ -45,9 +46,12 @@ class Uniprot:
         return result
 
     def __info(self):
-        xmldic = xmltodict.parse(self.__requesturl().text, attr_prefix='', cdata_key='')['uniprot']['entry']
-
-        return xmldic
+        try:
+            xmldic = xmltodict.parse(self.__requesturl().text, attr_prefix='', cdata_key='')['uniprot']['entry']
+            return xmldic
+        except ExpatError:
+            logger.warning('Timeout or no domain information found.')
+            return None
 
     @property
     def feature(self):

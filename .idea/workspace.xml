@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/DomainCds.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/DomainCds.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/pyUniprot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/pyUniprot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -98,7 +100,9 @@
       <workItem from="1587524540839" duration="6000" />
       <workItem from="1588228718872" duration="7000" />
       <workItem from="1589377815506" duration="925000" />
-      <workItem from="1589423626354" duration="283000" />
+      <workItem from="1589423626354" duration="13917000" />
+      <workItem from="1591167418529" duration="26000" />
+      <workItem from="1591340314503" duration="2185000" />
     </task>
     <servers />
   </component>

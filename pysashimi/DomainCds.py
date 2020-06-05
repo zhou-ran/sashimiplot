@@ -46,8 +46,9 @@ def calculateinterval(cdsinterval, txregion):
     lindex, rindex = CdsDmain.domainlocation(cdsinterval, txregion)
 
     # remove the intersect region because one point.
+
     if not all([max(map(lambda x: max(x), cdsinterval)) > min(txregion),
-                min(map(lambda x: max(x), cdsinterval)) < max(txregion)]):
+                min(map(lambda x: min(x), cdsinterval)) < max(txregion)]):
         return None
 
     info = cdsinterval[lindex:rindex]

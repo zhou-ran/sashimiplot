@@ -303,10 +303,8 @@ def plot_density_single(read_depth_object,
         avx.xaxis.set_ticks_position('bottom')
 
         max_graphcoords = max(graphcoords)
-        # print(max_graphcoords, nxticks)
         pylab.xticks(pylab.linspace(0, max_graphcoords, nxticks),
-                     [graphToGene[int(x)] for x in \
-                      pylab.linspace(0, max_graphcoords, nxticks)],
+                     [graphToGene[int(x)] for x in pylab.linspace(0, max_graphcoords, nxticks)],
                      fontsize=font_size)
 
     else:
@@ -328,8 +326,10 @@ def plot_density_single(read_depth_object,
                     sys.exit()
 
                 pylab.text(x=graphcoords[subsite - tx_start],
-                           y=max_used_yval / 2,
+                           # for distinguish the overlaping weight
+                           y=max_used_yval * 2 / 3,
                            s=wt_pasite[site_index],
+                           color='blue',
                            fontsize=font_size)
 
     if pasite2:
@@ -346,8 +346,10 @@ def plot_density_single(read_depth_object,
                     sys.exit()
 
                 pylab.text(x=graphcoords[subsite - tx_start],
-                           y=max_used_yval / 2,
+                           # for distinguish the overlaping weight
+                           y=max_used_yval * 1 / 3,
                            s=wt_pasite2[site_index],
+                           color='red',
                            fontsize=font_size)
 
     pylab.xlim(0, max(graphcoords))
@@ -410,16 +412,16 @@ def getScaling(tx_start,
         exoncoords[exon_starts[i] - tx_start: exon_ends[i] - tx_start] = 1
 
     graphToGene = {}
-    graphcoords = np.zeros((tx_end - tx_start + 1), dtype='f')
+    graphcoords = np.zeros((tx_end - tx_start + 1), dtype='float64')
+    # graphcoords = np.repeat(np.NaN, (tx_end - tx_start + 1))
     x = 0
     for i in range(tx_end - tx_start + 1):
         graphcoords[i] = x
-        graphToGene[int(x)] = i + tx_start
+        graphToGene[np.int(x)] = i + tx_start
         if exoncoords[i] == 1:
             x += 1. / exon_scale
         else:
             x += 1. / intron_scale
-
     return graphcoords, graphToGene
 
 
@@ -470,7 +472,10 @@ def plotdomain(region,
         if domainname not in DOMAINFILTER:
             continue
 
+
         dregion = calculateinterval(dregion, (tx_start, tx_end))
+        if not dregion:
+            continue
         minsite = min(map(lambda x: x[0], dregion))
         maxsite = max(map(lambda x: x[1], dregion))
         min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
