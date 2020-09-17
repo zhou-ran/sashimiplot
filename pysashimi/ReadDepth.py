@@ -60,14 +60,14 @@ class ReadDepth:
 
             relevant_reads = bam_file.fetch(reference=chrom, start=start_coord, end=end_coord)
 
-            depth_vector = numpy.zeros(end_coord - start_coord + 1, dtype='f')
-            spanned_junctions = defaultdict(int)
-
             if barcode_info:
-                cluster_cov = defaultdict(lambda :defaultdict())
+                cluster_cov = defaultdict(lambda: defaultdict())
                 for cluster in set(barcode_info.values()):
-                    cluster_cov[cluster]['depth'] = depth_vector
-                    cluster_cov[cluster]['junc'] = spanned_junctions
+                    cluster_cov[cluster]['depth'] = numpy.zeros(end_coord - start_coord + 1, dtype='f')
+                    cluster_cov[cluster]['junc'] = defaultdict(int)
+            else:
+                depth_vector = numpy.zeros(end_coord - start_coord + 1, dtype='f')
+                spanned_junctions = defaultdict(int)
 
             for read in relevant_reads:
                 if barcode_info:
@@ -126,7 +126,7 @@ class ReadDepth:
             if scale and not barcode_info:
                 max_value = numpy.max(depth_vector)
                 if max_value != 0:
-                    depth_vector = depth_vector/max_value * 100
+                    depth_vector = depth_vector / max_value * 100
             if barcode_info:
                 cluster_cov_return = {}
                 for cluster, dep_junc_info in cluster_cov.items():
@@ -144,7 +144,6 @@ class ReadDepth:
         except IOError:
 
             raise Exception(f'There is no .bam file at {bam_file_path}')
-
 
     @classmethod
     def generateobj(cls):

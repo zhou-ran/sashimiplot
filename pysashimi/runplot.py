@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/16 4:07 PM
+from functools import reduce
+from operator import add
 
 __author__ = 'Zhou Ran'
 import sys
 
 import click
 from loguru import logger
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 from .ReadDepth import ReadDepth
 from .mRNA import mRNA
@@ -377,8 +379,9 @@ def junc(gtf,
                     )
                 bam_site_cov[label] = site_depth
         else:
+            tmp_list = []
             for bam_ in filepath:
-                bam_cov.update(
+                tmp_list.append(
                     ReadDepth.determine_depth(
                         bam_,
                         mRNAobject.chr,
@@ -391,6 +394,8 @@ def junc(gtf,
                         readFilter=peakfilter
                     )
                 )
+            bam_cov = dict(reduce(add, map(Counter, tmp_list)))
+
             if ps:
                 bam_site_cov = None
 
