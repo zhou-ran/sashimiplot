@@ -134,8 +134,8 @@ class ReadDepth:
                         chrom,
                         start_coord,
                         end_coord,
-                        depth_vector['depth'],
-                        depth_vector['junc']
+                        cluster_cov[cluster]['depth'],
+                        cluster_cov[cluster]['junc']
                     )
                 return cluster_cov_return
 
