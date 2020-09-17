@@ -20,7 +20,7 @@ This script were migrated from spliceplot
 
 class ReadDepth:
     def __init__(self,
-                 chrm,
+                 chrom,
                  low,
                  high,
                  wiggle,
@@ -28,37 +28,55 @@ class ReadDepth:
 
         self.low = low
         self.high = high
-        self.chrm = chrm
+        self.chrom = chrom
         self.wiggle = wiggle
         self.junctions_dict = junctions_dict
 
     @classmethod
     def determine_depth(cls,
                         bam_file_path,
-                        chrm,
+                        chrom,
                         start_coord,
                         end_coord,
                         scale=False,
+                        barcode=None,
+                        cell_tag=None,
+                        umi_tag=None,
                         readFilter=None):
         """
         calculate the coverage at each base between start_coord and endcoord.
 
+        :param cell_tag:
+        :param umi_tag:
         :param bam_file_path:
-        :param chrm:
-        :param start_coord: int
-        :param end_coord: int
-        :return: Numpy array
+        :param chrom:
+        :param start_coord:
+        :param end_coord:
+        :param scale:
+        :param barcode:
+        :param readFilter:
+        :return:
         """
 
-        # checkbam(bam_file_path)
         try:
             bam_file = pysam.Samfile(bam_file_path, 'rb')
-            relevant_reads = bam_file.fetch(reference=chrm, start=start_coord, end=end_coord)
+
+            relevant_reads = bam_file.fetch(reference=chrom, start=start_coord, end=end_coord)
 
             depth_vector = numpy.zeros(end_coord - start_coord + 1, dtype='f')
             spanned_junctions = defaultdict(int)
 
             for read in relevant_reads:
+                if barcode:
+                    try:
+                        current_bc = read.get_tag(cell_tag)
+                        _ = read.get_tag(umi_tag)
+                        if current_bc not in barcode:
+                            continue
+
+                    except KeyError:
+                        continue
+
                 if readFilter:
                     if not pafilter(read, readFilter):
                         continue
@@ -67,7 +85,7 @@ class ReadDepth:
                 cigar_string = read.cigar
 
                 # each read must have a cigar string
-                if cigar_string == None:
+                if cigar_string is None:
                     continue
                 #
                 # # read cannot have insertions or deletions
@@ -89,7 +107,7 @@ class ReadDepth:
                 intronbound = fetch_intron(read.reference_start, cigar_string)
                 if intronbound:
                     for intronbound_ in intronbound:
-                        junction_name = '{}:{}-{}'.format(chrm,
+                        junction_name = '{}:{}-{}'.format(chrom,
                                                           intronbound_[0],
                                                           intronbound_[1]
                                                           )
@@ -99,7 +117,7 @@ class ReadDepth:
                 if max_value != 0:
                     depth_vector = depth_vector/max_value * 100
 
-            return cls(chrm, start_coord, end_coord, depth_vector, spanned_junctions)
+            return cls(chrom, start_coord, end_coord, depth_vector, spanned_junctions)
         except IOError:
 
             raise 'There is no .bam file at {0}'.format(bam_file_path)
@@ -113,7 +131,7 @@ class ReadDepth:
         """
         Check the readdepth object whether legal
         """
-        return self.chrm is None or self.low is None or self.high is None or self.wiggle is None or self.junctions_dict is None
+        return self.chrom is None or self.low is None or self.high is None or self.wiggle is None or self.junctions_dict is None
 
     def __add__(self, other):
         """
@@ -127,8 +145,9 @@ class ReadDepth:
         if other.is_invalid():
             return self
 
-        assert self.chrm == other.chrm, 'Cannot add depths from different chromosomes'
-        assert self.low == other.low and self.high == other.high, 'Cannot add depths with different start and end points'
+        assert self.chrom == other.chrom, 'Cannot add depths from different chromosomes'
+        assert self.low == other.low and self.high == other.high, \
+            'Cannot add depths with different start and end points'
         new_wiggle = self.wiggle + other.wiggle
 
         new_junctions_dict = defaultdict(int)
@@ -152,7 +171,7 @@ class ReadDepth:
             except KeyError:
                 pass
 
-        return ReadDepth(self.chrm, self.low, self.high, new_wiggle, new_junctions_dict)
+        return ReadDepth(self.chrom, self.low, self.high, new_wiggle, new_junctions_dict)
 
     def __str__(self):
-        return '{0}:{1}-{2},{3},{4}'.format(self.chrm, self.low, self.high, self.wiggle, self.junctions_dict)
+        return '{0}:{1}-{2},{3},{4}'.format(self.chrom, self.low, self.high, self.wiggle, self.junctions_dict)

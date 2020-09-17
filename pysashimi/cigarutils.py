@@ -27,7 +27,7 @@ B	BAM_CBACK	    9
 def fetch_exon(start, cigar):
     """
     return the exon information, the start site must be 0-based
-    :param chrom:
+
     :param start:
     :param cigar:
     :return:
@@ -82,7 +82,7 @@ def fetch_intron(start, cigar):
 
         elif c == 4:
             # start += l
-            u'3.15 这里好像有问题，得改'
+            # u'3.15 这里好像有问题，得改??'
             continue
 
         elif c == 0:

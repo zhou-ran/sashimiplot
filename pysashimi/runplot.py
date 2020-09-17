@@ -7,6 +7,7 @@ import sys
 
 import click
 from loguru import logger
+from collections import defaultdict
 
 from .ReadDepth import ReadDepth
 from .mRNA import mRNA
@@ -243,6 +244,14 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
 @click.option('--scale',
               is_flag=True,
               help="Scale the count into 10%")
+@click.option('--bc',
+              default=None,
+              type=str,
+              help="Barcode file for split single cell RNA seq data sets. default: None")
+@click.option('--tag',
+              default='CB,UB',
+              type=str,
+              help="Cell barcode and umi molecular tag in bam file, default: CB,UB")
 # @click.option('--verbose',
 #               is_flag=True,
 #               help='set the logging level, if Ture -> INFO')
@@ -265,11 +274,12 @@ def junc(gtf,
          hl,
          inc,
          dim,
-         # verbose,
          model,
          ade,
          id_keep,
-         scale
+         scale,
+         bc,
+         tag
          ):
     """
     Junction mode, not need network to plot
@@ -279,16 +289,34 @@ def junc(gtf,
         cli(['junc', '--help'])
         sys.exit(1)
 
-    chr, s, e = junc.split(':')
-    # print(scale)
+    chrom, s, e = junc.split(':')
+
     logger.info("prepare the mRNA data")
     mRNAobject = mRNA(
-        chr,
+        chrom,
         s,
         e,
         gtf,
         exonstat=True if not domain else False
     )
+    if bc:
+        cb_tag, umi_tag = map(lambda x: x.strip(), tag.split(','))
+        cell_cluster = set()
+        sample_names = set()
+
+        cluster_sample_cell = defaultdict(lambda: defaultdict(set))
+        with open(bc) as bc_fh:
+            for line in bc_fh:
+                if not line:
+                    continue
+                cell_name, cluster_info = line.strip().split('\t')
+                sample_name, cell_id = cell_name.split('_')
+                cell_id = cell_id.split('-')[0]
+
+                cluster_sample_cell[cluster_info][sample_name].add(cell_id)
+
+                cell_cluster.add(cluster_info)
+                sample_names.add(sample_name)
 
     # focus the given regions
     if focus:
@@ -309,56 +337,81 @@ def junc(gtf,
     if id_keep:
         id_keep = set(id_keep.split(','))
 
-    # figdim
+    # fig dim
     if dim:
         width, height = map(lambda x: float(x), map(lambda x: x.strip(), dim.split(',')))
     else:
         width, height = 8.0, 12.0
 
-    bamdict, colordict = readbamlist(bam)
-    bamlst = []
-    bamsitelst = [] if ps else None
+    bam_dic, color_dic = readbamlist(bam)
+    bam_cov = []
+    bam_site_cov = [] if ps else None
     logger.info("retrieve expression data")
 
-    for label, filepath in bamdict.items():
-        readdepth_ = ReadDepth.generateobj()
-
-        for bam_ in filepath:
-            readdepth_ += ReadDepth.determine_depth(bam_,
-                                                    mRNAobject.chr,
-                                                    mRNAobject.tstart,
-                                                    mRNAobject.tend,
-                                                    scale=scale,
-                                                    readFilter=peakfilter)
-        bamlst.append({label: readdepth_})
-        if ps:
-            sitedepth_ = SiteDepth.generateobj()
+    if not bc:
+        for label, filepath in bam_dic.items():
+            read_depth = ReadDepth.generateobj()
             for bam_ in filepath:
-                sitedepth_ += SiteDepth.determine_depth(bam_,
-                                                        mRNAobject.chr,
-                                                        mRNAobject.tstart,
-                                                        mRNAobject.tend,
-                                                        ps,
-                                                        singlestrand=ssm,
-                                                        readFilter=peakfilter)
-            bamsitelst.append({label: sitedepth_})
+                read_depth += ReadDepth.determine_depth(
+                    bam_,
+                    mRNAobject.chr,
+                    mRNAobject.tstart,
+                    mRNAobject.tend,
+                    scale=scale,
+                    readFilter=peakfilter
+                )
+
+            bam_cov.append({label: read_depth})
+
+            if ps:
+                site_depth = SiteDepth.generateobj()
+                for bam_ in filepath:
+                    site_depth += SiteDepth.determine_depth(
+                        bam_,
+                        mRNAobject.chr,
+                        mRNAobject.tstart,
+                        mRNAobject.tend,
+                        ps,
+                        singlestrand=ssm,
+                        readFilter=peakfilter
+                    )
+                bam_site_cov.append({label: site_depth})
+    else:
+        for cluster in cell_cluster:
+            read_depth = ReadDepth.generateobj()
+            sample_cell = cluster_sample_cell[cluster]
+            for sample, cell in sample_cell.items():
+                for bam_ in bam_dic[sample]:
+                    read_depth += ReadDepth.determine_depth(
+                        bam_,
+                        mRNAobject.chr,
+                        mRNAobject.tstart,
+                        mRNAobject.tend,
+                        barcode=cell,
+                        cell_tag=cb_tag,
+                        umi_tag=umi_tag,
+                        scale=scale,
+                        readFilter=peakfilter
+                    )
+            bam_cov.append({cluster: read_depth})
+
     logger.info("plot")
 
     try:
-        plot_density(bamlst,
+        plot_density(bam_cov,
                      mRNAobject,
                      fileout,
                      sj,
                      width=width,
                      height=height,
-                     colors=colordict,
+                     colors=color_dic,
                      pasite=pa,
                      wt_pasite=wt,
                      pasite2=pa2,
                      wt_pasite2=wt2,
                      focus=focus,
                      domain=domain,
-                     sitedepth=bamsitelst,
+                     sitedepth=bam_site_cov,
                      logtrans=log,
                      prob=prob,
                      model=model,

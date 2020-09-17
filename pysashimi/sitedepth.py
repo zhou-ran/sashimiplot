@@ -80,7 +80,8 @@ class SiteDepth:
                 # each read must have a cigar string
                 if cigar_string == None:
                     continue
-                # if not start_coord <= read.reference_start + 1 <= end_coord and not start_coord <= read.reference_end + 1 <= end_coord: continue
+                # if not start_coord <= read.reference_start + 1 <= end_coord and not start_coord <=
+                # read.reference_end + 1 <= end_coord: continue
                 if read.is_reverse:
                     if read.is_read1:
                         if not start_coord <= read.reference_end + 1 <= end_coord:
@@ -108,7 +109,7 @@ class SiteDepth:
 
         except IOError:
 
-            raise 'There is no .bam file at {s}'.format(bam_file_path)
+            raise f'There is no .bam file at {bam_file_path}'
 
     @classmethod
     def generateobj(cls):
@@ -117,7 +118,7 @@ class SiteDepth:
 
     def is_invalid(self):
         """
-        Check the readdepth object whether legal
+        Check the read depth object whether legal
         """
         return self.chrm is None or self.low is None or self.high is None or self.plus is None or self.minus is None
 
@@ -129,7 +130,8 @@ class SiteDepth:
             return self
 
         assert self.chrm == other.chrm, 'Cannot add depths from different chromosomes'
-        assert self.low == other.low and self.high == other.high, 'Cannot add depths with different start and end points'
+        assert self.low == other.low and self.high == other.high, 'Cannot add depths with different start and end ' \
+                                                                  'points '
         newplus = self.plus + other.plus
         newminus = self.minus + other.minus
 

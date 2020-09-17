@@ -34,11 +34,7 @@ class Myinfo:
         """
         # 在这里添加判断iquery是list还是str，进而进行判断是否是多个list的请求
 
-        self._variant = set(['gene',
-                             'variant',
-                             'chem',
-                             'disease',
-                             'taxon'])
+        self._variant = {'gene', 'variant', 'chem', 'disease', 'taxon'}
 
         self.annotfunc = annotfunc
         self.iquery = iquery

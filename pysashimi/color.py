@@ -3,6 +3,7 @@
 from matplotlib import cm, colors
 import colorsys
 
+
 # reference: https://stackoverflow.com/a/49601444
 def darken_rgb(color, amount=1.5):
     """
@@ -21,6 +22,7 @@ def darken_rgb(color, amount=1.5):
     c = colorsys.rgb_to_hls(*colors.to_rgb(c))
     c = colorsys.rgb_to_hls(c[0], max(0, min(1, amount * c[1])), c[2])
     return colors.to_hex(c)
+
 
 # Colorblindness adjusted vega_10
 # See https://github.com/theislab/scanpy/issues/387
@@ -111,6 +113,7 @@ def _plot_color_cylce(clists: Mapping[str, Sequence[str]]):
         ax.set_axis_off()
     # fig.show()
     plt.savefig('fig.pdf')
+
 
 if __name__ == '__main__':
     _plot_color_cylce({

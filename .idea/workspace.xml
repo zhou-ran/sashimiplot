@@ -2,10 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/DomainCds.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/DomainCds.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/pyUniprot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/pyUniprot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/Constant.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/Constant.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/FetchGene.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/FetchGene.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/ReadDepth.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/ReadDepth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/cigarutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/cigarutils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/color.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/color.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/runplot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/runplot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/sitedepth.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/sitedepth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +51,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -103,6 +109,12 @@
       <workItem from="1589423626354" duration="13917000" />
       <workItem from="1591167418529" duration="26000" />
       <workItem from="1591340314503" duration="2185000" />
+      <workItem from="1591371007809" duration="281000" />
+      <workItem from="1592450800752" duration="814000" />
+      <workItem from="1592987181841" duration="1673000" />
+      <workItem from="1597203932654" duration="512000" />
+      <workItem from="1597388989285" duration="423000" />
+      <workItem from="1600329554651" duration="4795000" />
     </task>
     <servers />
   </component>
