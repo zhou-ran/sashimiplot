@@ -304,7 +304,7 @@ def junc(gtf,
         cell_cluster = set()
         sample_names = set()
 
-        cluster_sample_cell = defaultdict(lambda: defaultdict(set))
+        sample_cell_cluster = defaultdict(lambda: defaultdict())
         with open(bc) as bc_fh:
             for line in bc_fh:
                 if not line:
@@ -313,7 +313,7 @@ def junc(gtf,
                 sample_name, cell_id = cell_name.split('_')
                 cell_id = cell_id.split('-')[0]
 
-                cluster_sample_cell[cluster_info][sample_name].add(cell_id)
+                sample_cell_cluster[sample_name][cell_id] = cluster_info
 
                 cell_cluster.add(cluster_info)
                 sample_names.add(sample_name)
@@ -344,12 +344,12 @@ def junc(gtf,
         width, height = 8.0, 12.0
 
     bam_dic, color_dic = readbamlist(bam)
-    bam_cov = []
-    bam_site_cov = [] if ps else None
+    bam_cov = {}
+    bam_site_cov = {} if ps else None
     logger.info("retrieve expression data")
 
-    if not bc:
-        for label, filepath in bam_dic.items():
+    for label, filepath in bam_dic.items():
+        if not bc:
             read_depth = ReadDepth.generateobj()
             for bam_ in filepath:
                 read_depth += ReadDepth.determine_depth(
@@ -361,7 +361,7 @@ def junc(gtf,
                     readFilter=peakfilter
                 )
 
-            bam_cov.append({label: read_depth})
+            bam_cov[label] = read_depth
 
             if ps:
                 site_depth = SiteDepth.generateobj()
@@ -375,25 +375,73 @@ def junc(gtf,
                         singlestrand=ssm,
                         readFilter=peakfilter
                     )
-                bam_site_cov.append({label: site_depth})
-    else:
-        for cluster in cell_cluster:
-            read_depth = ReadDepth.generateobj()
-            sample_cell = cluster_sample_cell[cluster]
-            for sample, cell in sample_cell.items():
-                for bam_ in bam_dic[sample]:
-                    read_depth += ReadDepth.determine_depth(
+                bam_site_cov[label] = site_depth
+        else:
+            for bam_ in filepath:
+                bam_cov.update(
+                    ReadDepth.determine_depth(
                         bam_,
                         mRNAobject.chr,
                         mRNAobject.tstart,
                         mRNAobject.tend,
-                        barcode=cell,
+                        barcode_info=sample_cell_cluster[label],
                         cell_tag=cb_tag,
                         umi_tag=umi_tag,
                         scale=scale,
                         readFilter=peakfilter
                     )
-            bam_cov.append({cluster: read_depth})
+                )
+            if ps:
+                bam_site_cov = None
+
+
+    # if not bc:
+    #     for label, filepath in bam_dic.items():
+    #         read_depth = ReadDepth.generateobj()
+    #         for bam_ in filepath:
+    #             read_depth += ReadDepth.determine_depth(
+    #                 bam_,
+    #                 mRNAobject.chr,
+    #                 mRNAobject.tstart,
+    #                 mRNAobject.tend,
+    #                 scale=scale,
+    #                 readFilter=peakfilter
+    #             )
+    #
+    #         bam_cov.append({label: read_depth})
+    #
+    #         if ps:
+    #             site_depth = SiteDepth.generateobj()
+    #             for bam_ in filepath:
+    #                 site_depth += SiteDepth.determine_depth(
+    #                     bam_,
+    #                     mRNAobject.chr,
+    #                     mRNAobject.tstart,
+    #                     mRNAobject.tend,
+    #                     ps,
+    #                     singlestrand=ssm,
+    #                     readFilter=peakfilter
+    #                 )
+    #             bam_site_cov.append({label: site_depth})
+    # else:
+    #     for cluster in cell_cluster:
+    #
+    #         read_depth = ReadDepth.generateobj()
+    #         sample_cell = cluster_sample_cell[cluster]
+    #         for sample, cell in sample_cell.items():
+    #             for bam_ in bam_dic[sample]:
+    #                 read_depth += ReadDepth.determine_depth(
+    #                     bam_,
+    #                     mRNAobject.chr,
+    #                     mRNAobject.tstart,
+    #                     mRNAobject.tend,
+    #                     barcode=cell,
+    #                     cell_tag=cb_tag,
+    #                     umi_tag=umi_tag,
+    #                     scale=scale,
+    #                     readFilter=peakfilter
+    #                 )
+    #         bam_cov.append({cluster: read_depth})
 
     logger.info("plot")
 

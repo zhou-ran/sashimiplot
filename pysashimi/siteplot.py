@@ -211,11 +211,11 @@ def plot_density_site(read_depth_object,
                            height_ratios=[4] * nfile + [1] * mRNAnum
                            )
 
-    for fileindex, bamfileinfo in enumerate(read_depth_object):
+    for fileindex, bam_label in enumerate(read_depth_object):
         axvar = pylab.subplot(gs[fileindex, :])
 
-        bamread = list(bamfileinfo.values())[0]
-        bamname = list(bamfileinfo.keys())[0]
+        bamread = read_depth_object[bam_label]
+        bamname = bam_label
         xlabel = True if fileindex == nfile - 1 else False
 
         try:

@@ -722,7 +722,7 @@ def plot_density(read_depth_object,
                            height_ratios=[4] * nfile + [1] * mRNAnum
                            )
 
-    for fileindex, bamfileinfo in enumerate(read_depth_object):
+    for fileindex, bam_label in enumerate(read_depth_object):
         if not sitedepth:
             xlabel = True if fileindex == nfile - 1 else False
             fileindex_grid = fileindex
@@ -732,8 +732,8 @@ def plot_density(read_depth_object,
 
         axvar = pylab.subplot(gs[fileindex_grid, :])
 
-        bamread = list(bamfileinfo.values())[0]
-        bamname = list(bamfileinfo.keys())[0]
+        bamread = read_depth_object[bam_label]
+        bamname = bam_label
 
         if colors:
             color = colors[bamname]

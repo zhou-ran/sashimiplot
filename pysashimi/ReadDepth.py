@@ -39,21 +39,18 @@ class ReadDepth:
                         start_coord,
                         end_coord,
                         scale=False,
-                        barcode=None,
+                        barcode_info=None,
                         cell_tag=None,
                         umi_tag=None,
                         readFilter=None):
         """
         calculate the coverage at each base between start_coord and endcoord.
 
-        :param cell_tag:
-        :param umi_tag:
         :param bam_file_path:
         :param chrom:
         :param start_coord:
         :param end_coord:
         :param scale:
-        :param barcode:
         :param readFilter:
         :return:
         """
@@ -66,14 +63,22 @@ class ReadDepth:
             depth_vector = numpy.zeros(end_coord - start_coord + 1, dtype='f')
             spanned_junctions = defaultdict(int)
 
+            if barcode_info:
+                cluster_cov = defaultdict(lambda :defaultdict())
+                for cluster in set(barcode_info.values()):
+                    cluster_cov[cluster]['depth'] = depth_vector
+                    cluster_cov[cluster]['junc'] = spanned_junctions
+
             for read in relevant_reads:
-                if barcode:
+                if barcode_info:
                     try:
                         current_bc = read.get_tag(cell_tag)
                         _ = read.get_tag(umi_tag)
-                        if current_bc not in barcode:
+                        current_bc = current_bc.strip().split('-')[0]
+                        if current_bc not in barcode_info:
                             continue
-
+                        else:
+                            current_cluster = barcode_info[current_bc]
                     except KeyError:
                         continue
 
@@ -102,7 +107,10 @@ class ReadDepth:
                 for index, base_position in enumerate(read.positions):
                     base_position += 1
                     if start_coord <= base_position <= end_coord:
-                        depth_vector[base_position - start_coord] += 1
+                        if barcode_info:
+                            cluster_cov[current_cluster]['depth'][base_position - start_coord] += 1
+                        else:
+                            depth_vector[base_position - start_coord] += 1
 
                 intronbound = fetch_intron(read.reference_start, cigar_string)
                 if intronbound:
@@ -111,16 +119,32 @@ class ReadDepth:
                                                           intronbound_[0],
                                                           intronbound_[1]
                                                           )
-                        spanned_junctions[junction_name] += 1
-            if scale:
+                        if barcode_info:
+                            cluster_cov[current_cluster]['junc'][junction_name] += 1
+                        else:
+                            spanned_junctions[junction_name] += 1
+            if scale and not barcode_info:
                 max_value = numpy.max(depth_vector)
                 if max_value != 0:
                     depth_vector = depth_vector/max_value * 100
+            if barcode_info:
+                cluster_cov_return = {}
+                for cluster, dep_junc_info in cluster_cov.items():
+                    cluster_cov_return[cluster] = cls(
+                        chrom,
+                        start_coord,
+                        end_coord,
+                        depth_vector['depth'],
+                        depth_vector['junc']
+                    )
+                return cluster_cov_return
 
             return cls(chrom, start_coord, end_coord, depth_vector, spanned_junctions)
+
         except IOError:
 
-            raise 'There is no .bam file at {0}'.format(bam_file_path)
+            raise Exception(f'There is no .bam file at {bam_file_path}')
+
 
     @classmethod
     def generateobj(cls):
