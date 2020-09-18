@@ -62,7 +62,8 @@ class ReadDepth:
 
             if barcode_info:
                 cluster_cov = defaultdict(lambda: defaultdict())
-                for cluster in set(barcode_info.values()):
+                clusters = sorted(list(set(barcode_info.values())))
+                for cluster in clusters:
                     cluster_cov[cluster]['depth'] = numpy.zeros(end_coord - start_coord + 1, dtype='f')
                     cluster_cov[cluster]['junc'] = defaultdict(int)
             else:
