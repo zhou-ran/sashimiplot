@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/1/16 4:07 PM
 from functools import reduce
-from operator import add
+# from operator import add
 
 __author__ = 'Zhou Ran'
 import sys
@@ -303,7 +303,7 @@ def junc(gtf,
     )
     if bc:
         cb_tag, umi_tag = map(lambda x: x.strip(), tag.split(','))
-        # cell_cluster = set()
+        cell_cluster = set()
         # sample_names = set()
 
         sample_cell_cluster = defaultdict(lambda: defaultdict())
@@ -317,7 +317,7 @@ def junc(gtf,
 
                 sample_cell_cluster[sample_name][cell_id] = cluster_info
 
-                # cell_cluster.add(cluster_info)
+                cell_cluster.add(cluster_info)
                 # sample_names.add(sample_name)
 
     # focus the given regions
@@ -349,6 +349,7 @@ def junc(gtf,
     bam_cov = {}
     bam_site_cov = {} if ps else None
     logger.info("retrieve expression data")
+    tmp_list = []
 
     for label, filepath in bam_dic.items():
         if not bc:
@@ -379,7 +380,6 @@ def junc(gtf,
                     )
                 bam_site_cov[label] = site_depth
         else:
-            tmp_list = []
             for bam_ in filepath:
                 tmp_list.append(
                     ReadDepth.determine_depth(
@@ -394,10 +394,23 @@ def junc(gtf,
                         readFilter=peakfilter
                     )
                 )
-            bam_cov = dict(reduce(add, map(Counter, tmp_list)))
 
             if ps:
                 bam_site_cov = None
+    if bc:
+        for cluster in cell_cluster:
+            cluster_use_obj = []
+            for sample in tmp_list:
+                try:
+                    cluster_use_obj.append(
+                        sample[cluster]
+                    )
+                except KeyError:
+                    continue
+
+            bam_cov[cluster] = reduce(ReadDepth.__add__, cluster_use_obj)
+        # bam_cov = reduce(ReadDepth.__add__, map(Counter, tmp_list))
+        # bam_cov = reduce(ReadDepth.__add__(), map(Counter, tmp_list))
 
     logger.info("plot")
 
