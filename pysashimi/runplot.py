@@ -75,12 +75,16 @@ def cli():
               default=None,
               type=str,
               help="Only plot the given splice junction. Egg, sj1:sj2,sj3:sj4")
+@click.option('--ie',
+              default='15,1',
+              type=str,
+              help="Intron and exon scale for plot the mRNA track, default: 15,1")
 @click.option('--log',
               default=None,
               type=str,
               help="plot the log-tranformed expression values, and support log2 and log10. default: None"
               )
-def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose):
+def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, ie, verbose):
     """
     Normal mode to generate sashimi plot
     """
@@ -101,6 +105,11 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
     if inc:
         # incase somebody add space in the given splice junction
         inc = list(map(lambda x: x.strip(), inc.split(',')))
+    try:
+        intron_scale, exon_scale = map(int, map(lambda x: x.strip(), ie.split(',')))
+    except ValueError as e:
+        logger.error('Error intron and exon scale information.')
+        logger.exception(e)
 
     '''
     1.21 add transcript support
@@ -138,7 +147,9 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
                      pasite=pa,
                      focus=focus,
                      include_sj=inc,
-                     logtrans=log
+                     logtrans=log,
+                     intron_scale=intron_scale,
+                     exon_scale=exon_scale
                      )
 
     except Exception as e:
@@ -254,9 +265,10 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, verbose)
               default='CB,UB',
               type=str,
               help="Cell barcode and umi molecular tag in bam file, default: CB,UB")
-# @click.option('--verbose',
-#               is_flag=True,
-#               help='set the logging level, if Ture -> INFO')
+@click.option('--ie',
+              default='15,1',
+              type=str,
+              help="Intron and exon scale for plot the mRNA track, default: 15,1")
 def junc(gtf,
          bam,
          fileout,
@@ -281,6 +293,7 @@ def junc(gtf,
          id_keep,
          scale,
          bc,
+         ie,
          tag
          ):
     """
@@ -319,6 +332,11 @@ def junc(gtf,
 
                 cell_cluster.add(cluster_info)
                 # sample_names.add(sample_name)
+    try:
+        intron_scale, exon_scale = map(int, map(lambda x: x.strip(), ie.split(',')))
+    except ValueError as e:
+        logger.error('Error intron and exon scale information.')
+        logger.exception(e)
 
     # focus the given regions
     if focus:
@@ -435,7 +453,9 @@ def junc(gtf,
                      addexpress=ade,
                      id_keep=id_keep,
                      highlight_sj=hl,
-                     include_sj=inc
+                     include_sj=inc,
+                     intron_scale=intron_scale,
+                     exon_scale=exon_scale
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

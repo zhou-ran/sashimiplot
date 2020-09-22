@@ -661,7 +661,9 @@ def plot_density(read_depth_object,
                  model=None,
                  addexpress=None,
                  highlight_sj=None,
-                 include_sj=None
+                 include_sj=None,
+                 intron_scale=15,
+                 exon_scale=1
                  ):
     """
 
@@ -690,8 +692,6 @@ def plot_density(read_depth_object,
     exon_starts = mRNAobject.exonstarts
     exon_ends = mRNAobject.exonend
 
-    intron_scale = 15
-    exon_scale = 1
 
     plt.rcParams["figure.figsize"] = (width, height)
 
@@ -722,13 +722,15 @@ def plot_density(read_depth_object,
                            height_ratios=[4] * nfile + [1] * mRNAnum
                            )
 
-    for fileindex, bam_label in enumerate(read_depth_object):
+    bam_labels = sorted(list(read_depth_object.keys()))
+
+    for file_index, bam_label in enumerate(bam_labels):
         if not sitedepth:
-            xlabel = True if fileindex == nfile - 1 else False
-            fileindex_grid = fileindex
+            x_label = True if file_index == nfile - 1 else False
+            fileindex_grid = file_index
         else:
-            fileindex_grid = 2 * fileindex
-            xlabel = False
+            fileindex_grid = 2 * file_index
+            x_label = False
 
         axvar = pylab.subplot(gs[fileindex_grid, :])
 
@@ -739,9 +741,9 @@ def plot_density(read_depth_object,
             color = colors[bamname]
         else:
             try:
-                color = COLOR[fileindex]
+                color = COLOR[file_index]
             except IndexError:
-                color = COLOR[fileindex % 11]
+                color = COLOR[file_index % 11]
 
         plot_density_single(bamread,
                             # mRNAlist,
@@ -749,7 +751,7 @@ def plot_density(read_depth_object,
                             graphcoords,
                             graphToGene,
                             axvar,
-                            xlabel,
+                            x_label,
                             sjthread,
                             color,
                             ymax=None,
@@ -768,17 +770,17 @@ def plot_density(read_depth_object,
                             )
         if sitedepth:
             axvar = pylab.subplot(gs[fileindex_grid + 1, :])
-            bamfileinfo = sitedepth[fileindex]
+            bamfileinfo = sitedepth[file_index]
             bamread = list(bamfileinfo.values())[0]
             bamname = list(bamfileinfo.keys())[0]
-            xlabel = True if fileindex == nfile / 2 - 1 else False
+            x_label = True if file_index == nfile / 2 - 1 else False
 
             plot_density_single_site(bamread,
                                      bamname,
                                      graphcoords,
                                      graphToGene,
                                      axvar,
-                                     xlabel,
+                                     x_label,
                                      color,
                                      nxticks=4,
                                      font_size=6,
