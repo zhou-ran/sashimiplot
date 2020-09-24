@@ -472,7 +472,6 @@ def plotdomain(region,
         if domainname not in DOMAINFILTER:
             continue
 
-
         dregion = calculateinterval(dregion, (tx_start, tx_end))
         if not dregion:
             continue
@@ -506,7 +505,7 @@ def plotdomain(region,
                    fontdict={'fontsize': 4},
                    bbox=dict(facecolor='none',
                              edgecolor='none')
-        )
+                   )
 
     plt.text(xaxisloc, yloc - 0.05, '{}_domain'.format(tid), fontsize=8)
 
@@ -658,6 +657,7 @@ def plot_density(read_depth_object,
                  logtrans=None,
                  prob=None,
                  id_keep=None,
+                 bam_order=None,
                  model=None,
                  addexpress=None,
                  highlight_sj=None,
@@ -692,7 +692,6 @@ def plot_density(read_depth_object,
     exon_starts = mRNAobject.exonstarts
     exon_ends = mRNAobject.exonend
 
-
     plt.rcParams["figure.figsize"] = (width, height)
 
     # print(txstart, txend)
@@ -721,8 +720,19 @@ def plot_density(read_depth_object,
                            1,
                            height_ratios=[4] * nfile + [1] * mRNAnum
                            )
+    if bam_order:
+        whether_exit = list(map(lambda x: x in read_depth_object.keys(), bam_order))
+        if not all(whether_exit):
+            return_val = []
+            for index, bool_val in enumerate(whether_exit):
+                if not bool_val:
+                    return_val.append(bam_order[index])
 
-    bam_labels = sorted(list(read_depth_object.keys()))
+            logger.error(f'{return_val}, bam order files were not all in read_depth_object, please check.')
+            sys.exit(1)
+        bam_labels = bam_order
+    else:
+        bam_labels = list(read_depth_object.keys())
 
     for file_index, bam_label in enumerate(bam_labels):
         if not sitedepth:

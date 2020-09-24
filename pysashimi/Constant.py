@@ -3,8 +3,9 @@
 # @Time    : 2019/1/17 3:27 PM
 __author__ = 'Zhou Ran'
 
-COLOR = ["#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#FFFF33",
-         "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00"]
+COLOR = ["#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
+         "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
+         "#E41A1C"]
 
 # COLOR = [
 #     '#8dd593',

@@ -269,6 +269,10 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, ie, verb
               default='15,1',
               type=str,
               help="Intron and exon scale for plot the mRNA track, default: 15,1")
+@click.option('--co',
+              default=None,
+              type=str,
+              help="Cluster orders.")
 def junc(gtf,
          bam,
          fileout,
@@ -294,7 +298,8 @@ def junc(gtf,
          scale,
          bc,
          ie,
-         tag
+         tag,
+         co
          ):
     """
     Junction mode, not need network to plot
@@ -427,8 +432,18 @@ def junc(gtf,
                     continue
 
             bam_cov[cluster] = reduce(ReadDepth.__add__, cluster_use_obj)
-        # bam_cov = reduce(ReadDepth.__add__, map(Counter, tmp_list))
-        # bam_cov = reduce(ReadDepth.__add__(), map(Counter, tmp_list))
+
+    if co:
+        order_lst = []
+        try:
+            with open(co) as co_fh:
+                for line in co_fh:
+                    if not line:
+                        continue
+                    line = line.strip()
+                    order_lst.append(line)
+        except Exception as e:
+            logger.exception(e)
 
     logger.info("plot")
 
@@ -455,7 +470,8 @@ def junc(gtf,
                      highlight_sj=hl,
                      include_sj=inc,
                      intron_scale=intron_scale,
-                     exon_scale=exon_scale
+                     exon_scale=exon_scale,
+                     bam_order=order_lst
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
