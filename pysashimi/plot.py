@@ -721,16 +721,18 @@ def plot_density(read_depth_object,
                            height_ratios=[4] * nfile + [1] * mRNAnum
                            )
     if bam_order:
-        whether_exit = list(map(lambda x: x in read_depth_object.keys(), bam_order))
+        colors = bam_order
+        bam_labels = list(bam_order.keys())
+        whether_exit = list(map(lambda x: x in read_depth_object.keys(), bam_labels))
         if not all(whether_exit):
             return_val = []
             for index, bool_val in enumerate(whether_exit):
                 if not bool_val:
-                    return_val.append(bam_order[index])
+                    return_val.append(bam_labels[index])
 
             logger.error(f'{return_val}, bam order files were not all in read_depth_object, please check.')
             sys.exit(1)
-        bam_labels = bam_order
+
     else:
         bam_labels = list(read_depth_object.keys())
 

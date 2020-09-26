@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/Constant.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/Constant.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pysashimi/runplot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/runplot.py" afterDir="false" />
     </list>
@@ -109,7 +108,7 @@
       <workItem from="1597203932654" duration="512000" />
       <workItem from="1597388989285" duration="423000" />
       <workItem from="1600329554651" duration="10113000" />
-      <workItem from="1600392462799" duration="9744000" />
+      <workItem from="1600392462799" duration="14240000" />
     </task>
     <servers />
   </component>

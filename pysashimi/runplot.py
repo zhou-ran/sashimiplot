@@ -9,7 +9,8 @@ import sys
 
 import click
 from loguru import logger
-from collections import defaultdict, Counter
+from collections import defaultdict
+from random import sample as random_sample
 
 from .ReadDepth import ReadDepth
 from .mRNA import mRNA
@@ -17,6 +18,7 @@ from .plot import plot_density
 from .sitedepth import SiteDepth
 from .siteplot import plot_density_site
 from .utils import readbamlist
+from .Constant import COLOR
 
 logger.remove(0)
 logger.add('sashimiplot.log', rotation='10 MB', colorize=True,
@@ -424,6 +426,7 @@ def junc(gtf,
         for cluster in cell_cluster:
             cluster_use_obj = []
             for sample in tmp_list:
+
                 try:
                     cluster_use_obj.append(
                         sample[cluster]
@@ -434,16 +437,21 @@ def junc(gtf,
             bam_cov[cluster] = reduce(ReadDepth.__add__, cluster_use_obj)
 
     if co:
-        order_lst = []
+        order_dic = {}
         try:
             with open(co) as co_fh:
                 for line in co_fh:
                     if not line:
                         continue
-                    line = line.strip()
-                    order_lst.append(line)
+                    try:
+                        id_use, col_use = line.strip().split('\t')
+                        order_dic[id_use] = col_use
+                    except ValueError:
+                        order_dic[id_use] = COLOR[random_sample(range(len(COLOR)), 1)]
         except Exception as e:
             logger.exception(e)
+    else:
+        order_dic = None
 
     logger.info("plot")
 
@@ -471,7 +479,7 @@ def junc(gtf,
                      include_sj=inc,
                      intron_scale=intron_scale,
                      exon_scale=exon_scale,
-                     bam_order=order_lst
+                     bam_order=order_dic
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
