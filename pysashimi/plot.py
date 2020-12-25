@@ -3,7 +3,7 @@
 # @Time    : 2019/1/10 4:18 PM
 __author__ = 'Zhou Ran'
 import sys
-
+import matplotlib as mpl
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,6 +21,8 @@ from .color import darken_rgb
 from .EM import EM
 
 plt.switch_backend('agg')
+
+mpl.rcParams['pdf.fonttype'] = 42
 
 
 def r2(x, y):
@@ -782,11 +784,9 @@ def plot_density(read_depth_object,
                             )
         if sitedepth:
             axvar = pylab.subplot(gs[fileindex_grid + 1, :])
-            bamfileinfo = sitedepth[file_index]
-            bamread = list(bamfileinfo.values())[0]
-            bamname = list(bamfileinfo.keys())[0]
+            bamread = sitedepth[bam_label]
+            bamname = bam_label
             x_label = True if file_index == nfile / 2 - 1 else False
-
             plot_density_single_site(bamread,
                                      bamname,
                                      graphcoords,

@@ -47,7 +47,7 @@ def pafilter(reads, peak):
             if cigarinfo[-1][0] != 4:
                 return False
             else:
-                if 'AAAAAAAAAAAA' not in sequence:
+                if 'AAAAAA' not in sequence:
                     return False
                 elif cigarinfo[0][0] == 4:
                     return False

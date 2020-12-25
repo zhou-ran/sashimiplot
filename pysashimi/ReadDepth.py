@@ -66,6 +66,7 @@ class ReadDepth:
                 for cluster in clusters:
                     cluster_cov[cluster]['depth'] = numpy.zeros(end_coord - start_coord + 1, dtype='f')
                     cluster_cov[cluster]['junc'] = defaultdict(int)
+                umi_info = defaultdict(set)
             else:
                 depth_vector = numpy.zeros(end_coord - start_coord + 1, dtype='f')
                 spanned_junctions = defaultdict(int)
@@ -74,12 +75,18 @@ class ReadDepth:
                 if barcode_info:
                     try:
                         current_bc = read.get_tag(cell_tag)
-                        _ = read.get_tag(umi_tag)
+                        umi = read.get_tag(umi_tag)
                         current_bc = current_bc.strip().split('-')[0]
                         if current_bc not in barcode_info:
                             continue
                         else:
                             current_cluster = barcode_info[current_bc]
+                        # umi = read.get_tag(umi_tag)
+                        if umi in umi_info[current_bc]:
+                            continue
+                        else:
+                            umi_info[current_bc].add(umi)
+
                     except KeyError:
                         continue
 

@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/ReadDepth.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/ReadDepth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/bamfilter.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/bamfilter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/runplot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/runplot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -108,7 +109,19 @@
       <workItem from="1597203932654" duration="512000" />
       <workItem from="1597388989285" duration="423000" />
       <workItem from="1600329554651" duration="10113000" />
-      <workItem from="1600392462799" duration="14240000" />
+      <workItem from="1600392462799" duration="15542000" />
+      <workItem from="1601169662320" duration="446000" />
+      <workItem from="1601309455022" duration="2040000" />
+      <workItem from="1601958930194" duration="915000" />
+      <workItem from="1602812938735" duration="16000" />
+      <workItem from="1602848231449" duration="1640000" />
+      <workItem from="1604245942246" duration="1627000" />
+      <workItem from="1604496854178" duration="408000" />
+      <workItem from="1606877731750" duration="2577000" />
+      <workItem from="1607649780836" duration="426000" />
+      <workItem from="1608193536507" duration="216000" />
+      <workItem from="1608277211359" duration="1145000" />
+      <workItem from="1608892518880" duration="74000" />
     </task>
     <servers />
   </component>
