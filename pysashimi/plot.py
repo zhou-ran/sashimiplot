@@ -23,6 +23,7 @@ from .EM import EM
 plt.switch_backend('agg')
 
 mpl.rcParams['pdf.fonttype'] = 42
+mpl.rcParams["font.family"] = 'Arial'
 
 
 def r2(x, y):

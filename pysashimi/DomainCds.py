@@ -187,11 +187,11 @@ class CdsDmain:
                 left_orgin = list(cdsregion[0])
                 right_orgin = list(cdsregion[-1])
                 tmplist = list(cdsregion[0])
-                tmplist[0] = left_orgin[0] + loffset
+                tmplist[0] = left_orgin[0] + loffset - 1
                 cdsregion[0] = tuple(tmplist)
 
                 tmplist = list(cdsregion[-1])
-                tmplist[1] = right_orgin[0] + roffset
+                tmplist[1] = right_orgin[0] + roffset - 1
                 cdsregion[-1] = tuple(tmplist)
 
             else:
@@ -203,7 +203,7 @@ class CdsDmain:
                 cdsregion[0] = tuple(tmplist)
 
                 tmplist = list(cdsregion[-1])
-                tmplist[0] = right_orgin[1] - roffset
+                tmplist[0] = right_orgin[1] - roffset + 1
                 cdsregion[-1] = tuple(tmplist)
             indexres.append((cdsregion, name))
         return indexres
