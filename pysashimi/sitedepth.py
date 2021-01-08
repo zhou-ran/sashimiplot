@@ -16,21 +16,21 @@ from .utils import checkbam
 
 class SiteDepth:
     def __init__(self,
-                 chrm,
+                 chrom,
                  low,
                  high,
                  plus,
                  minus):
         self.low = low
         self.high = high
-        self.chrm = chrm
+        self.chrom = chrom
         self.minus = minus
         self.plus = plus
 
     @classmethod
     def determine_depth(cls,
                         bam_file_path,
-                        chrm,
+                        chrom,
                         start_coord,
                         end_coord,
                         libtype,
@@ -42,7 +42,7 @@ class SiteDepth:
         FR means: the R1 is reversed to the gene strand, and the R2 is same to the gene strand
 
         :param bam_file_path:
-        :param chrm:
+        :param chrom:
         :param start_coord:
         :param end_coord:
         :param libtype:
@@ -56,7 +56,25 @@ class SiteDepth:
 
         try:
             bam_file = pysam.Samfile(bam_file_path, 'rb', ignore_truncation=True)
-            relevant_reads = bam_file.fetch(reference=chrm, start=start_coord, end=end_coord)
+            chrom_id = set(map(lambda x: x['SN'], bam_file.header['SQ']))
+
+            if chrom not in chrom_id:
+                if chrom.startswith('chr'):
+                    if chrom.replace('chr', '') in chrom_id:
+                        chrom_id = chrom.replace('chr', '')
+                    else:
+                        chrom_id = chrom
+                else:
+                    if chrom == 'MT' and 'chrom' in chrom_id:
+                        chrom_id = 'chrom'
+                    elif f'chr{chrom}' in chrom_id:
+                        chrom_id = f'chr{chrom}'
+                    else:
+                        chrom_id = chrom
+            else:
+                chrom_id = chrom
+
+            relevant_reads = bam_file.fetch(reference=chrom_id, start=start_coord, end=end_coord)
 
             plus = np.zeros(end_coord - start_coord + 1, dtype='f')
             minus = np.zeros(end_coord - start_coord + 1, dtype='f')
@@ -103,9 +121,9 @@ class SiteDepth:
                         plus[read.reference_end - start_coord + 1] += 1
 
             if libtype == "FR":
-                return cls(chrm, start_coord, end_coord, plus, -minus)
+                return cls(chrom, start_coord, end_coord, plus, -minus)
             else:
-                return cls(chrm, start_coord, end_coord, minus, -plus)
+                return cls(chrom, start_coord, end_coord, minus, -plus)
 
         except IOError:
 
@@ -120,7 +138,7 @@ class SiteDepth:
         """
         Check the read depth object whether legal
         """
-        return self.chrm is None or self.low is None or self.high is None or self.plus is None or self.minus is None
+        return self.chrom is None or self.low is None or self.high is None or self.plus is None or self.minus is None
 
     def __add__(self, other):
 
@@ -129,13 +147,13 @@ class SiteDepth:
         if other.is_invalid():
             return self
 
-        assert self.chrm == other.chrm, 'Cannot add depths from different chromosomes'
+        assert self.chrom == other.chrom, 'Cannot add depths from different chromosomes'
         assert self.low == other.low and self.high == other.high, 'Cannot add depths with different start and end ' \
                                                                   'points '
         newplus = self.plus + other.plus
         newminus = self.minus + other.minus
 
-        return SiteDepth(self.chrm, self.low, self.high, newplus, newminus)
+        return SiteDepth(self.chrom, self.low, self.high, newplus, newminus)
 
     def __str__(self):
-        return '{0}:{1}-{2},{3},{4}'.format(self.chrm, self.low, self.high, self.plus, self.minus)
+        return '{0}:{1}-{2},{3},{4}'.format(self.chrom, self.low, self.high, self.plus, self.minus)

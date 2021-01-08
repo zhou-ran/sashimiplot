@@ -57,8 +57,25 @@ class ReadDepth:
 
         try:
             bam_file = pysam.Samfile(bam_file_path, 'rb')
+            chrom_id = set(map(lambda x: x['SN'], bam_file.header['SQ']))
 
-            relevant_reads = bam_file.fetch(reference=chrom, start=start_coord, end=end_coord)
+            if chrom not in chrom_id:
+                if chrom.startswith('chr'):
+                    if chrom.replace('chr', '') in chrom_id:
+                        chrom_id = chrom.replace('chr', '')
+                    else:
+                        chrom_id = chrom
+                else:
+                    if chrom == 'MT' and 'chrM' in chrom_id:
+                        chrom_id = 'chrM'
+                    elif f'chr{chrom}' in chrom_id:
+                        chrom_id = f'chr{chrom}'
+                    else:
+                        chrom_id = chrom
+            else:
+                chrom_id = chrom
+
+            relevant_reads = bam_file.fetch(reference=chrom_id, start=start_coord, end=end_coord)
 
             if barcode_info:
                 cluster_cov = defaultdict(lambda: defaultdict())
