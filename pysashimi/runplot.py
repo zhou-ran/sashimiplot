@@ -199,6 +199,11 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, ie, verb
               default=None,
               help="The weight for every pa sites from `--pa2`, the number of wt must be same to `--pa`,seperate by `,`"
               )
+@click.option('--trackline',
+              type=str,
+              default=None,
+              help="The track line on annotation, if there were multiple sites, pls seperate by `,`. default: None"
+              )
 @click.option('--focus',
               default=None,
               help="Highlight the given region. for one region: start-end, if multiple, pls seperate by ,")
@@ -301,7 +306,8 @@ def junc(gtf,
          bc,
          ie,
          tag,
-         co
+         co,
+         trackline
          ):
     """
     Junction mode, not need network to plot
@@ -466,6 +472,7 @@ def junc(gtf,
                      pasite=pa,
                      wt_pasite=wt,
                      pasite2=pa2,
+                     trackline=trackline,
                      wt_pasite2=wt2,
                      focus=focus,
                      domain=domain,

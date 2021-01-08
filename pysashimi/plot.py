@@ -519,6 +519,7 @@ def plot_mRNAs(tx_start,
                graphcoords,
                domain=True,
                focus=None,
+               trackline=None,
                weight_color=None,
                id_keep=None
                ):
@@ -639,6 +640,13 @@ def plot_mRNAs(tx_start,
                 color_for_weight = 'grey'
             pylab.fill(fill_x, fill_y, alpha=0.1, color=color_for_weight)
 
+    if trackline:
+        trackline = list(map(int, trackline.split(',')))
+
+        for site_index, subsite in enumerate(trackline):
+            pylab.axvline(graphcoords[subsite - tx_start],
+                          color="blue",
+                          lw=.5)
     pylab.xticks([])
     pylab.yticks([])
 
@@ -653,6 +661,7 @@ def plot_density(read_depth_object,
                  pasite=None,
                  wt_pasite=None,
                  pasite2=None,
+                 trackline=None,
                  wt_pasite2=None,
                  focus=None,
                  domain=True,
@@ -894,6 +903,7 @@ def plot_density(read_depth_object,
                graphcoords,
                domain,
                focus=focus,
+               trackline=trackline,
                weight_color=weight_color,
                id_keep=id_keep)
 
