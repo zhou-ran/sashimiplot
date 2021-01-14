@@ -9,3 +9,4 @@ click==7.1.2
 loguru==0.5.1
 keras==2.4.3
 seaborn==0.11.1
+mpl-axes-aligner==1.1

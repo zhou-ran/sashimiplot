@@ -4,11 +4,13 @@
 __author__ = 'Zhou Ran'
 
 import sys
+import scipy.stats as sts
 
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import pylab
+from mpl_axes_aligner import align
 
 from .Constant import COLOR
 from .mRNA import mRNA
@@ -27,7 +29,6 @@ def plot_density_single_site(read_depth_object,
                              logtrans=None
                              ):
     """
-
     :param read_depth_object:
     :param mRNAs:
     :param samplename:
@@ -60,10 +61,10 @@ def plot_density_single_site(read_depth_object,
 
     maxheight = max(plus)
     minheight = min(minus)
+    max_val = max(maxheight, abs(minheight))
 
-    ymax = 1.1 * maxheight
-
-    ymin = 1.1 * minheight
+    ymax = 1.1 * max_val
+    ymin = 1.1 * -max_val
 
     pylab.fill_between(graphcoords,
                        plus,
@@ -81,11 +82,25 @@ def plot_density_single_site(read_depth_object,
                        step='pre',
                        interpolate=False,
                        rasterized=True)
+    for label, array_plot in zip(['plus', 'minus'], [plus, minus]):
+
+        array_hist = np.repeat(graphcoords, np.abs(array_plot).astype(np.int))
+        try:
+            kde = sts.gaussian_kde(array_hist)
+            fit_value = kde.pdf(graphcoords)
+        except Exception:
+            continue
+
+        fit_value = fit_value / fit_value.max()
+        if label == 'plus':
+            plt.plot(graphcoords, fit_value * array_plot.max(), c=color, lw=1)
+        else:
+            plt.plot(graphcoords, fit_value * array_plot.min(), c=color, lw=1)
 
     # set the y limit
 
     avx.set_ybound(lower=ymin, upper=ymax)
-    universal_yticks = pylab.linspace(ymin, ymax, 2 + 1)
+    universal_yticks = pylab.linspace(ymin, ymax, 3)
 
     curr_yticklabels = []
     for label in universal_yticks:
@@ -96,7 +111,7 @@ def plot_density_single_site(read_depth_object,
     avx.spines["left"].set_bounds(ymin, ymax)
     avx.set_yticks(universal_yticks)
     avx.yaxis.set_ticks_position('left')
-    avx.spines["right"].set_color('none')
+    avx.spines["right"].set_visible(False)
 
     # ylab
     y_horz_alignment = 'right'
@@ -125,6 +140,7 @@ def plot_density_single_site(read_depth_object,
 
     # Here to plot the highlight site, for example pasite.
     pylab.xlim(0, max(graphcoords))
+
 
     return avx
 

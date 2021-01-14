@@ -427,6 +427,7 @@ def junc(gtf,
                 )
 
             if ps:
+                # single cell bam, no site coverage. not available
                 bam_site_cov = None
     if bc:
         for cluster in cell_cluster:
