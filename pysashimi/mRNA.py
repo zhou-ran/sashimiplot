@@ -158,6 +158,7 @@ class mRNA:
                     resdict[line.attributes["transcript_id"]]["symbol"] = "None"
 
             elif _feature in self._validfeature:
+                resdict[line.attributes["transcript_id"]]["strand"] = line.strand
                 resdict[line.attributes["transcript_id"]][_feature].append((line.start, line.end))
             else:
                 continue

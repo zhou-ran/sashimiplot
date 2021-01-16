@@ -545,7 +545,12 @@ def plot_mRNAs(tx_start,
                 pass
 
             strand = info['strand']
-            minsite, maxsite = info['maxinfo'][0]
+            try:
+                minsite, maxsite = info['maxinfo'][0]
+            except IndexError:
+                minsite = min(map(lambda x: x[0], info['exon']))
+                maxsite = max(map(lambda x: x[1], info['exon']))
+
             logger.debug('ploting {}'.format(tid))
 
             '''
@@ -584,7 +589,7 @@ def plot_mRNAs(tx_start,
                     s = s - tx_start
                     e = e - tx_start
                     x = [graphcoords[s], graphcoords[e], graphcoords[e], graphcoords[s]]
-                    y = [yloc - exonwidth / 2, yloc - exonwidth / 2, \
+                    y = [yloc - exonwidth / 2, yloc - exonwidth / 2,
                          yloc + exonwidth / 2, yloc + exonwidth / 2]
 
                     pylab.fill(x, y, '#000000', lw=.5, zorder=20)
@@ -612,8 +617,9 @@ def plot_mRNAs(tx_start,
                                fontsize=8)
                 else:
                     xaxisloc = -1 * max(graphcoords) * 0.3
+                    symbol_id = info['symbol'] if info['symbol'] else 'NAs'
                     pylab.text(xaxisloc, yloc - 0.05,
-                               '|'.join([info['symbol'], tid]),
+                               '|'.join([symbol_id, tid, strand]),
                                fontsize=8)
                 yloc += 1
                 logger.debug('{} done'.format(tid))
