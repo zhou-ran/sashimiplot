@@ -545,11 +545,7 @@ def plot_mRNAs(tx_start,
                 pass
 
             strand = info['strand']
-            try:
-                minsite, maxsite = info['maxinfo'][0]
-            except IndexError:
-                minsite = min(map(lambda x: x[0], info['exon']))
-                maxsite = max(map(lambda x: x[1], info['exon']))
+
 
             logger.debug('ploting {}'.format(tid))
 
@@ -560,6 +556,8 @@ def plot_mRNAs(tx_start,
             toplot = ['domain', 'CDS', 'exon'] if domain else ['exon']
 
             for type_ in toplot:
+                # minsite = min(map(lambda x: x[0], info[type_]))
+                # maxsite = max(map(lambda x: x[1], info[type_]))
 
                 logger.debug("plotting the {}".format(type_))
                 try:
@@ -568,9 +566,11 @@ def plot_mRNAs(tx_start,
                     logger.warning(f'There was no {type_} information')
                     continue
 
-                # print(region)
                 if not region:
                     continue
+
+                minsite = min(map(lambda x: x[0], region))
+                maxsite = max(map(lambda x: x[1], region))
 
                 if type_ == 'domain':
                     plotdomain(region, tx_start, tx_end, graphcoords, exonwidth, yloc, xaxisloc, tid)
