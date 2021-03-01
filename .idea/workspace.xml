@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="">
+    <list default="true" id="fdb43074-d788-445c-9b82-d7c1dff73809" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pysashimi.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pysashimi.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/libraries/R_User_Library.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/other.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/pysashimi.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/ReadDepth.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/ReadDepth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/bamfilter.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/bamfilter.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,39 +22,12 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FavoritesManager">
-    <favorites_list name="pysashimi" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="JsFlowSettings">
-    <service-enabled>true</service-enabled>
-    <exe-path />
-    <other-services-enabled>true</other-services-enabled>
-    <auto-save>true</auto-save>
-  </component>
-  <component name="ProjectId" id="1ShW9d5b9zGZ7mkd2DW3VKrms14" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="1p7CitsMwJ4d0yKYDRFIDVBl0HT" />
   <component name="PropertiesComponent">
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
-    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -62,69 +46,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9d033e0d-e30a-498b-9ce4-7c55bcf29b91" name="Default Changelist" comment="" />
-      <created>1543414716237</created>
+      <changelist id="fdb43074-d788-445c-9b82-d7c1dff73809" name="Default Changelist" comment="" />
+      <created>1614524871902</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1543414716237</updated>
-      <workItem from="1568634924915" duration="2469000" />
-      <workItem from="1569119070743" duration="253000" />
-      <workItem from="1569201703227" duration="400000" />
-      <workItem from="1569288964482" duration="509000" />
-      <workItem from="1572016165535" duration="55719000" />
-      <workItem from="1572229278739" duration="1991000" />
-      <workItem from="1572267668425" duration="2189000" />
-      <workItem from="1573214935657" duration="419000" />
-      <workItem from="1573368881144" duration="684000" />
-      <workItem from="1574077654501" duration="549000" />
-      <workItem from="1575631585162" duration="826000" />
-      <workItem from="1575906945945" duration="2534000" />
-      <workItem from="1577704287719" duration="642000" />
-      <workItem from="1577801600725" duration="9459000" />
-      <workItem from="1578014030624" duration="741000" />
-      <workItem from="1578043962016" duration="7925000" />
-      <workItem from="1578446844129" duration="2580000" />
-      <workItem from="1578881133102" duration="389000" />
-      <workItem from="1581514821794" duration="65000" />
-      <workItem from="1581591074461" duration="2523000" />
-      <workItem from="1582641714090" duration="7642000" />
-      <workItem from="1583209671723" duration="1986000" />
-      <workItem from="1584966700448" duration="3000000" />
-      <workItem from="1585102404747" duration="329000" />
-      <workItem from="1587009714575" duration="2271000" />
-      <workItem from="1587086691793" duration="8594000" />
-      <workItem from="1587392780460" duration="137000" />
-      <workItem from="1587518955252" duration="303000" />
-      <workItem from="1587524540839" duration="6000" />
-      <workItem from="1588228718872" duration="7000" />
-      <workItem from="1589377815506" duration="925000" />
-      <workItem from="1589423626354" duration="13917000" />
-      <workItem from="1591167418529" duration="26000" />
-      <workItem from="1591340314503" duration="2185000" />
-      <workItem from="1591371007809" duration="281000" />
-      <workItem from="1592450800752" duration="814000" />
-      <workItem from="1592987181841" duration="1673000" />
-      <workItem from="1597203932654" duration="512000" />
-      <workItem from="1597388989285" duration="423000" />
-      <workItem from="1600329554651" duration="10113000" />
-      <workItem from="1600392462799" duration="15542000" />
-      <workItem from="1601169662320" duration="446000" />
-      <workItem from="1601309455022" duration="2040000" />
-      <workItem from="1601958930194" duration="915000" />
-      <workItem from="1602812938735" duration="16000" />
-      <workItem from="1602848231449" duration="1640000" />
-      <workItem from="1604245942246" duration="1627000" />
-      <workItem from="1604496854178" duration="408000" />
-      <workItem from="1606877731750" duration="2577000" />
-      <workItem from="1607649780836" duration="426000" />
-      <workItem from="1608193536507" duration="216000" />
-      <workItem from="1608277211359" duration="1145000" />
-      <workItem from="1608892518880" duration="344000" />
-      <workItem from="1609038014820" duration="1584000" />
-      <workItem from="1610034282137" duration="2076000" />
-      <workItem from="1610520836221" duration="10617000" />
-      <workItem from="1610767533067" duration="888000" />
-      <workItem from="1614325871966" duration="1271000" />
+      <updated>1614524871902</updated>
+      <workItem from="1614524874115" duration="1834000" />
     </task>
     <servers />
   </component>
@@ -136,9 +63,7 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>

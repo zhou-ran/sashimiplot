@@ -20,10 +20,10 @@ def pafilter(reads, peak):
         To check the R1 whether there were soft clip or there were polyA or polyT on sequence?
         '''
 
-        if not reads.is_reverse and strand == '+':
+        if reads.is_reverse and strand == '+':
             reads_site = reads.reference_start + 1
 
-        elif reads.is_reverse and strand == '-':
+        elif not reads.is_reverse and strand == '-':
             reads_site = reads.reference_end + 1
 
         else:
@@ -62,3 +62,30 @@ def pafilter(reads, peak):
         return reads_site
 
     return False
+
+def strand_filter(reads, peak):
+    """
+    polyA filter for bam file
+    :param reads:
+    :param peak:
+    :return:
+    """
+    chrom, st, en, strand = peak.split(':')
+
+    if reads.is_read2:
+
+        if not reads.is_reverse and strand == '+':
+            return True
+        elif reads.is_reverse and strand == '-':
+            return True
+        else:
+            return False
+
+    else:
+        if reads.is_reverse and strand == '+':
+            return True
+        elif not reads.is_reverse and strand == '-':
+            return True
+        else:
+            return False
+

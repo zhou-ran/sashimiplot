@@ -8,7 +8,7 @@ import numpy
 import pysam
 
 from .cigarutils import fetch_intron
-from .bamfilter import pafilter
+from .bamfilter import pafilter, strand_filter
 from .utils import checkbam
 
 logger = logging.getLogger("MAIN")
@@ -89,6 +89,19 @@ class ReadDepth:
                 spanned_junctions = defaultdict(int)
 
             for read in relevant_reads:
+                if readFilter:
+                    u'''
+                    This is for pA filter, now just use strand filter
+                    '''
+                    # if not pafilter(read, readFilter):
+                    #     continue
+
+                    u'''
+                    only work fine for 10X now.
+                    '''
+                    if not strand_filter(read, readFilter):
+                        continue
+
                 if barcode_info:
                     try:
                         current_bc = read.get_tag(cell_tag)
@@ -107,9 +120,6 @@ class ReadDepth:
                     except KeyError:
                         continue
 
-                if readFilter:
-                    if not pafilter(read, readFilter):
-                        continue
 
                 # make sure that the read can be used
                 cigar_string = read.cigar
