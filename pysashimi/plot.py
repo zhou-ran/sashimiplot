@@ -568,9 +568,11 @@ def plot_mRNAs(tx_start,
 
                 if not region:
                     continue
-
-                minsite = min(map(lambda x: x[0], region))
-                maxsite = max(map(lambda x: x[1], region))
+                if type_ == 'exon':
+                    minsite, maxsite = info['maxinfo'][0]
+                else:
+                    minsite = min(map(lambda x: x[0], region))
+                    maxsite = max(map(lambda x: x[1], region))
 
                 if type_ == 'domain':
                     plotdomain(region, tx_start, tx_end, graphcoords, exonwidth, yloc, xaxisloc, tid)

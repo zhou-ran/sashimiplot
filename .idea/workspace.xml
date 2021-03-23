@@ -2,19 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fdb43074-d788-445c-9b82-d7c1dff73809" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/pysashimi.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pysashimi.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/libraries/R_User_Library.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/other.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/pysashimi.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/ReadDepth.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/ReadDepth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysashimi/bamfilter.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/bamfilter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysashimi/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysashimi/plot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,6 +41,7 @@
       <option name="presentableId" value="Default" />
       <updated>1614524871902</updated>
       <workItem from="1614524874115" duration="1834000" />
+      <workItem from="1616470884637" duration="704000" />
     </task>
     <servers />
   </component>
@@ -63,7 +53,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
