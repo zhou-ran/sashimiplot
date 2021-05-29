@@ -757,6 +757,7 @@ def plot_density(read_depth_object,
                  head_track=None,
                  model=None,
                  addexpress=None,
+                 sameymax=False,
                  highlight_sj=None,
                  include_sj=None,
                  intron_scale=15,
@@ -837,10 +838,13 @@ def plot_density(read_depth_object,
         bam_labels = list(read_depth_object.keys())
 
     # here to scale all track into one ymax value
-    ymax_val = []
-    for _, bam_obj in read_depth_object.items():
-        ymax_val.append(np.max(bam_obj.wiggle))
-    ymax_val = np.round(max(ymax_val)) + 1
+    if sameymax:
+        ymax_val = []
+        for _, bam_obj in read_depth_object.items():
+            ymax_val.append(np.max(bam_obj.wiggle))
+        ymax_val = np.round(max(ymax_val)) + 1
+    else:
+        ymax_val = None
 
     for file_index, bam_label in enumerate(bam_labels):
         if not sitedepth:

@@ -246,6 +246,10 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, ie, verb
               is_flag=True,
               help="add gene structure."
               )
+@click.option('--sameymax',
+              is_flag=True,
+              help="same or not same ymax."
+              )
 @click.option('--model',
               default=None,
               type=str,
@@ -313,7 +317,8 @@ def junc(gtf,
          tag,
          co,
          trackline,
-         track
+         track,
+         sameymax
          ):
     """
     Junction mode, not need network to plot
@@ -502,7 +507,8 @@ def junc(gtf,
                      intron_scale=intron_scale,
                      exon_scale=exon_scale,
                      bam_order=order_dic,
-                     head_track=track
+                     head_track=track,
+                     sameymax=sameymax
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))
