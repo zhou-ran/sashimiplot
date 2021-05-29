@@ -3,9 +3,11 @@
 # @Time    : 2019/1/16 3:41 PM
 __author__ = 'Zhou Ran'
 import os
+import sys
 from loguru import logger
 from collections import defaultdict
 import pysam
+
 
 def readbamlist(bamlists):
     """
@@ -59,3 +61,46 @@ def checkbam(bamfile):
 
         else:
             logger.info("Index of the bam file was complete!")
+
+
+def read_track(trackfile):
+    """
+
+    Read the track config files
+    :param bamlists: file
+    :return: a dict contain all sample label and target tracking information
+    """
+
+    trackdict = defaultdict()
+    try:
+        with open(trackfile) as fi:
+            for line in fi.readlines():
+                line = line.strip().split('\t')
+                if len(line) == 2:
+                    label, track_path = line
+                    trackdict[label] = track_path
+                else:
+                    sys.exit(
+                        "There was more than more or only one columns in {} file".format(trackfile)
+                        )
+        return trackdict
+    except IOError:
+        raise "{} file can't be found".format(trackfile)
+
+
+def chrom_transform(chromosome_id):
+    """
+    convert chromosome id from with or without `chr` suffix
+    """
+    if chromosome_id.startswith('chr'):
+        if chromosome_id == 'chrM':
+            chrom_id = 'chrM'
+        else:
+            chrom_id = chromosome_id.replace('chr', '')
+    else:
+        if chromosome_id == 'chrM':
+            chrom_id = 'MT'
+        else:
+            chrom_id = f'chr{chromosome_id}'
+
+    return chrom_id

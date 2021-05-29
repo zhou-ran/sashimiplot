@@ -17,8 +17,8 @@ from .DomainCds import calculateinterval
 from .Constant import COLOR
 from .Constant import DOMAINFILTER
 from .siteplot import plot_density_single_site
-from .color import darken_rgb
 from .EM import EM
+# from .color import darken_rgb
 
 plt.switch_backend('agg')
 
@@ -49,7 +49,7 @@ def cubic_bezier(pts, t):
     p2 = pylab.array(p2)
     p3 = pylab.array(p3)
     return p0 * (1 - t) ** 3 + 3 * t * p1 * (1 - t) ** 2 + \
-           3 * t ** 2 * (1 - t) * p2 + t ** 3 * p3
+        3 * t ** 2 * (1 - t) * p2 + t ** 3 * p3
 
 
 def plot_density_single(read_depth_object,
@@ -101,14 +101,17 @@ def plot_density_single(read_depth_object,
     """
 
     if include_sj:
-        assert isinstance(include_sj, list), "The including junction was not a set, pls check your including input"
+        assert isinstance(
+            include_sj, list), "The including junction was not a set, pls check your including input"
 
     if include_sj and highlight:
         if not include_sj & highlight:
-            raise Exception("There was no overlap bewteen including and highlight junction!")
+            raise Exception(
+                "There was no overlap bewteen including and highlight junction!")
 
     if highlight:
-        assert isinstance(highlight, list), "The highlight junction was not a set, pls check your highlight input"
+        assert isinstance(
+            highlight, list), "The highlight junction was not a set, pls check your highlight input"
     else:
         highlight = set("")
 
@@ -155,7 +158,8 @@ def plot_density_single(read_depth_object,
     u'''
     1.13 sorted the list by the location
     '''
-    jxns_sorted_list = sorted(jxns.keys(), key=lambda x: int(x.split(':')[1].split('-')[0]))
+    jxns_sorted_list = sorted(
+        jxns.keys(), key=lambda x: int(x.split(':')[1].split('-')[0]))
     current_height = -3 * ymin / 4
 
     jxns_new = {}
@@ -165,9 +169,11 @@ def plot_density_single(read_depth_object,
         jxns_new[sj_id] = sj_counts
     if include_sj:
         if len(include_sj) == 2:
-            psi_numerator = jxns_new.get(include_sj[0]) if jxns_new.get(include_sj[0]) is not None else 0
+            psi_numerator = jxns_new.get(include_sj[0]) if jxns_new.get(
+                include_sj[0]) is not None else 0
             psi_denominator = [jxns_new.get(key) for key in include_sj]
-            psi = psi_numerator / np.sum([0 if i is None else i for i in psi_denominator])
+            psi = psi_numerator / \
+                np.sum([0 if i is None else i for i in psi_denominator])
 
         elif len(include_sj) >= 3:
             psi_numerator = [jxns_new.get(key) for key in include_sj[:2]]
@@ -205,14 +211,16 @@ def plot_density_single(read_depth_object,
 
         try:
 
-            ss1, ss2 = [graphcoords[leftss - tx_start - 1], graphcoords[rightss - tx_start + 1]]
+            ss1, ss2 = [graphcoords[leftss - tx_start - 1],
+                        graphcoords[rightss - tx_start + 1]]
         except IndexError:
             continue
 
         # draw junction on bottom
 
         if plotted_count % 2 == 1:
-            pts = [(ss1, 0), (ss1, -current_height), (ss2, -current_height), (ss2, 0)]
+            pts = [(ss1, 0), (ss1, -current_height),
+                   (ss2, -current_height), (ss2, 0)]
             midpt = cubic_bezier(pts, .5)
         # draw junction on top
         else:
@@ -245,7 +253,8 @@ def plot_density_single(read_depth_object,
         # here to add the highlight information for sj
         if junc_label in set(highlight):
             p = PathPatch(a, color="#282828",
-                          lw=pylab.log(jxns[jxn] + 1) / pylab.log(junction_log_base) * 0.5,
+                          lw=pylab.log(jxns[jxn] + 1) /
+                          pylab.log(junction_log_base) * 0.5,
                           fc='none')
         else:
             p = PathPatch(a, color=color,
@@ -254,7 +263,11 @@ def plot_density_single(read_depth_object,
         avx.add_patch(p)
 
     # set the y limit
-    max_used_yval = avx.get_ylim()[1]
+    if ymax:
+        max_used_yval = ymax
+    else:
+        max_used_yval = avx.get_ylim()[1]
+
     fake_ymin = -0.5 * max_used_yval
     if ymax == 100:
         avx.set_ybound(lower=fake_ymin, upper=max_used_yval)
@@ -307,7 +320,8 @@ def plot_density_single(read_depth_object,
 
         max_graphcoords = max(graphcoords)
         pylab.xticks(pylab.linspace(0, max_graphcoords, nxticks),
-                     [graphToGene[int(x)] for x in pylab.linspace(0, max_graphcoords, nxticks)],
+                     [graphToGene[int(x)] for x in pylab.linspace(
+                         0, max_graphcoords, nxticks)],
                      fontsize=font_size)
 
     else:
@@ -317,7 +331,8 @@ def plot_density_single(read_depth_object,
     # Here to plot the highlight site, for example pasite.
     if pasite:
         pasite = list(map(int, pasite.split(',')))
-        wt_pasite = list(map(str, wt_pasite.split(','))) if wt_pasite else wt_pasite
+        wt_pasite = list(map(str, wt_pasite.split(','))
+                         ) if wt_pasite else wt_pasite
 
         for site_index, subsite in enumerate(pasite):
             pylab.axvline(graphcoords[subsite - tx_start],
@@ -325,7 +340,8 @@ def plot_density_single(read_depth_object,
                           lw=.5)
             if wt_pasite:
                 if len(pasite) != len(wt_pasite):
-                    logger.error("The length of pasite and wt_pasite was not same!")
+                    logger.error(
+                        "The length of pasite and wt_pasite was not same!")
                     sys.exit()
 
                 pylab.text(x=graphcoords[subsite - tx_start],
@@ -337,7 +353,8 @@ def plot_density_single(read_depth_object,
 
     if pasite2:
         pasite2 = list(map(int, pasite2.split(',')))
-        wt_pasite2 = list(map(str, wt_pasite2.split(','))) if wt_pasite2 else wt_pasite2
+        wt_pasite2 = list(map(str, wt_pasite2.split(','))
+                          ) if wt_pasite2 else wt_pasite2
 
         for site_index, subsite in enumerate(pasite2):
             pylab.axvline(graphcoords[subsite - tx_start],
@@ -345,7 +362,8 @@ def plot_density_single(read_depth_object,
                           lw=.5)
             if wt_pasite2:
                 if len(pasite2) != len(wt_pasite2):
-                    logger.error("The length of pasite and wt_pasite was not same!")
+                    logger.error(
+                        "The length of pasite and wt_pasite was not same!")
                     sys.exit()
 
                 pylab.text(x=graphcoords[subsite - tx_start],
@@ -450,7 +468,8 @@ def plotdomain(region,
     :return:
     """
 
-    RGB_tuples = ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"]
+    RGB_tuples = ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3",
+                  "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"]
     for index, subdomain in enumerate(region):
         logger.debug("plotting domain")
 
@@ -481,12 +500,14 @@ def plotdomain(region,
         minsite = min(map(lambda x: x[0], dregion))
         maxsite = max(map(lambda x: x[1], dregion))
         min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
-        max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
+        max_ = graphcoords[tx_end - tx_start if maxsite -
+                           tx_end > 0 else maxsite - tx_start]
 
         for s, e in dregion:
             s = s - tx_start
             e = e - tx_start
-            x = [graphcoords[s], graphcoords[e], graphcoords[e], graphcoords[s]]
+            x = [graphcoords[s], graphcoords[e],
+                 graphcoords[e], graphcoords[s]]
 
             y = [yloc_offset_at_y - exonwidth / 2, yloc_offset_at_y - exonwidth / 2,
                  yloc_offset_at_y + exonwidth / 2, yloc_offset_at_y + exonwidth / 2]
@@ -501,7 +522,8 @@ def plotdomain(region,
 
             pylab.fill(x, y, color_use, lw=.5, zorder=20)
 
-        pylab.plot([min_, max_], [yloc_offset_at_y, yloc_offset_at_y], color=color_use, lw=0.2)
+        pylab.plot([min_, max_], [yloc_offset_at_y,
+                                  yloc_offset_at_y], color=color_use, lw=0.2)
         pylab.text(graphcoords[s], yloc + y_axis_offset,
                    domain_detail,
                    color=color_use,
@@ -521,7 +543,8 @@ def plot_mRNAs(tx_start,
                focus=None,
                trackline=None,
                weight_color=None,
-               id_keep=None
+               id_keep=None,
+               head_track=None
                ):
     """
     Draw the gene structure.
@@ -545,7 +568,6 @@ def plot_mRNAs(tx_start,
                 pass
 
             strand = info['strand']
-
 
             logger.debug('ploting {}'.format(tid))
 
@@ -575,7 +597,14 @@ def plot_mRNAs(tx_start,
                     maxsite = max(map(lambda x: x[1], region))
 
                 if type_ == 'domain':
-                    plotdomain(region, tx_start, tx_end, graphcoords, exonwidth, yloc, xaxisloc, tid)
+                    plotdomain(region,
+                               tx_start,
+                               tx_end,
+                               graphcoords,
+                               exonwidth,
+                               yloc,
+                               xaxisloc,
+                               tid)
                     yloc += 1
                     continue
 
@@ -584,18 +613,22 @@ def plot_mRNAs(tx_start,
                 if not region:
                     continue
 
-                min_ = graphcoords[0 if minsite - tx_start < 0 else minsite - tx_start]
-                max_ = graphcoords[tx_end - tx_start if maxsite - tx_end > 0 else maxsite - tx_start]
+                min_ = graphcoords[0 if minsite -
+                                   tx_start < 0 else minsite - tx_start]
+                max_ = graphcoords[tx_end - tx_start if maxsite -
+                                   tx_end > 0 else maxsite - tx_start]
 
                 for s, e in region:
                     s = s - tx_start
                     e = e - tx_start
-                    x = [graphcoords[s], graphcoords[e], graphcoords[e], graphcoords[s]]
+                    x = [graphcoords[s], graphcoords[e],
+                         graphcoords[e], graphcoords[s]]
                     y = [yloc - exonwidth / 2, yloc - exonwidth / 2,
                          yloc + exonwidth / 2, yloc + exonwidth / 2]
 
                     pylab.fill(x, y, '#000000', lw=.5, zorder=20)
-                    pylab.plot([min_, max_], [yloc, yloc], color='#000000', lw=0.5)
+                    pylab.plot([min_, max_], [yloc, yloc],
+                               color='#000000', lw=0.5)
 
                 logger.debug('{} ploting intron'.format(tid))
 
@@ -615,7 +648,8 @@ def plot_mRNAs(tx_start,
 
                 if domain:
                     pylab.text(xaxisloc, yloc - 0.05,
-                               '|'.join([info['symbol'], '_'.join([tid, type_])]),
+                               '|'.join(
+                                   [info['symbol'], '_'.join([tid, type_])]),
                                fontsize=8)
                 else:
                     xaxisloc = -1 * max(graphcoords) * 0.3
@@ -625,6 +659,48 @@ def plot_mRNAs(tx_start,
                                fontsize=8)
                 yloc += 1
                 logger.debug('{} done'.format(tid))
+
+    for label, region in head_track.items():
+        if not region:
+            continue
+        else:
+            region = calculateinterval(region, (tx_start, tx_end))
+
+            if not region:
+                continue
+
+            minsite = min(map(lambda x: x[0], region))
+            maxsite = max(map(lambda x: x[1], region))
+
+            min_ = graphcoords[0 if minsite -
+                                tx_start < 0 else minsite - tx_start]
+            max_ = graphcoords[tx_end - tx_start if maxsite -
+                                tx_end > 0 else maxsite - tx_start]
+
+            for s, e in region:
+                s = s - tx_start
+                e = e - tx_start
+                x = [
+                    graphcoords[s],
+                    graphcoords[e],
+                    graphcoords[e],
+                    graphcoords[s]
+                    ]
+                y = [
+                    yloc - exonwidth / 6,
+                    yloc - exonwidth / 6,
+                    yloc + exonwidth / 6,
+                    yloc + exonwidth / 6
+                    ]
+                pylab.fill(x, y, '#000000', lw=.5, zorder=20)
+
+        xaxisloc = -1 * max(graphcoords) * 0.3
+        pylab.text(
+            xaxisloc, yloc - 0.05,
+            label,
+            fontsize=8
+            )
+        yloc += 1
 
     pylab.xlim(0, max(graphcoords))
     pylab.ylim(-.5, yloc + .5)
@@ -678,6 +754,7 @@ def plot_density(read_depth_object,
                  prob=None,
                  id_keep=None,
                  bam_order=None,
+                 head_track=None,
                  model=None,
                  addexpress=None,
                  highlight_sj=None,
@@ -734,7 +811,8 @@ def plot_density(read_depth_object,
     if id_keep is not None:
         mRNAnum = len(id_keep) * 3
     else:
-        mRNAnum = len(mRNAobject.txlst) * 2 if len(mRNAobject.txlst) != 0 else 1
+        mRNAnum = len(mRNAobject.txlst) * \
+            2 if len(mRNAobject.txlst) != 0 else 1
 
     gs = gridspec.GridSpec(int(nfile + mRNAnum),
                            1,
@@ -743,18 +821,26 @@ def plot_density(read_depth_object,
     if bam_order:
         colors = bam_order
         bam_labels = list(bam_order.keys())
-        whether_exit = list(map(lambda x: x in read_depth_object.keys(), bam_labels))
+        whether_exit = list(
+            map(lambda x: x in read_depth_object.keys(), bam_labels))
         if not all(whether_exit):
             return_val = []
             for index, bool_val in enumerate(whether_exit):
                 if not bool_val:
                     return_val.append(bam_labels[index])
 
-            logger.error(f'{return_val}, bam order files were not all in read_depth_object, please check.')
+            logger.error(
+                f'{return_val}, bam order files were not all in read_depth_object, please check.')
             sys.exit(1)
 
     else:
         bam_labels = list(read_depth_object.keys())
+
+    # here to scale all track into one ymax value
+    ymax_val = []
+    for _, bam_obj in read_depth_object.items():
+        ymax_val.append(np.max(bam_obj.wiggle))
+    ymax_val = np.round(max(ymax_val)) + 1
 
     for file_index, bam_label in enumerate(bam_labels):
         if not sitedepth:
@@ -786,7 +872,7 @@ def plot_density(read_depth_object,
                             x_label,
                             sjthread,
                             color,
-                            ymax=None,
+                            ymax=ymax_val,
                             number_junctions=True,
                             nxticks=4,
                             font_size=6,
@@ -884,7 +970,8 @@ def plot_density(read_depth_object,
         if strand == '+':
             expInfo[int(peaks) - txstart: int(peake) - txstart + 1] = emMAP.pi
         else:
-            expInfo[int(peaks) - txstart: int(peake) - txstart + 1] = emMAP.pi[::-1]
+            expInfo[int(peaks) - txstart: int(peake) -
+                    txstart + 1] = emMAP.pi[::-1]
 
         ax = pylab.subplot(gs[fileindex_grid + 2, :])
 
@@ -913,7 +1000,8 @@ def plot_density(read_depth_object,
                focus=focus,
                trackline=trackline,
                weight_color=weight_color,
-               id_keep=id_keep)
+               id_keep=id_keep,
+               head_track=head_track)
 
     # if pasite:
     #     pasite = map(int, pasite.split(','))

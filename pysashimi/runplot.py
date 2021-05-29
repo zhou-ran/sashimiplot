@@ -17,8 +17,9 @@ from .mRNA import mRNA
 from .plot import plot_density
 from .sitedepth import SiteDepth
 from .siteplot import plot_density_site
-from .utils import readbamlist
+from .utils import read_track, readbamlist
 from .Constant import COLOR
+from .annot_track import AnnotTrack
 
 logger.remove(0)
 logger.add('sashimiplot.log', rotation='10 MB', colorize=True,
@@ -280,6 +281,10 @@ def gene(gtf, gene, bam, pa, fileout, offset, sj, focus, log, dim, inc, ie, verb
               default=None,
               type=str,
               help="Cluster orders.")
+@click.option('--track',
+              default=None,
+              type=str,
+              help="Additional track file, like miRNA binding sites as bed formats.")
 def junc(gtf,
          bam,
          fileout,
@@ -307,7 +312,8 @@ def junc(gtf,
          ie,
          tag,
          co,
-         trackline
+         trackline,
+         track
          ):
     """
     Junction mode, not need network to plot
@@ -327,6 +333,14 @@ def junc(gtf,
         gtf,
         exonstat=True if not domain else False
     )
+    if track:
+        track = AnnotTrack(
+            read_track(trackfile=track),
+            mRNAobject.chr,
+            mRNAobject.tstart,
+            mRNAobject.tend
+        ).tracklist
+
     if bc:
         cb_tag, umi_tag = map(lambda x: x.strip(), tag.split(','))
         cell_cluster = set()
@@ -487,7 +501,8 @@ def junc(gtf,
                      include_sj=inc,
                      intron_scale=intron_scale,
                      exon_scale=exon_scale,
-                     bam_order=order_dic
+                     bam_order=order_dic,
+                     head_track=track
                      )
     except Exception as e:
         logger.error("Error information found in {}, pls check the splicing region".format(junc))

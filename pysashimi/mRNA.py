@@ -30,7 +30,7 @@ class GTFFeature(object):
     Retrieve line from GFFfile class, and return information line by line.
     """
 
-    def __init__(self, chrom=None, source=None, featuretype=None, start=None, end=None,
+    def __init__(self,chrom=None, source=None, featuretype=None, start=None, end=None,
                  score=None, strand=None, phase=None, attributes=None):
 
         self._chrom = chrom
@@ -48,7 +48,8 @@ class GTFFeature(object):
         if attributes:
             items = attributes.split(';')
             for i in items:
-                if len(i) == 0: continue
+                if len(i) == 0:
+                    continue
                 try:
                     name, key = i.strip().split()
                 except ValueError:
@@ -142,7 +143,7 @@ class mRNA:
             line_gid = line.attributes["gene_id"]
 
             u'''
-            support the single gene mode 
+            support the single gene mode
             '''
 
             if self.genename:
@@ -150,16 +151,21 @@ class mRNA:
                     continue
 
             if _feature == 'transcript':
-                resdict[line.attributes["transcript_id"]]['maxinfo'].append((line.start, line.end))
-                resdict[line.attributes["transcript_id"]]["strand"] = line.strand
+                resdict[line.attributes["transcript_id"]
+                        ]['maxinfo'].append((line.start, line.end))
+                resdict[line.attributes["transcript_id"]
+                        ]["strand"] = line.strand
                 try:
-                    resdict[line.attributes["transcript_id"]]["symbol"] = line.attributes["gene_name"]
+                    resdict[line.attributes["transcript_id"]
+                            ]["symbol"] = line.attributes["gene_name"]
                 except KeyError:
                     resdict[line.attributes["transcript_id"]]["symbol"] = "None"
 
             elif _feature in self._validfeature:
-                resdict[line.attributes["transcript_id"]]["strand"] = line.strand
-                resdict[line.attributes["transcript_id"]][_feature].append((line.start, line.end))
+                resdict[line.attributes["transcript_id"]
+                        ]["strand"] = line.strand
+                resdict[line.attributes["transcript_id"]
+                        ][_feature].append((line.start, line.end))
             else:
                 continue
 
@@ -183,7 +189,8 @@ class mRNA:
                             ';;'.join([domain.name, domain.type])
                         )
                     )
-                tmpres = CdsDmain(cdsexon["CDS"], domainlst, strand).domainrelativegenomiccoordinary
+                tmpres = CdsDmain(
+                    cdsexon["CDS"], domainlst, strand).domainrelativegenomiccoordinary
                 resdict[t]["domain"] = tmpres
             else:
                 pass
@@ -208,7 +215,8 @@ class mRNA:
         if not self.txlst_:
             return ''
 
-        d = list(chain(*list(map(lambda x: list(x.values())[0], self.txlst_.values()))))
+        d = list(
+            chain(*list(map(lambda x: list(x.values())[0], self.txlst_.values()))))
         return d
 
     @staticmethod
