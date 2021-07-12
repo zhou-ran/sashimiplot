@@ -659,48 +659,48 @@ def plot_mRNAs(tx_start,
                                fontsize=8)
                 yloc += 1
                 logger.debug('{} done'.format(tid))
-
-    for label, region in head_track.items():
-        if not region:
-            continue
-        else:
-            region = calculateinterval(region, (tx_start, tx_end))
-
+    if head_track:
+        for label, region in head_track.items():
             if not region:
                 continue
+            else:
+                region = calculateinterval(region, (tx_start, tx_end))
 
-            minsite = min(map(lambda x: x[0], region))
-            maxsite = max(map(lambda x: x[1], region))
+                if not region:
+                    continue
 
-            min_ = graphcoords[0 if minsite -
-                                tx_start < 0 else minsite - tx_start]
-            max_ = graphcoords[tx_end - tx_start if maxsite -
-                                tx_end > 0 else maxsite - tx_start]
+                minsite = min(map(lambda x: x[0], region))
+                maxsite = max(map(lambda x: x[1], region))
 
-            for s, e in region:
-                s = s - tx_start
-                e = e - tx_start
-                x = [
-                    graphcoords[s],
-                    graphcoords[e],
-                    graphcoords[e],
-                    graphcoords[s]
-                    ]
-                y = [
-                    yloc - exonwidth / 6,
-                    yloc - exonwidth / 6,
-                    yloc + exonwidth / 6,
-                    yloc + exonwidth / 6
-                    ]
-                pylab.fill(x, y, '#000000', lw=.5, zorder=20)
+                min_ = graphcoords[0 if minsite -
+                                    tx_start < 0 else minsite - tx_start]
+                max_ = graphcoords[tx_end - tx_start if maxsite -
+                                    tx_end > 0 else maxsite - tx_start]
 
-        xaxisloc = -1 * max(graphcoords) * 0.3
-        pylab.text(
-            xaxisloc, yloc - 0.05,
-            label,
-            fontsize=8
-            )
-        yloc += 1
+                for s, e in region:
+                    s = s - tx_start
+                    e = e - tx_start
+                    x = [
+                        graphcoords[s],
+                        graphcoords[e],
+                        graphcoords[e],
+                        graphcoords[s]
+                        ]
+                    y = [
+                        yloc - exonwidth / 6,
+                        yloc - exonwidth / 6,
+                        yloc + exonwidth / 6,
+                        yloc + exonwidth / 6
+                        ]
+                    pylab.fill(x, y, '#000000', lw=.5, zorder=20)
+
+            xaxisloc = -1 * max(graphcoords) * 0.3
+            pylab.text(
+                xaxisloc, yloc - 0.05,
+                label,
+                fontsize=8
+                )
+            yloc += 1
 
     pylab.xlim(0, max(graphcoords))
     pylab.ylim(-.5, yloc + .5)
